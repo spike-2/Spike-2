@@ -1,0 +1,59 @@
+{
+	"gamble": {
+		"shopText": "'$buy textemojis': $5000 - A whole new list of text emojis!\n\n'$buy slots': $10000 - Play the slot machine as much as you want and make that money!\n\n'$buy echo': $15000 - When you type $echo [text], you can make Spike say anything!\n\n'$buy highroller': $30000 - An exclusive role, only obtainable by the best gamblers!",
+		"coinImage": "      █████████      \r\n    ██         ██    \r\n  ██  ░░░░░░░░░░░██  \r\n██  ░░░░  ░░░░░░░░░██\r\n██  ░░  ░░░░░░░░░░░██\r\n██  ░░░░░░░░░░░░░░░██\r\n██  ░░░░░░░░░░░░░░░██\r\n  ██  ░░░░░░░░░░░██  \r\n    ██░░░░░░░░░██    \r\n      █████████      \r\n\n",
+		"giftImage": "   ○╦○   \n╔═══╦═══╗\n║   ║   ║\n╠═══╬═══╣\n║   ║   ║\n╚═══╩═══╝\n",
+		"slotsImage": "  ╔═════════╗    \n  ║  SLOTS  ║   ○\n╔═╩═════════╩═╗ ║\n║ ╔═════════╗ ║ ║\n║ ║ # ║ ╠═╝\n║ ╚═════════╝ ║  \n║             ║  \n║             ║  \n╚═════════════╝  \n",
+		"d10": "  ____    \n /\\ . \\ \n/: \\___\\\n\\' /'.'/ \n \\/'_'/  \n          \n",
+		"d20": "  ____    \n /\\' .\\ \n/: \\___\\\n\\' / . / \n \\/___/  \n          \n",
+		"d30": "  ____    \n /\\'. \\ \n/.:\\_'_\\\n\\.'/ . / \n \\/___/  \n          \n",
+		"d40": "  ____    \n /\\' '\\ \n/ .\\'_'\\\n\\  /'.'/ \n \\/'_'/  \n          \n",	
+		"d50": "  ____    \n /\\'.'\\ \n/: \\'_'\\\n\\' /: :/ \n \\/'_'/  \n          \n",
+		"d60": "  ____    \n /\\: :\\ \n/: \\'_'\\\n\\' /.  / \n \\/__'/  \n          \n",
+		"d01": "           \r\n   _____   \r\n  / .  /\\ \r\n/____/..\\ \r\n\\'  '\\  /\r\n\\'__'\\/  \r\n",
+		"d02": "           \r\n   _____   \r\n  /  . /\\ \r\n/_'__/..\\ \r\n\\'  '\\::/\r\n\\'__'\\/  \r\n",
+		"d03": "           \r\n   _____   \r\n  / .' /\\ \r\n/_'__/  \\ \r\n\\   '\\' /\r\n\\'___\\/  \r\n",
+		"d04": "           \r\n   _____   \r\n  /'  '/\\ \r\n/_'_'/..\\ \r\n\\   '\\  /\r\n\\'___\\/  \r\n",
+		"d05": "           \r\n   _____   \r\n  /'. '/\\ \r\n/_'_'/ .\\ \r\n\\'  '\\  /\r\n\\'__'\\/  \r\n",
+		"d06": "           \r\n   _____   \r\n  /:  :/\\ \r\n/_'_'/.'\\ \r\n\\'  '\\.:/\r\n\\'__'\\/  \r\n"
+	},
+	"role": {
+		"emoji": "692222442801987635",
+		"slots": "810249172606910494",
+		"echo": "809151273554804806",
+		"highroller": "809127293955211274",
+		"verified": "827972362326376489"
+	},
+	"channel": {
+		"introductions": "689243733035974720",
+		"bot-commands": "689298597837144146",
+		"admin-notifications": "748357727872614411",
+		"bot-lab": "825031915387224107"
+	},
+	"pm": {
+		"noTicket": "You do not currently have an open ticket",
+		"intro": "Your message has been sent anonymously to the admins\nSomeone will help you shortly. Thank you for your patience!\n\nIf you wish to mark your ticket as resolved, type $close",
+		"avatarURL": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.SUAUwUeaHXcK8J3o-VLKhQAAAA%26pid%3DApi&f=1",
+		"ticketResolved": "***Ticket has been resolved***"
+	},
+	"verify": {
+		"muted-msg": "You have been marked as unverified since you are either new here or you nickname does not meet the server's guidelines. Please read the rules and change your discord nickname to include your first and last name. **After you have done this, type `$verify` to request an unmute!**",
+		"sent-msg": "The admins have been notified about your unmute request!"
+	},
+	"help": {
+		"main": "Use '$help [c]' or '$man [c]' to find more information about these commands\n$buy - purchase an item from the Spike Shop\n$cointoss - Flip a coin\n$dice - Roll some dice\n$echo - Speak with the voice of Spike\n$embedify - Create an embeded message\n$enigma - encode/decode a message\n$gift - Share some of your Spike Bucks\n$info - Find more information about Spike\n$leaderboard - View the richest in the community\n$shop - View items you can buy with Spike Bucks\n$slots - Play a game of slots\n$wallet - Check your balance\n",
+		"embedify": "$embedify [title]; [content]\nGive the embeded message a title and mark the end of the title with a semicolon. Then you can add the content/description on the embed.",
+		"info": "By typing '$info', you can see plenty of information about the bot. This does't have much function, however, it is here for those interested",
+		"cointoss": "$cointoss [wager] [face]\nYou can wager some of your Spike Bucks on a coin toss for a chance at making some money!",
+		"gift": "$gift [amount] [user]\nYou can gift some of your Spike Bucks to your friends!",
+		"leaderboard": "$leaderboard\nView the users with the most Spike Bucks. Climb to the top if you can!",
+		"dice": "$dice [wager]\nThe game of dice is a fairly simple game. You can make a lot of Spike Bucks if you roll a sum value greater than 7, or roll doubles.",
+		"slots": "$slots [wager]\nIn order to use this command, you must buy it from the Spike Shop\n\nThis game has come more complex. If you get a match, you will gain some money. The more matching results, the more money you will gain! There are also generic values '$', which will always get you money. If you get a generic and pairs, you will gain even more Spike Bugs. If you get all 4 generics, you will win a jackpot!",
+		"shop": "$shop\nYou can use this command to see what is in the Spike Shop. If you want to make a purchase from the Spike Shop, you will need to use the '$buy' command.",
+		"buy": "$buy [item]\nYou can use this command to make purchases from the Spike Shop. If you don't have enough money, talk more or try gambling! If you want more information about Spike Bucks, you can use '$help bucks' or '$man bucks'.",
+		"bucks": "Spike Bucks are what you can use to make purchases from the Spike Shop. You can earn Spike Bucks by talking in the various text channels or by playing any of the various games!",
+		"echo": "$echo [text]\nIn order to use this command, you must buy it from the Spike Shop.\n\nUsing this command, you can display some text with the voice of Spike.",
+		"wallet": "$wallet [user]\nWith this command you can check the the amount of Spike Bucks in anyone's wallet. If you want to know how many Bucks you have in your own wallet, you can simply leave the user field blank.",
+		"enigma": "$enigma [message] [r1] [r1o] [r2] [r2o] [r3] [r3o] [ref]\nEncode or decode a message using Spike's enigma machine.\n\nmessage - String to encode/decode\nr1 - Name of rotor to use in rightmost position\nr1o - Starting offset for rightmost rotor, 0<=x<=25\nr2 - Name of rotor to use in center position\nr2o - Starting offset for center rotor, 0<=x<=25\nr3 - Name of rotor to use in leftmost position\nr3o - Starting offset for leftmost rotor, 0<=x<=25\nref - Name of reflector to use\n\nThe rotors and their offsets all have defaults and can be left empty. The default values of rotors 1, 2, and 3 are I, II, and III respectively. The default values for the starting offsets are all zero. The default value for the reflector is 'B'.\n\nRotor Names: I, II, III, IV, V\nReflector Names: A, B, C\n\nNote: This enigma may have the rotors in reverse order when compared to other enigma machines.\n\nSpecial thanks to Brandon Ingli for creating this enigma machine!"
+	}
+}
