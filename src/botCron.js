@@ -4,6 +4,7 @@
  */
 
 const Discord = require('discord.js');
+const {getConsts} = require('./faccess.js');
 const its = require('./truman-its-service-notes.js');
 const asyncint = require('./asyncInterval.js');
 
