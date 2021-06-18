@@ -1,5 +1,6 @@
 /**
  * @author Joshua Maxwell
+ * @author Brandon Ingli
  * This file will start the bot, send commands to the command handlers
  * and it will add Spike Bucks to users whenever they send a message
  */
@@ -10,6 +11,7 @@ const {Client} = require('discord.js');
 const {execute, basicEmbed} = require('./commands.js');
 const {readIn, addBucks, getConsts} = require('./faccess.js');
 const { verify } = require('./verify.js');
+const {cron} = require('./botCron.js');
 
 
 // starting the bot
@@ -47,3 +49,6 @@ console.log(readIn());
 
 // brings the bot online
 bot.login(process.env.DISJS_BOT_TOKEN);
+
+// Starts the bot cron jobs
+cron.startJobs(bot);
