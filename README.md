@@ -18,7 +18,7 @@ useful utilities, as well as a points and gaming system.
     + See the leaderboard (`$leaderboard`)
     + Gift Spike Bucks (`$gift`)
     + Buy special roles for special features (`$buy`)
-+ Text Emojis (`/{stuff}`)
++ Text Emojis (`/{stuff}`) (Coming Soon)
 + Say things as the bot (`$echo`)
 + Encode and Decode messages in an [Enigma machine](https://git.brandoningli.com/brandon/enigmajs) (`$enigma`)
 + Disallow sending messages until a user is marked as Verified, enforcing rules while allowing a preview of the server (`$verify`)
