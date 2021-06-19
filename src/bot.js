@@ -11,7 +11,7 @@ const {Client} = require('discord.js');
 const {execute, basicEmbed} = require('./commands.js');
 const {readIn, addBucks, getConsts} = require('./faccess.js');
 const { verify } = require('./verify.js');
-const {cron} = require('./botCron.js');
+const cron = require('./botCron.js');
 
 
 // starting the bot
