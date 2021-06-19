@@ -18,6 +18,8 @@ const cron = require('./botCron.js');
 const bot = new Client();
 bot.on('ready', () => { // when loaded (ready event)
   console.log(`${bot.user.username} is ready...`);
+  // Starts the bot cron jobs
+  cron.startJobs(bot);
 });
 // on message recieved
 bot.on('message', (message) => {
@@ -49,6 +51,3 @@ console.log(readIn());
 
 // brings the bot online
 bot.login(process.env.DISJS_BOT_TOKEN);
-
-// Starts the bot cron jobs
-cron.startJobs(bot);
