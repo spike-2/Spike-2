@@ -102,7 +102,7 @@ const echo = (msg) => {
   msg.delete();
 }
 
-function getCollaboratorsPromise(){
+function getContributorsPromise(){
   return new Promise((resolve, reject) => {
 		https.get({
       host: "api.github.com",
@@ -136,13 +136,13 @@ function getCollaboratorsPromise(){
  */
 const info = async (msg) => {
   console.log('performing info');
-  const https_promise = getCollaboratorsPromise();
+  const https_promise = getContributorsPromise();
   const collabs_response = await https_promise;
   const response_obj = JSON.parse(collabs_response);
   const botinfo = getBotInfo();
 
   const content = `Created by: ${botinfo.creator}\n` +
-                  `Collaborators: ${response_obj.map(function(e){
+                  `Contributors: ${response_obj.map(function(e){
                     return e.login
                   }).join(", ")}\n` +
                   `Version: ${botinfo.version}\n` +
