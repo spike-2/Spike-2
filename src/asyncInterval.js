@@ -34,7 +34,7 @@ class AsyncInterval{
   async start() {
     await this._cb();
     if(this._interval) {
-      setTimeout(() => this.run(), this._interval)
+      setTimeout(() => this.start(), this._interval)
     }
   }
 
