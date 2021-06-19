@@ -294,21 +294,21 @@ const slots = (msg) => {
  */
 const executeGame = (msg) => {
   console.log('Searching for game command');
-  const command = msg.content.split(' ')[0].toLowerCase();
-  if (command === '$wallet')
+  const command = msg.content.split(' ')[0].toLowerCase().slice(1);
+  if (command === 'wallet')
     if (msg.content.split(' ')[1])
       getWallet(msg, detag(msg.content.split(' ')[1]));
     else
       getWallet(msg, null);
-  else if (command === '$cointoss')
+  else if (command === 'cointoss')
     coinToss(msg);
-  else if (command === '$gift')
+  else if (command === 'gift')
     gift(msg);
-  else if (command === '$leaderboard')
+  else if (command === 'leaderboard')
     leaderboard(msg);
-  else if (command === '$dice')
+  else if (command === 'dice')
     dice(msg);
-  else if (command === '$slots')
+  else if (command === 'slots')
     slots(msg);
   else // whoops probably a shop command
     executeShop(msg);

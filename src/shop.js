@@ -80,10 +80,10 @@ const buy = (msg) => {
  * @param {Message} msg the message sent by the user
  */
 const executeShop = (msg) => {
-  const command = msg.content.split(' ')[0];
-  if (command.toLowerCase() === '$shop')
+  const command = msg.content.split(' ')[0].toLowerCase().slice(1);
+  if (command.toLowerCase() === 'shop')
     shop(msg);
-  else if (command.toLowerCase() === '$buy')
+  else if (command.toLowerCase() === 'buy')
     buy(msg);
 }
 

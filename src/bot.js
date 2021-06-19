@@ -13,6 +13,7 @@ const {readIn, addBucks, getConsts} = require('./faccess.js');
 const { verify } = require('./verify.js');
 const cron = require('./botCron.js');
 
+const PREFIX = '$';
 
 // starting the bot
 const bot = new Client();
@@ -29,21 +30,17 @@ bot.on('message', (message) => {
     verify(message, bot);
   }
   
-
   if (message.channel.type === 'dm') {
     //TODO
   }
 
   // if it is a command (currently using ! as prefix)
-  if (message.content.charAt(0) === '$')
+  if (message.content.charAt(0) === PREFIX)
     execute(message);
-
-  // if (message.channel.type === 'dm')    
 
   // if a user sends a message
   if (!message.author.bot)
     addBucks(message.author, 1); 
-
 });
 
 // loads in data
