@@ -6,8 +6,9 @@
 const Discord = require('discord.js');
 const {throwErr} = require('./botErr.js');
 const {executeGame} = require('./gamble.js');
-const {getConsts} = require('./faccess');
+const {getConsts, getBotInfo} = require('./faccess');
 const {enigma} = require('./enigma.js');
+const https = require("https");
 
 /**
  * This will remind a user of a given thing, after a given amount of time
@@ -101,19 +102,55 @@ const echo = (msg) => {
   msg.delete();
 }
 
+function getCollaboratorsPromise(){
+  return new Promise((resolve, reject) => {
+		https.get({
+      host: "api.github.com",
+      path: "/repos/jwMaxwell/Spike-2/contributors",
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'Mozilla/5.0'
+      }
+      }, (response) => {
+			let chunks_of_data = [];
+
+			response.on('data', (fragments) => {
+				chunks_of_data.push(fragments);
+			});
+
+			response.on('end', () => {
+				let response_body = Buffer.concat(chunks_of_data).toString('utf8');
+				resolve(response_body.toString());
+			});
+
+			response.on('error', (error) => {
+				reject(error);
+			});
+		});
+	});
+}
+
 /**
  * displays information about the bot 
  * @param {Message} msg the message sent by the user 
  */
-const info = (msg) => {
+const info = async (msg) => {
   console.log('performing info');
-  const content = `Created by: Joshua Maxwell\n` +
-                  `Collaborators: Brandon Ingli\n` +
-                  `Version: 2.0.4\n` +
-                  `Language: Javascript\n` + 
-                  `Creation date: 11/25/2020\n` +
-                  `Date since last update: 05/10/2021\n`;
-  basicEmbed(msg, 'Spike (Beta) info', content);
+  const https_promise = getCollaboratorsPromise();
+  const collabs_response = await https_promise;
+  const response_obj = JSON.parse(collabs_response);
+  const botinfo = getBotInfo();
+
+  const content = `Created by: ${botinfo.creator}\n` +
+                  `Collaborators: ${response_obj.map(function(e){
+                    return e.login
+                  }).join(", ")}\n` +
+                  `Version: ${botinfo.version}\n` +
+                  `Language: ${botinfo.language}\n` + 
+                  `Creation date: ${botinfo.created}\n` +
+                  `Last updated: ${botinfo.updated}\n` + 
+                  `Repository: ${botinfo.repo}`;
+  basicEmbed(msg, `${botinfo.name} info`, content);
 }
 
 /**
