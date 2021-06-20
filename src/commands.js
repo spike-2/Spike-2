@@ -167,7 +167,7 @@ const info = async (msg) => {
                   `Contributors: ${collabs_response_obj.map(function(e){
                     return e.login
                   }).join(", ")}\n` +
-                  `Version: ${package.version}\n` +
+                  // `Version: ${package.version}\n` +
                   `Commit ID: ${commit_response_obj.shortHash}\n`+
                   `Committed: ${new Date(parseInt(commit_response_obj.committedOn*1000)).toUTCString()}\n` +
                   `Language: ${package.language}\n` + 
