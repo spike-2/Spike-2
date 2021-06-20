@@ -33,7 +33,7 @@ const itsMessages = (bot) => {
           .setTitle(message.title)
           .setDescription('\n' + message.content + '\n')
           .setFooter("Posted " + message.updated.toUTCString());
-        bot.channels.cache.get(getConsts().channel['bot-lab']).send(embed);
+        bot.channels.cache.get(getConsts().channel['bot-commands']).send(embed);
       }
     }, 
     10*MINUTE
