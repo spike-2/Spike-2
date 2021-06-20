@@ -169,7 +169,7 @@ const info = async (msg) => {
                   }).join(", ")}\n` +
                   `Version: ${package.version}\n` +
                   `Commit ID: ${commit_response_obj.shortHash}\n`+
-                  `Committed: ${new Date(parseInt(commit_response_obj.committedOn)).toUTCString()}\n` +
+                  `Committed: ${new Date(parseInt(commit_response_obj.committedOn*1000)).toUTCString()}\n` +
                   `Language: ${package.language}\n` + 
                   `Creation date: ${package.created}\n` +
                   `Repository: ${package.repository.gh_url}`;
