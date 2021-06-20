@@ -5,7 +5,7 @@
 fs = require('fs');
 
 const FILENAME = '../records.json'
-const BOTINFOFILENAME = '../botinfo.json'
+const PACKAGEFILENAME = '../package.json'
 let dat;
 
 /**
@@ -31,11 +31,11 @@ const readIn = () => {
 }
 
 /**
- * Reads bot information from file
- * @returns Bot Info object
+ * Gets the contents of package.json
+ * @returns package.json contents
  */
-const getBotInfo = () => {
-  let info = fs.readFileSync(BOTINFOFILENAME, {encoding: 'utf8', flag:'r'});
+const getPackage = () => {
+  let info = fs.readFileSync(PACKAGEFILENAME, {encoding: 'utf8', flag:'r'});
   info = JSON.parse(info);
   return info;
 }
@@ -81,7 +81,7 @@ const getConsts = () => {
 };
 
 
-module.exports = {getStudent, readIn, updateFile, addBucks, getDat, getConsts, getBotInfo}
+module.exports = {getStudent, readIn, updateFile, addBucks, getDat, getConsts, getPackage}
 
 /**
  * This whole thing is going to function a lot differently than Java Spike

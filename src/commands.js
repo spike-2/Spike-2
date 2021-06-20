@@ -6,9 +6,10 @@
 const Discord = require('discord.js');
 const {throwErr} = require('./botErr.js');
 const {executeGame} = require('./gamble.js');
-const {getConsts, getBotInfo} = require('./faccess');
+const {getConsts, getPackage} = require('./faccess');
 const {enigma} = require('./enigma.js');
 const https = require("https");
+const {getLastCommit} = require("git-last-commit")
 
 /**
  * This will remind a user of a given thing, after a given amount of time
@@ -102,6 +103,10 @@ const echo = (msg) => {
   msg.delete();
 }
 
+/**
+ * Generate a Promise to get contributors from GH API
+ * @returns {Promise} Promise to get contributors from GH API
+ */
 function getContributorsPromise(){
   return new Promise((resolve, reject) => {
 		https.get({
@@ -131,6 +136,19 @@ function getContributorsPromise(){
 }
 
 /**
+ * Gets a promise to retrieve the latest commit info
+ * @returns {Promise} Promise to get latest commit info
+ */
+function getCommitPromise(){
+  return new Promise((resolve, reject) => {
+		getLastCommit((err, commit) => {
+      if (err) return reject(err);
+      return resolve(commit);
+    })
+	});
+}
+
+/**
  * displays information about the bot 
  * @param {Message} msg the message sent by the user 
  */
@@ -138,19 +156,24 @@ const info = async (msg) => {
   console.log('performing info');
   const https_promise = getContributorsPromise();
   const collabs_response = await https_promise;
-  const response_obj = JSON.parse(collabs_response);
-  const botinfo = getBotInfo();
+  const collabs_response_obj = JSON.parse(collabs_response);
 
-  const content = `Created by: ${botinfo.creator}\n` +
-                  `Contributors: ${response_obj.map(function(e){
+  const commit_promise = getCommitPromise();
+  const commit_response_obj = await commit_promise;
+
+  const package = getPackage();
+
+  const content = `Created by: ${package.creator}\n` +
+                  `Contributors: ${collabs_response_obj.map(function(e){
                     return e.login
                   }).join(", ")}\n` +
-                  `Version: ${botinfo.version}\n` +
-                  `Language: ${botinfo.language}\n` + 
-                  `Creation date: ${botinfo.created}\n` +
-                  `Last updated: ${botinfo.updated}\n` + 
-                  `Repository: ${botinfo.repo}`;
-  basicEmbed(msg, `${botinfo.name} info`, content);
+                  `Version: ${package.version}\n` +
+                  `Commit ID: ${commit_response_obj.shortHash}\n`+
+                  `Committed: ${new Date(parseInt(commit_response_obj.committedOn)).toUTCString()}\n` +
+                  `Language: ${package.language}\n` + 
+                  `Creation date: ${package.created}\n` +
+                  `Repository: ${package.repository.gh_url}`;
+  basicEmbed(msg, `${package.fullName} info`, content);
 }
 
 /**
