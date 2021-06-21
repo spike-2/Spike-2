@@ -9,6 +9,11 @@ const COLORS = {
   "PURPLE": 0xcc00ff
 };
 
+// Time Constants for convenience
+const SECOND = 1000;
+const MINUTE = 60*SECOND;
+const HOUR = 60*MINUTE;
+
 /**
  * Get the Channel ID of a given channel name.
  * @param {string} channelName Channel name without the leading #.
@@ -77,4 +82,4 @@ function createEmbed(title, content, monotype=false, footer=null, footerImageURL
     .setFooter(footer, footerImageURL);
 }
 
-module.exports = {send, reply, createEmbed};
+module.exports = {SECOND, MINUTE, HOUR, send, reply, createEmbed};
