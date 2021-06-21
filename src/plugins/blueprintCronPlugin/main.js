@@ -7,11 +7,11 @@
 /**
  * A one stop shop for all things a Spike Plugin could need!
  */
-const spikeKit = require("../spikeKit.js");
+const spikeKit = require("../../spikeKit.js");
 /**
  * Provides an Asynchronous alternative to setInverval().
  */
-const {AsyncInterval} = require("../asyncInterval.js");
+const {AsyncInterval} = require("../../asyncInterval.js");
 
 /**
  * The display name of the plugin.

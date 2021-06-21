@@ -5,7 +5,7 @@
 /**
  * A one stop shop for all things a Spike Plugin could need!
  */
-const spikeKit = require("../spikeKit.js");
+const spikeKit = require("../../spikeKit.js");
 
 /**
  * The display name of the plugin.
