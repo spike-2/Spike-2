@@ -38,7 +38,7 @@ function send(content, channel, bot){
     throw "Embed not provided";
   }
   if (! (bot instanceof Discord.Client)){
-    throw "Embed not provided";
+    throw "Invalid bot";
   }
   bot.channels.cache.get(getChannelID(channel)).send(content);
 };
