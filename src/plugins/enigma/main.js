@@ -1,5 +1,5 @@
 /**
- * A blueprint for a SpikeKit Plugin.
+ * A plugin that emulates an enigma machine.
  */
 
 /**

@@ -1,7 +1,5 @@
 /**
- * A blueprint for a SpikeKit Cron Plugin.
- * This type of plugin runs things on an interval and DOES NOT handle commands.
- * startCron() is called on bot start. This plugin should then handle intervals.
+ * A plugin that retrieves and sends new ITS service notes.
  */
 
 /**
