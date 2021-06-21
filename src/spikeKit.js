@@ -17,29 +17,46 @@ const COLORS = {
  */
 function getChannelID(channelName){
   const channels = getConsts().channel;
-  if (channels.includes(channelName)){
+  if (Object.keys(channels).includes(channelName)){
     return channels[channelName];
   } else {
-    throw 'Channel not found';
+    throw "Channel not found";
   }
 }
 
 /**
- * Send a message to a channel.
- * @param {string | Discord.MessageEmbed} content The content to include in the message.
- * @param {number} channel The channel ID to send this message to.
+ * Send a message to a channel of your choice.
+ * @param {Discord.MessageEmbed} content The content to include in the message.
+ * @param {string} channel The channel name (without the leading #) to send this message to.
  * @param {Discord.Client} bot Instantiated Discord Client.
+ * @throws "Invalid bot" if the bot is not properly provided.
+ * @throws "Embed not provided" if Embed is not properly provided.
+ * @throws "Channel not found"  if the given channel name is not in our records.
  */
 function send(content, channel, bot){
-  bot.channels.cache.get(channel).send(content);
+  if (! (content instanceof Discord.MessageEmbed)){
+    throw "Embed not provided";
+  }
+  if (! (bot instanceof Discord.Client)){
+    throw "Embed not provided";
+  }
+  bot.channels.cache.get(getChannelID(channel)).send(content);
 };
 
 /**
  * Reply to an inbound message.
- * @param {string | Discord.MessageEmbed} content The content to include in the message.
+ * @param {Discord.MessageEmbed} content The content to include in the message.
  * @param {Discord.Message} message The message object to reply to.
+ * @throws "Embed not provided" if Embed is not properly provided.
+ * @throws "Invalid message" if the message object is not properly provided.
  */
 function reply(content, message){
+  if (! (content instanceof Discord.MessageEmbed)){
+    throw "Embed not provided";
+  }
+  if (! (message instanceof Discord.Message)){
+    throw "Invalid message";
+  }
   message.channel.send(content)
 };
 
@@ -60,4 +77,4 @@ function createEmbed(title, content, monotype=false, footer=null, footerImageURL
     .setFooter(footer, footerImageURL);
 }
 
-module.exports = {getChannelID, send, reply, createEmbed};
+module.exports = {send, reply, createEmbed};

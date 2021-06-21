@@ -1,5 +1,5 @@
 /**
- * A sample SpikeKit Plugin.
+ * A blueprint for a SpikeKit Plugin.
  */
 
 /**
