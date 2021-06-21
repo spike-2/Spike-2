@@ -7,6 +7,8 @@
 const https = require("https");
 const fs = require("fs");
 
+const LASTCHECKFILENAME = "plugins/itsServiceNotes/lastCheckTime.txt";
+
 /**
  * Strips HTML tags, carriage returns, decodes common HTML entities, and trims.
  * @param {string} input HTML to be unescaped
@@ -44,7 +46,7 @@ function unescapeHTML(input) {
  */
 function getLastCheckTime() {
   try {
-    const data = fs.readFileSync('lastCheckTime.txt', 'utf8');
+    const data = fs.readFileSync(LASTCHECKFILENAME, 'utf8');
     // return new Date("2010-01-01 00:00:00"); // To test, uncomment this and comment line below
     return new Date().setTime(data);
   } catch (err) {
@@ -59,7 +61,7 @@ function getLastCheckTime() {
  */
 function setLastCheckTime() {
   try {
-    const data = fs.writeFileSync('lastCheckTime.txt', String(Date.now()));
+    const data = fs.writeFileSync(LASTCHECKFILENAME, String(Date.now()));
     return true;
   } catch (err) {
     return false;
