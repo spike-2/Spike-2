@@ -7,7 +7,6 @@ const Discord = require('discord.js');
 const {throwErr} = require('./botErr.js');
 const {executeGame} = require('./gamble.js');
 const {getConsts, getPackage} = require('./faccess');
-const {enigma} = require('./enigma.js');
 const https = require("https");
 const {getLastCommit} = require("git-last-commit")
 
@@ -198,22 +197,6 @@ const basicEmbed = (msg, title, content) => {
   msg.channel.send(embed);
 }
 
-const useEnigma = (msg) => {
-  const str = msg.content.includes(';') 
-            ? rmFirst(msg.content.slice(0, msg.content.indexOf(';')))
-            : rmFirst(msg.content);
-  const args = msg.content.includes(';') 
-             ? msg.content.slice(msg.content.indexOf(';') + 1).split(' ')
-             : '';
-
-  if (args.length) {
-    args.shift();
-    basicEmbed(msg, 'Enigma', enigma(str, ...args));
-  }
-  else
-    basicEmbed(msg, 'Enigma', enigma(str));
-}
-
 const help = (msg) => {
   const arg = msg.content.split(' ')[1];
 
@@ -245,8 +228,6 @@ const help = (msg) => {
     basicEmbed(msg, 'Help', getConsts().help.echo);
   else if (arg == 'wallet')
     basicEmbed(msg, 'Help', getConsts().help.wallet);
-  else if (arg == 'enigma')
-    basicEmbed(msg, 'Help', getConsts().help.enigma);
 }
 
 /**
@@ -270,8 +251,6 @@ const execute = (msg) => {
     info(msg);
   else if (command === 'help' || command === 'man')
     help(msg);
-  else if (command === 'enigma')
-    useEnigma(msg);
   else
     executeGame(msg); // send to gamble.js
 }
