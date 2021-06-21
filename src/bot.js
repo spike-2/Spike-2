@@ -42,7 +42,7 @@ bot.on('message', (message) => {
     const command = message.content.split(' ')[0].toLowerCase().slice(1);
     const args = message.content.substring(message.content.split(' ')[0].length).slice(1);
 
-    if (command.toLowerCase() == "help" || command.toLowerCase() == "man"){
+    if (command === "help" || command === "man"){
       console.log("Looking for help...");
       console.log(args);
       if (!args) {
@@ -70,11 +70,10 @@ bot.on('message', (message) => {
           console.log(`${helpCommand} : ${helpArgs}`);
           if (plugin.COMMANDS.includes(helpCommand)){
             console.log(`Getting help for ${PREFIX}${helpCommand} from "${plugin.NAME}"`);
-            const helpText = plugin.help(PREFIX, helpCommand, helpArgs);
             spikeKit.reply(
               spikeKit.createEmbed(
                 `${plugin.NAME} Help`,
-                helpText,
+                plugin.help(PREFIX, helpCommand, helpArgs), // helptext
                 true,
                 message.author.username,
                 message.author.avatarURL()
@@ -103,7 +102,6 @@ bot.on('message', (message) => {
       if(!found){execute(message);}
     }
   }
-    
 
   // if a user sends a message
   if (!message.author.bot)
