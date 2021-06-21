@@ -14,7 +14,7 @@ const { verify } = require('./verify.js');
 const cron = require('./botCron.js');
 const spikeKit = require("./spikeKit.js");
 
-const plugins = [require("./proofOfConcept/main.js")];
+const plugins = [require("./plugins/proofOfConcept/main.js")];
 
 const PREFIX = '$';
 

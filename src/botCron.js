@@ -3,7 +3,7 @@
  * This file handles tasks that run on some sort of schedule or interval.
  */
 
-const plugins = [require("./itsServiceNotes/main.js")];
+const plugins = [require("./plugins/itsServiceNotes/main.js")];
 
 /**
  * Starts all bot jobs that run on a timer or schedule.
