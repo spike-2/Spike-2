@@ -75,7 +75,7 @@ function getServiceNotesPromise(){
   return new Promise((resolve, reject) => {
 		https.get({
       host: "api.truman.edu",
-      path: "/its/service-notes?current=yes",
+      path: "/its/service-notes",
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
