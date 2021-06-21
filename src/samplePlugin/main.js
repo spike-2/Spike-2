@@ -40,9 +40,10 @@ function help(command, args) {
  * Handles incoming commands for this plugin.
  * @param {string} command The command issued, without the prefix.
  * @param {string} args The rest of the message.
+ * @param {Discord.Client} bot The instantiated Discord Bot object.
  * @param {Discord.message} message An object representing the message sent.
  */
-function processCommand(command, args, message){
+function processCommand(command, args, bot, message){
 
 }
 
