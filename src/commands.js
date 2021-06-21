@@ -6,8 +6,10 @@
 const Discord = require('discord.js');
 const {throwErr} = require('./botErr.js');
 const {executeGame} = require('./gamble.js');
-const {getConsts} = require('./faccess');
+const {getConsts, getPackage} = require('./faccess');
 const {enigma} = require('./enigma.js');
+const https = require("https");
+const {getLastCommit} = require("git-last-commit")
 
 /**
  * This will remind a user of a given thing, after a given amount of time
@@ -102,18 +104,76 @@ const echo = (msg) => {
 }
 
 /**
+ * Generate a Promise to get contributors from GH API
+ * @returns {Promise} Promise to get contributors from GH API
+ */
+function getContributorsPromise(){
+  return new Promise((resolve, reject) => {
+		https.get({
+      host: "api.github.com",
+      path: "/repos/jwMaxwell/Spike-2/contributors",
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'Mozilla/5.0'
+      }
+      }, (response) => {
+			let chunks_of_data = [];
+
+			response.on('data', (fragments) => {
+				chunks_of_data.push(fragments);
+			});
+
+			response.on('end', () => {
+				let response_body = Buffer.concat(chunks_of_data).toString('utf8');
+				resolve(response_body.toString());
+			});
+
+			response.on('error', (error) => {
+				reject(error);
+			});
+		});
+	});
+}
+
+/**
+ * Gets a promise to retrieve the latest commit info
+ * @returns {Promise} Promise to get latest commit info
+ */
+function getCommitPromise(){
+  return new Promise((resolve, reject) => {
+		getLastCommit((err, commit) => {
+      if (err) return reject(err);
+      return resolve(commit);
+    })
+	});
+}
+
+/**
  * displays information about the bot 
  * @param {Message} msg the message sent by the user 
  */
-const info = (msg) => {
+const info = async (msg) => {
   console.log('performing info');
-  const content = `Created by: Joshua Maxwell\n` +
-                  `Collaborators: Brandon Ingli\n` +
-                  `Version: 2.0.4\n` +
-                  `Language: Javascript\n` + 
-                  `Creation date: 11/25/2020\n` +
-                  `Date since last update: 05/10/2021\n`;
-  basicEmbed(msg, 'Spike (Beta) info', content);
+  const https_promise = getContributorsPromise();
+  const collabs_response = await https_promise;
+  const collabs_response_obj = JSON.parse(collabs_response);
+
+  const commit_promise = getCommitPromise();
+  const commit_response_obj = await commit_promise;
+
+  const package = getPackage();
+
+  const content = `Created by: ${package.creator}\n` +
+                  `Contributors: ${collabs_response_obj.map(function(e){
+                    return e.login
+                  }).join(", ")}\n` +
+                  // `Version: ${package.version}\n` +
+                  `Commit ID: ${commit_response_obj.shortHash}\n`+
+                  `Committed: ${new Date(parseInt(commit_response_obj.committedOn*1000)).toUTCString()}\n` +
+                  `Language: ${package.language}\n` + 
+                  `Creation date: ${package.created}\n` +
+                  `Repository: ${package.repository.gh_url}`;
+  basicEmbed(msg, `${package.fullName} info`, content);
 }
 
 /**

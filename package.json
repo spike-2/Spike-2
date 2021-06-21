@@ -1,8 +1,17 @@
 {
   "name": "spike",
-  "version": "2.0.4",
+  "fullName": "Spike (Beta)",
+  "version": "2.0.5",
   "description": "",
   "main": "index.js",
+  "creator": "Joshua Maxwell",
+  "created": "25 Nov 2020",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwMaxwell/Spike-2.git",
+    "gh_url": "https://github.com/jwMaxwell/Spike-2"
+  },
+  "language": "node.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/bot.js"
@@ -12,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "git-last-commit": "^1.0.0"
   }
 }
