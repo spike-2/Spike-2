@@ -16,7 +16,7 @@ const spikeKit = require("./spikeKit.js");
 
 const plugins = [require("./plugins/proofOfConcept/main.js"), require("./plugins/enigma/main.js")];
 
-const PREFIX = '%';
+const PREFIX = '$';
 
 // starting the bot
 const bot = new Client();
