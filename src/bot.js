@@ -42,8 +42,8 @@ bot.on('message', (message) => {
 
   // if it is a command
   if (message.content.charAt(0) === PREFIX){
-    const command = message.content.split(' ')[0].toLowerCase().slice(1);
-    const args = message.content.substring(message.content.split(' ')[0].length).slice(1);
+    const command = message.content.split(/\s/)[0].toLowerCase().slice(1);
+    const args = message.content.substring(message.content.split(/\s/)[0].length).slice(1);
 
     if (command === "help" || command === "man"){
       console.log("Looking for help...");
