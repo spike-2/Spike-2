@@ -4,7 +4,6 @@
  */
 
 const Discord = require('discord.js');
-const {executeGame} = require('./gamble.js');
 const spikeKit = require("./spikeKit.js");
 
 const plugins = [
