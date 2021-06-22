@@ -1,26 +1,68 @@
 /**
  * @author Joshua Maxwell
- * This file deals with Gambling related commands
+ * @author Brandon Ingli
+ * Gambling functions for Spike
  */
-
-const Discord = require('discord.js');
-const {getStudent, addBucks, getDat, getConsts} = require('./faccess.js');
-const {throwErr} = require('./botErr');
-const {executeShop} = require('./shop');
 
 /**
- * creates an embed with relatively little codes
- * @param {Message} msg the message sent by the user
- * @param {String} title the title for the embed
- * @param {String} content the description for the embed
+ * A one stop shop for all things a Spike Plugin could need!
  */
-const basicEmbed = (msg, title, content) => {
-  const embed = new Discord.MessageEmbed()
-    .setColor(0xcc00ff)
-    .setTitle(title)
-    .setDescription('```yaml\n' + content + '\n```')
-    .setFooter(msg.author.username, msg.author.avatarURL());
-  msg.channel.send(embed);
+const spikeKit = require("../../spikeKit.js");
+const {getStudent, addBucks, getDat, getConsts} = require('../../faccess.js');
+const {throwErr} = require('../../botErr.js');
+
+/**
+ * The display name of the plugin.
+ */
+const NAME = "Gamble";
+/**
+ * The author(s) of this plugin.
+ */
+const AUTHOR = "Joshua Maxwell and Brandon Ingli";
+/**
+ * Commands supported by this plugin. Do not include the prefix.
+ * Good: command
+ * Bad: $command
+ */
+const COMMANDS = ["wallet", "cointoss", "gift", "leaderboard", "dice", "slots"];
+
+/**
+ * Handles help requests for this plugin.
+ * @param {string} prefix The command prefix.
+ * @param {string} command The command issued, without the prefix.
+ * @param {string} args The rest of the message.
+ * @returns Help text to be sent back to the user.
+ */
+ function help(prefix, command, args) {
+  switch(command){
+    case "wallet":
+      return `${prefix}wallet [user]\nWith this command you can check the the amount of Spike Bucks in anyone's wallet. If you want to know how many Bucks you have in your own wallet, you can simply leave the user field blank.`;
+    case "cointoss":
+      return `${prefix}cointoss [wager] [face]\nYou can wager some of your Spike Bucks on a coin toss for a chance at making some money!`;
+    case "gift":
+      return `${prefix}gift [amount] [user]\nYou can gift some of your Spike Bucks to your friends!`;
+    case "leaderboard":
+      return `${prefix}leaderboard\nView the users with the most Spike Bucks. Climb to the top if you can!`;
+    case "dice":
+      return `${prefix}dice [wager]\nThe game of dice is a fairly simple game. You can make a lot of Spike Bucks if you roll a sum value greater than 7, or roll doubles.`;
+    case "slots":
+      return `${prefix}slots [wager]\nIn order to use this command, you must buy it from the Spike Shop\n\nThis game has come more complex. If you get a match, you will gain some money. The more matching results, the more money you will gain! There are also generic values '$', which will always get you money. If you get a generic and pairs, you will gain even more Spike Bugs. If you get all 4 generics, you will win a jackpot!`;
+  }
+}
+
+/**
+ * Generates help text for the main help screen.
+ * @param {string} prefix The command prefix.
+ * @returns Help text for the main help screen.
+ */
+ function shortHelp(prefix){
+  return `Earn Spike Bucks to gamble or gift by sending messages.
+${prefix}wallet - View Spike Bucks balance.
+${prefix}cointoss - Wager Spike Bucks on Heads or Tails.
+${prefix}gift - Gift some Spike Bucks to friends.
+${prefix}leaderboard - View the leaderboard.
+${prefix}dice - Wager Spike Bucks on a roll of the dice.
+${prefix}slots - Pull the handle and find a jackpot.`
 }
 
 /**
@@ -29,7 +71,7 @@ const basicEmbed = (msg, title, content) => {
  * @param {Integer} wager the amount of Spike Bucks being wagered
  * @returns whether or not the given wager is valid
  */
-const validWager = (msg, wager) => {
+ const validWager = (msg, wager) => {
   // wager will be passed in as a string
   const temp = parseInt(wager);
   if (temp && temp >= 0 && getStudent(msg.author.id).wallet >= temp)
@@ -102,17 +144,29 @@ const getWallet = (msg, id) => {
     id = msg.author.id;
 
   student = getStudent(id);
+  if (!student) {
+    throwErr(msg, 'user');
+    return;
+  }
 
   const title = student.name;
   const content = tablify(`${student.wallet}`);
-  basicEmbed(msg, title, content);
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      title,
+      content,
+      true,
+      msg.author.username, msg.author.avatarURL()
+    ),
+    msg
+  );
 }
 
 /**
  * Performs the cointoss gambling game
  * @param {Message} msg the message sent by the user
  */
-const coinToss = (msg) => {
+const coinToss = (msg, prefix) => {
   // $cointoss [wager] [face]
   const args = msg.content.split(' ');
   
@@ -121,8 +175,8 @@ const coinToss = (msg) => {
     return;
 
   // is it a valid coin face?
-  if (args[2].toLowerCase() !== 'heads' && args[2].toLowerCase() !== 'tails') {
-    throwErr(msg, 'cointoss');
+  if (args.length != 3 || (args[2].toLowerCase() !== 'heads' && args[2].toLowerCase() !== 'tails')) {
+    throwErr(msg, 'syntax');
     return;
   }
 
@@ -147,7 +201,15 @@ const coinToss = (msg) => {
                     `Earnings: ${(earnings - wager)}`;
 
   const title = 'Coin Toss';
-  basicEmbed(msg, title, contents);
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      title,
+      contents,
+      true,
+      msg.author.username, msg.author.avatarURL()
+    ),
+    msg
+  );
 }
 
 /**
@@ -157,23 +219,39 @@ const coinToss = (msg) => {
 const gift = (msg) => {
   // gift [amt] [user]
   const args = msg.content.split(' ');
-  const giftAmt = parseInt(args[1]);
-  if (!validWager(msg, giftAmt))
+  console.log(args);
+
+  if (args.length != 3) {
+    throwErr(msg, 'syntax');
     return;
+  }
+
+  const giftAmt = parseInt(args[1]);
+  if (!validWager(msg, giftAmt)){
+    return;
+  }
   
   const recipient = getStudent(detag(args[2]));
   if (!recipient) {
-    throwErr('gift');
+    throwErr(msg, 'user');
     return;
   }
 
   addBucks(msg.author, -giftAmt);
   getDat()[detag(args[2])]['wallet'] += giftAmt;
-  const contents =  `${getConsts.gamble['giftImage']}` +
+  const contents =  `${getConsts().gamble['giftImage']}` +
                     `Amount: $${giftAmt}\n` +
                     `To: ${recipient.name}\n` +
                     `From: ${msg.author.username}`;
-  basicEmbed(msg, 'Gift', contents);
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Gift",
+      contents,
+      true,
+      msg.author.username, msg.author.avatarURL()
+    ),
+    msg
+  );
 }
 
 /**
@@ -189,8 +267,17 @@ const leaderboard = (msg) => {
   let result = '';
   for (let i = 0; i < 10; ++i)
     result += `${i + 1} | ${users[i].name} - ${users[i].wallet}\n`;
-  result = result.slice(0, result.length - 1)
-  basicEmbed(msg, 'Leaderboard', tablify(result));
+  result = result.slice(0, result.length - 1);
+  const title = 'Coin Toss';
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Leaderboard",
+      tablify(result),
+      true,
+      msg.author.username, msg.author.avatarURL()
+    ),
+    msg
+  );
 }
 
 const stitch = (a, b) => {
@@ -231,9 +318,16 @@ const dice = (msg) => {
   const img = //long boi
   `${stitch(getConsts().gamble[`d${die1}0`], getConsts().gamble[`d0${die2}`])}`
   
-  const content = 
-    `${img}Die 1: ${die1}\nDie 2: ${die2}\nEarnings: ${winnings - wager}`;
-  basicEmbed(msg, 'Dice Roll', content);
+  const content = `${img}Die 1: ${die1}\nDie 2: ${die2}\nEarnings: ${winnings - wager}`;
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Dice Roll",
+      content,
+      true,
+      msg.author.username, msg.author.avatarURL()
+    ),
+    msg
+  );
 }
 
 /**
@@ -285,33 +379,42 @@ const slots = (msg) => {
     '#', `${result[0]} ${result[1]} ${result[2]} ${result[3]}`
   );
   contents += `Wager: ${wager}\nEarnings: ${earnings}`;
-  basicEmbed(msg, 'Slots', contents);
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Slots",
+      contents,
+      true,
+      msg.author.username, msg.author.avatarURL()
+    ),
+    msg
+  );
 }
 
 /**
- * Determine where to send control
- * @param {Message} msg the message sent by the user
+ * Handles incoming commands for this plugin.
+ * @param {string} command The command issued, without the prefix.
+ * @param {string} args The rest of the message.
+ * @param {Discord.Client} bot The instantiated Discord Bot object.
+ * @param {Discord.Message} message An object representing the message sent.
  */
-const executeGame = (msg) => {
-  console.log('Searching for game command');
-  const command = msg.content.split(' ')[0].toLowerCase().slice(1);
-  if (command === 'wallet')
-    if (msg.content.split(' ')[1])
-      getWallet(msg, detag(msg.content.split(' ')[1]));
-    else
-      getWallet(msg, null);
-  else if (command === 'cointoss')
-    coinToss(msg);
-  else if (command === 'gift')
-    gift(msg);
-  else if (command === 'leaderboard')
-    leaderboard(msg);
-  else if (command === 'dice')
-    dice(msg);
-  else if (command === 'slots')
-    slots(msg);
-  else // whoops probably a shop command
-    executeShop(msg);
+function processCommand(command, args, bot, message){
+  if (command === 'wallet') {
+    if (args) {
+      getWallet(message, detag(args));
+    } else {
+      getWallet(message, null);
+    }
+  } else if (command === 'cointoss'){
+    coinToss(message);
+  } else if (command === 'gift'){
+    gift(message);
+  } else if (command === 'leaderboard'){
+    leaderboard(message);
+  } else if (command === 'dice'){
+    dice(message);
+  } else if (command === 'slots'){
+    slots(message);
+  }
 }
 
-module.exports = { executeGame }
+module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};

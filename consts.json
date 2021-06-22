@@ -1,6 +1,5 @@
 {
 	"gamble": {
-		"shopText": "'$buy textemojis': $5000 - A whole new list of text emojis!\n\n'$buy slots': $10000 - Play the slot machine as much as you want and make that money!\n\n'$buy echo': $15000 - When you type $echo [text], you can make Spike say anything!\n\n'$buy highroller': $30000 - An exclusive role, only obtainable by the best gamblers!",
 		"coinImage": "      █████████      \r\n    ██         ██    \r\n  ██  ░░░░░░░░░░░██  \r\n██  ░░░░  ░░░░░░░░░██\r\n██  ░░  ░░░░░░░░░░░██\r\n██  ░░░░░░░░░░░░░░░██\r\n██  ░░░░░░░░░░░░░░░██\r\n  ██  ░░░░░░░░░░░██  \r\n    ██░░░░░░░░░██    \r\n      █████████      \r\n\n",
 		"giftImage": "   ○╦○   \n╔═══╦═══╗\n║   ║   ║\n╠═══╬═══╣\n║   ║   ║\n╚═══╩═══╝\n",
 		"slotsImage": "  ╔═════════╗    \n  ║  SLOTS  ║   ○\n╔═╩═════════╩═╗ ║\n║ ╔═════════╗ ║ ║\n║ ║ # ║ ╠═╝\n║ ╚═════════╝ ║  \n║             ║  \n║             ║  \n╚═════════════╝  \n",
@@ -61,16 +60,5 @@
 	"verify": {
 		"muted-msg": "You have been marked as unverified since you are either new here or you nickname does not meet the server's guidelines. Please read the rules and change your discord nickname to include your first and last name. **After you have done this, type `$verify` to request an unmute!**",
 		"sent-msg": "The admins have been notified about your unmute request!"
-	},
-	"help": {
-		"cointoss": "$cointoss [wager] [face]\nYou can wager some of your Spike Bucks on a coin toss for a chance at making some money!",
-		"gift": "$gift [amount] [user]\nYou can gift some of your Spike Bucks to your friends!",
-		"leaderboard": "$leaderboard\nView the users with the most Spike Bucks. Climb to the top if you can!",
-		"dice": "$dice [wager]\nThe game of dice is a fairly simple game. You can make a lot of Spike Bucks if you roll a sum value greater than 7, or roll doubles.",
-		"slots": "$slots [wager]\nIn order to use this command, you must buy it from the Spike Shop\n\nThis game has come more complex. If you get a match, you will gain some money. The more matching results, the more money you will gain! There are also generic values '$', which will always get you money. If you get a generic and pairs, you will gain even more Spike Bugs. If you get all 4 generics, you will win a jackpot!",
-		"shop": "$shop\nYou can use this command to see what is in the Spike Shop. If you want to make a purchase from the Spike Shop, you will need to use the '$buy' command.",
-		"buy": "$buy [item]\nYou can use this command to make purchases from the Spike Shop. If you don't have enough money, talk more or try gambling! If you want more information about Spike Bucks, you can use '$help bucks' or '$man bucks'.",
-		"bucks": "Spike Bucks are what you can use to make purchases from the Spike Shop. You can earn Spike Bucks by talking in the various text channels or by playing any of the various games!",
-		"wallet": "$wallet [user]\nWith this command you can check the the amount of Spike Bucks in anyone's wallet. If you want to know how many Bucks you have in your own wallet, you can simply leave the user field blank."
 	}
 }
