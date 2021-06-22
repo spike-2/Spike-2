@@ -60,5 +60,127 @@
 	"verify": {
 		"muted-msg": "You have been marked as unverified since you are either new here or you nickname does not meet the server's guidelines. Please read the rules and change your discord nickname to include your first and last name. **After you have done this, type `$verify` to request an unmute!**",
 		"sent-msg": "The admins have been notified about your unmute request!"
+	},
+	"emoji": {
+		"lenny":{
+			"premium": false,
+			"content": "( ͡° ͜ʖ ͡°)"
+		},
+		"lennyshrug":{
+			"premium": false,
+			"content": "¯\\\\_( ͡° ͜ʖ ͡°)\\_/¯"
+		},
+		"fightme":{
+			"premium": false,
+			"content": "(ง'̀-'́)ง"
+		},
+		"eyefallsout":{
+			"premium": false,
+			"content": "( ಠ ͜ʖರೃ)"
+		},
+		"owo":{
+			"premium": false,
+			"content": "(´・ω・`)"
+		},
+		"highfive":{
+			"premium": false,
+			"content": "( ⌒o⌒)人(⌒-⌒ )v"
+		},
+		"noyou":{
+			"premium": false,
+			"content": "(☞ﾟヮﾟ)☞ ☜(ﾟヮﾟ☜) "
+		},
+		"excuse":{
+			"premium": false,
+			"content": "ಠ_ಠ"
+		},
+		"upsetti":{
+			"premium": false,
+			"content": "ಠ╭╮ಠ"
+		},
+		"hugpls":{
+			"premium": false,
+			"content": "༼ つ ◕_◕ ༽つ"
+		},
+		"canthearyou":{
+			"premium": false,
+			"content": "ᕦ(ò_óˇ)ᕤ"
+		},
+		"frickyou":{
+			"premium": false,
+			"content": "╭∩╮(ಠ۝ಠ)╭∩╮"
+		},
+		"listening":{
+			"premium": false,
+			"content": "ʕ ͠° ʖ̫ °͠ ʔ"
+		},
+		"cri":{
+			"premium": true,
+			"content": "(ಥ﹏ಥ)"
+		},
+		"sad":{
+			"premium": true,
+			"content": "ಥ_ಥ"
+		},
+		"smooch":{
+			"premium": true,
+			"content": "( ˘ ³˘)❤"
+		},
+		"uhohlenny":{
+			"premium": true,
+			"content": "( ͡ʘ ͜ʖ ͡ʘ)"
+		},
+		"unsettlinglenny":{
+			"premium": true,
+			"content": "( ͡👁️ ͜ʖ ͡👁️)"
+		},
+		"happy":{
+			"premium": true,
+			"content": "( ﾟヮﾟ)"
+		},
+		"depressed":{
+			"premium": true,
+			"content": "（ ´,_ゝ`)"
+		},
+		"no":{
+			"premium": true,
+			"content": "(╬ ಠ益ಠ)"
+		},
+		"intensifies":{
+			"premium": true,
+			"content": "(≧ロ≦)"
+		},
+		"yay":{
+			"premium": true,
+			"content": "ヽ(´▽`)/"
+		},
+		"ayy":{
+			"premium": true,
+			"content": "(☞ﾟヮﾟ)☞"
+		},
+		"stare":{
+			"premium": true,
+			"content": "(*′☉.̫☉)"
+		},
+		"smug":{
+			"premium": true,
+			"content": "( ‾ʖ̫‾)"
+		},
+		"imfine":{
+			"premium": true,
+			"content": "(¬‿¬)"
+		},
+		"sopretty":{
+			"premium": true,
+			"content": "(•‾̑⌣‾̑•)"
+		},
+		"imthebest":{
+			"premium": true,
+			"content": "☆(◒‿◒)☆"
+		},
+		"catdance":{
+			"premium": true,
+			"content": "⊂ヽ \n　 ＼＼ Λ＿Λ\n 　　 ＼( 'ㅅ' )\n 　　　 >　⌒ヽ\n 　　　/ 　 へ  ＼\n 　　 /　　/　＼＼\n 　　 ﾚ　ノ　　 ヽつ\n 　　/　/ \n 　 /　/| \n 　(　(ヽ \n 　|　|、＼ \n 　| 丿 ＼ ⌒) \n 　| |　　)"
+		}
 	}
 }
