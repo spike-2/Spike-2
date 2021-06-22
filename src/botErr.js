@@ -21,12 +21,12 @@ const errEmbed = (msg, title, content) => {
 }
 
 /**
- * throws an error for invalid coin toss syntax
+ * throws an error for invalid syntax
  * @param {Message} msg the message sent by the user
  */
-const coinTossErr = (msg) => {
+const syntaxErr = (msg) => {
   const title = 'Invalid Syntax';
-  const description = 'To toss a coin type "$cointoss [wager] [face]"';
+  const description = 'Please see the help menu for more information.';
   errEmbed(msg, title, description);
 }
 
@@ -44,9 +44,9 @@ const wagerErr = (msg) => {
  * throws an error for unknown users
  * @param {Message} msg the message sent by the user
  */
-const giftErr = (msg) => {
+const userErr = (msg) => {
   const title = 'Invalid User';
-  const description = 'The given recipient either doesn\'nt exist or has yet to be cached!';
+  const description = 'The given user either doesn\'t exist or has yet to be cached!';
   errEmbed(msg, title, description);
 }
 
@@ -116,7 +116,7 @@ const clearTooBigErr = (msg) => {
  */
 const clearTooSmallErr = (msg) => {
   const title = 'Error';
-  const description = 'Input a number that is more than 2';
+  const description = 'Input a number that is at least 2';
   errEmbed(msg, title, description);
 }
 
@@ -136,12 +136,12 @@ const invalidPermsErr = (msg) => {
  * @param {string} errType the type of error to throw
  */
 const throwErr = (msg, errType) => {
-  if (errType === 'cointoss')
-    coinTossErr(msg);
+  if (errType === 'syntax')
+    syntaxErr(msg);
   else if (errType === 'wager')
     wagerErr(msg);
-  else if (errType === 'gift')
-    giftErr(msg);
+  else if (errType === 'user')
+    userErr(msg);
   else if (errType === 'command')
     commandErr(msg);
   else if (errType === 'noItemErr')

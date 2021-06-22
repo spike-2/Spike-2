@@ -8,10 +8,11 @@
 // dependencies
 require('dotenv').config();
 const {Client} = require('discord.js');
-const {execute, basicEmbed} = require('./commands.js');
+const {execute} = require('./commands.js');
 const {readIn, addBucks, getConsts} = require('./faccess.js');
 const { verify } = require('./verify.js');
 const cron = require('./botCron.js');
+
 
 const PREFIX = '$';
 
@@ -34,9 +35,10 @@ bot.on('message', (message) => {
     //TODO
   }
 
-  // if it is a command (currently using ! as prefix)
-  if (message.content.charAt(0) === PREFIX)
-    execute(message);
+  // if it is a command
+  if (message.content.charAt(0) === PREFIX){
+   execute(message, bot, PREFIX);
+  }
 
   // if a user sends a message
   if (!message.author.bot)
