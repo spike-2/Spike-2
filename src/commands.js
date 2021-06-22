@@ -237,21 +237,21 @@ const help = (msg) => {
 const execute = (msg) => {
   console.log('Searching for command');
   const command = msg.content.split(' ')[0].toLowerCase().slice(1);
-  if (command.toLowerCase() === 'remindme')
-    remindMe(msg);
-  else if (command === 'test')
-    test(msg);
-  else if (command === 'embedify')
-    embedify(msg);
-  else if (command === 'clear')
-    clear(msg);
-  else if (command === 'echo')
-    echo(msg);
-  else if (command === 'info')
-    info(msg);
-  else if (command === 'help' || command === 'man')
-    help(msg);
-  else
+  // if (command.toLowerCase() === 'remindme')
+  //   remindMe(msg);
+  // else if (command === 'test')
+  //   test(msg);
+  // else if (command === 'embedify')
+  //   embedify(msg);
+  // else if (command === 'clear')
+  //   clear(msg);
+  // else if (command === 'echo')
+  //   echo(msg);
+  // else if (command === 'info')
+  //   info(msg);
+  // else if (command === 'help' || command === 'man')
+  //   help(msg);
+  // else
     executeGame(msg); // send to gamble.js
 }
 

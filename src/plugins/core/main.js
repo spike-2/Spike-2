@@ -3,6 +3,10 @@
  */
 
 const spikeKit = require("../../spikeKit.js");
+const {getPackage, getConsts} = require("../../faccess.js");
+const https = require("https");
+const {getLastCommit} = require("git-last-commit");
+const {throwErr} = require("../../botErr.js");
 
 const NAME = "Core";
 const AUTHOR = "Joshua Maxwell";
@@ -21,53 +25,60 @@ function shortHelp(prefix){
 }
 
 const remindMe = (msg) => {
-  const INTERVALS = [3600000, 60000, 1000] // hour, min, sec
-
   //splits first arg into time intervals
   const segs = msg.content
                   .split(' ')[1]
                   .split(':'); 
   
-  const time = parseInt(segs[0]) * INTERVALS[0]
-             + parseInt(segs[1]) * INTERVALS[1]
-             + parseInt(segs[2]) * INTERVALS[2];
+  const time = parseInt(segs[0]) * spikeKit.HOUR
+             + parseInt(segs[1]) * spikeKit.MINUTE
+             + parseInt(segs[2]) * spikeKit.SECOND;
 
   const reminder = msg.content
                       .slice(msg.content.indexOf(' ') + 1)
                       .slice(msg.content.indexOf(' '));
   setTimeout(_=> {
-    createEmbed("Reminder :bell:", reminder, msg.author.username, msg.author.avatarURL());
+    spikeKit.reply(
+      spikeKit.createEmbed("Reminder :bell:", reminder, true, msg.author.username, msg.author.avatarURL()),
+      msg);
   }, time);
   
-  createEmbed('Reminder Set', `Reminder set for ${math.floor(time / INTERVALS[1])}`
-             + ' minutes from now.', msg.author.username, msg.author.avatarURL()); //FIXME
+  spikeKit.reply(
+    spikeKit.createEmbed('Reminder Set', `Reminder set for ${Math.floor(time / spikeKit.MINUTE)}`
+                + ' minutes from now.', true, msg.author.username, msg.author.avatarURL()),
+    msg
+  );
 }
 
-const embedify = (msg) => {
+const embedify = (args, msg) => {
   console.log('performing embedify');
-  const title = rmFirst(msg.content.slice(0, msg.content.indexOf(';')));
-  const content = msg.content.slice(msg.content.indexOf(';') + 1).trimStart().trimEnd();
+  const title = args.slice(0, args.indexOf(';'));
+  const content = args.slice(args.indexOf(';') + 1).trimStart().trimEnd();
 
-  createEmbed(title, content, false, msg.author.username, msg.author.avatarURL());
+  spikeKit.reply(
+    spikeKit.createEmbed(title, content, false, msg.author.username, msg.author.avatarURL()),
+    msg
+  );
   msg.delete();
 }
 
 const clear = (msg) => {
-  if(!msg.member.hasPermission('ADMINISTRATOR')) { // TODO allow bot experts to use
-    throwErr('invalidPermsErr');
+  console.log(msg.member.roles);
+  if(!msg.member.hasPermission('ADMINISTRATOR') && !msg.member.roles.cache.has(getConsts().role.botexpert)) {
+    throwErr(msg, 'invalidPermsErr');
     return;
   }
   const arg = msg.content.split(' ')[1];
   if (isNaN(arg))
-    throwErr('clearNaNErr');
+    throwErr(msg, 'clearNaNErr');
   else if (arg > 100)
-    throwErr('clearTooBigErr');
+    throwErr(msg, 'clearTooBigErr');
   else if (arg < 2)
-    throwErr('clearTooSmallErr');
+    throwErr(msg, 'clearTooSmallErr');
   msg.channel.bulkDelete(parseInt(arg));
 }
 
-const echo = (msg) => {
+const echo = (content, msg) => {
   msg.channel.send(content);
   msg.delete();
 }
@@ -94,9 +105,10 @@ function getContributorsPromise(){
 			});
 
 			response.on('error', error => {
-				reject(error));
-		});
-	});
+				reject(error);
+      });
+    });
+  });
 }
 
 function getCommitPromise(){
@@ -124,20 +136,28 @@ const info = async (msg) => {
                   `Language: ${package.language}\n` + 
                   `Creation date: ${package.created}\n` +
                   `Repository: ${package.repository.gh_url}`;
-  createEmbed(`${package.fullName} info`, content);
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      `${package.fullName} info`,
+      content,
+      true,
+      msg.author.username,
+      msg.author.avatarURL()
+    ),
+    msg
+  );
 }
 
 function processCommand(command, args, bot, message) {
   console.log('Searching for command');
-  const command = msg.content.split(' ')[0].toLowerCase().slice(1);
   if (command.toLowerCase() === 'remindme')
-    remindMe(msg);
+    remindMe(message);
   else if (command === 'embedify')
-    embedify(msg);
+    embedify(args, message);
   else if (command === 'clear')
-    clear(msg);
+    clear(message);
   else if (command === 'echo')
-    echo(args);
+    echo(args, message);
   else if (command === 'info')
     info(message);
 }

@@ -116,7 +116,7 @@ const clearTooBigErr = (msg) => {
  */
 const clearTooSmallErr = (msg) => {
   const title = 'Error';
-  const description = 'Input a number that is more than 2';
+  const description = 'Input a number that is at least 2';
   errEmbed(msg, title, description);
 }
 
