@@ -9,19 +9,32 @@ const {getLastCommit} = require("git-last-commit");
 const {throwErr} = require("../../botErr.js");
 
 const NAME = "Core";
-const AUTHOR = "Joshua Maxwell";
+const AUTHOR = "Joshua Maxwell and Brandon Ingli";
 const COMMANDS = ['remindme', 'embedify', 'echo', 'clear', 'info'];
 
-function help(prefix, command, args) { // TODO
-  return "How to use the command with given args."
+function help(prefix, command, args) {
+  switch(command){
+    case "remindme":
+      return `${prefix}remindme [HH:MM:SS] [text]\nSend a reminder message to the same channel in the given time.`;
+    case "embedify":
+      return `${prefix}embedify [title]; [content]\nGive the embeded message a title and mark the end of the title with a semicolon. Then you can add the content/description on the embed.`;
+    case "echo":
+      return `${prefix}echo [text]\nIn order to use this command, you must buy it from the Spike Shop.\n\nUsing this command, you can display some text with the voice of Spike.`;
+    case "clear":
+      return `${prefix}clear [2 <= x <= 100]\nIn order to use this command, you must have administrator permissions or the Bot Expert role.\n\nDelete the last x messages from the channel, including the clear command itself.`;
+    case "info":
+      return `By typing '${prefix}info', you can see plenty of information about the bot.`
+    default:
+      return "Command not found."
+  }
 }
 
 function shortHelp(prefix){
   return `${prefix}remindme - Set a reminder.\n`
-       + `${prefix}embedify - Create an embeded message\n`
-       + `${prefix}echo - Speak with Spike's voice\n`
-       + `${prefix}clear - Delete a given number of messages\n`
-       + `${prefix}info - View bot information}`;
+       + `${prefix}embedify - Create an embeded message.\n`
+       + `${prefix}echo - Speak with Spike's voice.\n`
+       + `${prefix}clear - Delete a given number of messages.\n`
+       + `${prefix}info - View bot information.`;
 }
 
 const remindMe = (msg) => {

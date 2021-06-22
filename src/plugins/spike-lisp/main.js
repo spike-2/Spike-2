@@ -5,7 +5,7 @@ const spikeKit = require("../../spikeKit.js");
 const spikeLisp = require("./interpreter.js").littleLisp;
 
 const NAME = "Lisp Interpreter";
-const AUTHOR = "Joshua Maxwell";
+const AUTHOR = "Joshua Maxwell and maryrosecook";
 const COMMANDS = ["exec"];
 
  function help(prefix, command, args) {

@@ -63,9 +63,6 @@
 		"sent-msg": "The admins have been notified about your unmute request!"
 	},
 	"help": {
-		"main": "Use '$help [c]' or '$man [c]' to find more information about these commands\n$buy - purchase an item from the Spike Shop\n$cointoss - Flip a coin\n$dice - Roll some dice\n$echo - Speak with the voice of Spike\n$embedify - Create an embeded message\n$enigma - encode/decode a message\n$gift - Share some of your Spike Bucks\n$info - Find more information about Spike\n$leaderboard - View the richest in the community\n$shop - View items you can buy with Spike Bucks\n$slots - Play a game of slots\n$wallet - Check your balance\n",
-		"embedify": "$embedify [title]; [content]\nGive the embeded message a title and mark the end of the title with a semicolon. Then you can add the content/description on the embed.",
-		"info": "By typing '$info', you can see plenty of information about the bot. This does't have much function, however, it is here for those interested",
 		"cointoss": "$cointoss [wager] [face]\nYou can wager some of your Spike Bucks on a coin toss for a chance at making some money!",
 		"gift": "$gift [amount] [user]\nYou can gift some of your Spike Bucks to your friends!",
 		"leaderboard": "$leaderboard\nView the users with the most Spike Bucks. Climb to the top if you can!",
@@ -74,8 +71,6 @@
 		"shop": "$shop\nYou can use this command to see what is in the Spike Shop. If you want to make a purchase from the Spike Shop, you will need to use the '$buy' command.",
 		"buy": "$buy [item]\nYou can use this command to make purchases from the Spike Shop. If you don't have enough money, talk more or try gambling! If you want more information about Spike Bucks, you can use '$help bucks' or '$man bucks'.",
 		"bucks": "Spike Bucks are what you can use to make purchases from the Spike Shop. You can earn Spike Bucks by talking in the various text channels or by playing any of the various games!",
-		"echo": "$echo [text]\nIn order to use this command, you must buy it from the Spike Shop.\n\nUsing this command, you can display some text with the voice of Spike.",
-		"wallet": "$wallet [user]\nWith this command you can check the the amount of Spike Bucks in anyone's wallet. If you want to know how many Bucks you have in your own wallet, you can simply leave the user field blank.",
-		"enigma": "$enigma [message] [r1] [r1o] [r2] [r2o] [r3] [r3o] [ref]\nEncode or decode a message using Spike's enigma machine.\n\nmessage - String to encode/decode\nr1 - Name of rotor to use in rightmost position\nr1o - Starting offset for rightmost rotor, 0<=x<=25\nr2 - Name of rotor to use in center position\nr2o - Starting offset for center rotor, 0<=x<=25\nr3 - Name of rotor to use in leftmost position\nr3o - Starting offset for leftmost rotor, 0<=x<=25\nref - Name of reflector to use\n\nThe rotors and their offsets all have defaults and can be left empty. The default values of rotors 1, 2, and 3 are I, II, and III respectively. The default values for the starting offsets are all zero. The default value for the reflector is 'B'.\n\nRotor Names: I, II, III, IV, V\nReflector Names: A, B, C\n\nNote: This enigma may have the rotors in reverse order when compared to other enigma machines.\n\nSpecial thanks to Brandon Ingli for creating this enigma machine!"
+		"wallet": "$wallet [user]\nWith this command you can check the the amount of Spike Bucks in anyone's wallet. If you want to know how many Bucks you have in your own wallet, you can simply leave the user field blank."
 	}
 }
