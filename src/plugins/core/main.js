@@ -162,7 +162,6 @@ const info = async (msg) => {
 }
 
 function processCommand(command, args, bot, message) {
-  console.log('Searching for command');
   if (command.toLowerCase() === 'remindme')
     remindMe(message);
   else if (command === 'embedify')
