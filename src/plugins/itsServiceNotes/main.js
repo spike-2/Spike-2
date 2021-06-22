@@ -38,7 +38,7 @@ function startCron(bot){
           `Posted ${message.updated.toUTCString()}`,
           null
         );
-        spikeKit.send(embed, "bot-lab", bot);
+        spikeKit.send(embed, "bot-commands", bot);
       }
     }, 
     10*spikeKit.MINUTE
