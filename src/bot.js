@@ -15,7 +15,8 @@ const cron = require('./botCron.js');
 const spikeKit = require("./spikeKit.js");
 
 const plugins = [
-  require("./plugins/enigma/main.js")
+  require("./plugins/enigma/main.js"),
+  require("./plugins/spike-lisp/main.js")
 ];
 
 const PREFIX = '$';

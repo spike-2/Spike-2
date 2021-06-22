@@ -23,7 +23,15 @@ const COMMANDS = ["exec"];
 
 function processCommand(command, args, bot, message){
   const cmd = args.slice('\n```lisp\n'.length, args.lastIndexOf('```'));
-  reply('```' + spikeLisp.interpret(spikeLisp.parse(cmd)) + '```');
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Spike Lisp",
+      '```' + spikeLisp.interpret(spikeLisp.parse(cmd)) + '```',
+      false,
+      message.author.username,
+      message.author.avatarURL()
+      ),
+    message);
 }
 
 module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};
