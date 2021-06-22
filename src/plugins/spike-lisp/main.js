@@ -25,15 +25,30 @@ const COMMANDS = ["exec"];
 
 function processCommand(command, args, bot, message){
   const cmd = args.slice('\n```lisp\n'.length, args.lastIndexOf('```'));
-  spikeKit.reply(
-    spikeKit.createEmbed(
-      "Spike Lisp",
-      '```' + spikeLisp.interpret(spikeLisp.parse(cmd)) + '```',
-      false,
-      message.author.username,
-      message.author.avatarURL()
-      ),
-    message);
+  try {
+    spikeKit.reply(
+      spikeKit.createEmbed(
+        "Spike Lisp",
+        '```' + spikeLisp.interpret(spikeLisp.parse(cmd)) + '```',
+        false,
+        message.author.username,
+        message.author.avatarURL()
+        ),
+      message);
+  } catch (e) {
+    var caller_line = e.stack.split("\n")[4];
+    var index = caller_line.indexOf("at ");
+    var clean = caller_line.slice(index+2, caller_line.length);
+    spikeKit.reply(
+      spikeKit.createEmbed(
+        "Spike Lisp: ERROR",
+        '```' + e + '```\n```' + clean + '```',
+        false,
+        message.author.username,
+        message.author.avatarURL()
+        ),
+      message);
+  }
 }
 
 module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};
