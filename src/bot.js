@@ -12,16 +12,31 @@ const {execute} = require('./commands.js');
 const {readIn, addBucks, getConsts} = require('./faccess.js');
 const { verify } = require('./verify.js');
 const cron = require('./botCron.js');
+const slashCommands = require("./slashCommands.js");
 
 
 const PREFIX = '$';
 
 // starting the bot
 const bot = new Client();
-bot.on('ready', () => { // when loaded (ready event)
+
+
+
+bot.on('ready', async () => { // when loaded (ready event)
   console.log(`${bot.user.username} is ready...`);
   // Starts the bot cron jobs
   cron.startJobs(bot);
+
+  slashCommands.setBot(bot);
+  slashCommands.addAllCommands();
+
+  const commands = await slashCommands.getCommands();
+  console.log("Commands: " + String(commands));
+
+  bot.ws.on("INTERACTION_CREATE", async(interaction) => {
+    slashCommands.handleInteraction(interaction);
+  });
+
 });
 // on message recieved
 bot.on('message', (message) => {
