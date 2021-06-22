@@ -15,22 +15,6 @@ const plugins = [
 ];
 
 /**
- * Creates an embed
- * @param {Message} msg the message sent by the user
- * @param {String} title title for the embed
- * @param {String} content description for the embed
- */
-//FIXME Remove after modularization complete
-const basicEmbed = (msg, title, content) => {
-  const embed = new Discord.MessageEmbed()
-    .setColor(0xcc00ff)
-    .setTitle(title)
-    .setDescription('```yaml\n' + content + '\n```')
-    .setFooter(msg.author.username, msg.author.avatarURL());
-  msg.channel.send(embed);
-}
-
-/**
  * This will get help for a given command and arguments
  * @param {string} args The arguments of the help command
  * @param {Message} message the message sent by the user
@@ -103,4 +87,4 @@ const execute = (message, bot, PREFIX) => {
   }
 }
 
-module.exports = { execute, basicEmbed }
+module.exports = { execute }
