@@ -8,7 +8,7 @@
 // dependencies
 require('dotenv').config();
 const {Client} = require('discord.js');
-const {execute, basicEmbed} = require('./commands.js');
+const {execute} = require('./commands.js');
 const {readIn, addBucks, getConsts} = require('./faccess.js');
 const { verify } = require('./verify.js');
 const cron = require('./botCron.js');
