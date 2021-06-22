@@ -103,6 +103,8 @@
         return parenthesize(input, list);
       } else if (token === ")") {
         return list;
+      } else if (token === '+') {
+        return categorize(categorize(input.shift()).value + categorize(input.shift()).value);
       } else {
         return parenthesize(input, list.concat(categorize(token)));
       }
