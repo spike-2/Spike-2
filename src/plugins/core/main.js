@@ -92,6 +92,10 @@ const clear = (msg) => {
 }
 
 const echo = (content, msg) => {
+  if (!msg.member.roles.cache.has(getConsts().role["echo"])){
+    throwErr(msg, 'invalidPermsErr');
+    return;
+  }
   msg.channel.send(content);
   msg.delete();
 }

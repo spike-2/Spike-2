@@ -335,6 +335,10 @@ const dice = (msg) => {
  * @param {Message} msg the message sent by the user
  */
 const slots = (msg) => {
+  if (!msg.member.roles.cache.has(getConsts().role["slots"])){
+    throwErr(msg, 'invalidPermsErr');
+    return;
+  }
   const wager = parseInt(msg.content.split(' ')[1]);
   if (!validWager(msg, wager))
     return;
