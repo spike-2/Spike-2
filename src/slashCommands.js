@@ -79,13 +79,16 @@ const addAllCommands = () => {
 /**
  * Handle a new Interaction
  * @param {Interaction} interaction The interaction to interact with.
+ * 
+ * Member: https://discord.com/developers/docs/resources/guild#guild-member-object
+ * Options: [{value: "", type: 4, name: "name"}, ...]
  */
 const handleInteraction = async (interaction) => {
-  const {name, options} = interaction.data;
+  const {name, options, member} = interaction.data;
   const command = name.toLowerCase();
 
   if (command === "ping"){
-    reply("pong", interaction);
+    reply(`${member.user.username}, pong!`, interaction);
   }
 };
 
