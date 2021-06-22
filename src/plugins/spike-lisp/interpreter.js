@@ -104,8 +104,29 @@
       } else if (token === ")") {
         return list;
       } else if (token === '+') {
-        return parenthesize(input, list.concat(
-          categorize(categorize(input.shift()).value + categorize(input.shift()).value));
+        return parenthesize(input, 
+          list.concat(
+            categorize( categorize(input.shift()).value + categorize(input.shift()).value )
+          )
+        );
+      } else if (token === '-') {
+        return parenthesize(input, 
+          list.concat(
+            categorize( categorize(input.shift()).value - categorize(input.shift()).value )
+          )
+        );
+      } else if (token === '*') {
+        return parenthesize(input, 
+          list.concat(
+            categorize( categorize(input.shift()).value * categorize(input.shift()).value )
+          )
+        );
+      } else if (token === '/') {
+        return parenthesize(input, 
+          list.concat(
+            categorize( categorize(input.shift()).value / categorize(input.shift()).value )
+          )
+        );
       } else {
         return parenthesize(input, list.concat(categorize(token)));
       }
