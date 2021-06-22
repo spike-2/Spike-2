@@ -73,7 +73,13 @@ const reply = (response, interaction) => {
  * Bulk add the slash commands we want.
  */
 const addAllCommands = () => {
-  addCommand("Ping", "A simple ping-pong command.");
+  const emojis = getConsts().emoji;
+  for(let [name, params] of Object.entries(emojis)){
+    addCommand(
+      name,
+      (params.premium) ? `(Premium) ${params.content}` : params.content 
+    );
+  }
 }
 
 /**
@@ -85,11 +91,14 @@ const addAllCommands = () => {
  */
 const handleInteraction = async (interaction) => {
   const {name, options, member} = interaction.data;
-  const command = name.toLowerCase();
+  const emojiRole = getConsts().role.emoji;
 
-  if (command === "ping"){
-    reply(`${member.user.username}, pong!`, interaction);
+  const emoji = getConsts().emoji[name];
+
+  if (emoji && (!emoji.premium || (emoji.premium && member.roles.contains(emojiRole)))){
+    reply(emoji.content, interaction);
   }
+
 };
 
 module.exports = {setBot, getCommands, addCommand, addAllCommands, deleteCommand, handleInteraction};
