@@ -9,12 +9,14 @@ const AUTHOR = "Joshua Maxwell";
 const COMMANDS = ["exec"];
 
  function help(prefix, command, args) {
-  return `${prefix}exec [code]`
+  return `${prefix}exec [code]\n`
        + 'Spike-lisp is a simplified version of lisp created specifically '
        + 'for this server. In order to execute your code, you will need to '
-       + `use "${prefix}exec" followed by a new-line. You will need to `
-       + 'surround your code with 3 backticks. These backticks will need '
-       + 'to be placed on separate lines.'
+       + `format your message as follows, replacing {bt} with a backtick.\n\n`
+       + `${prefix}exec\n`
+       + '{bt}{bt}{bt}lisp\n'
+       + '(print(4, (1, 2, 3)));\n'
+       + '{bt}{bt}{bt}';
 }
 
  function shortHelp(prefix){
