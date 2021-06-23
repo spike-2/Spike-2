@@ -18,12 +18,13 @@ useful utilities, as well as a points and gaming system.
     + See the leaderboard (`$leaderboard`)
     + Gift Spike Bucks (`$gift`)
     + Buy special roles for special features (`$buy`)
-+ Text Emojis (`/{stuff}`) (Coming Soon)
++ Text Emojis (`/{stuff}`)
 + Say things as the bot (`$echo`)
 + Encode and Decode messages in an [Enigma machine](https://git.brandoningli.com/brandon/enigmajs) (`$enigma`)
 + Disallow sending messages until a user is marked as Verified, enforcing rules while allowing a preview of the server (`$verify`)
 + Anonymously message the admins via DM (Coming Soon)
-+ Set reminders (Coming Soon)
++ Set reminders (`$remindme`)
++ So much more!
 
 ## Why Spike 2?
 Spike v1 was written in Java. It is not good code. We don't talk about Spike v1.
