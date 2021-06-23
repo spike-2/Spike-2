@@ -95,7 +95,7 @@ const handleInteraction = async (interaction) => {
 
   const emoji = getConsts().emoji[name];
 
-  if (emoji && (!emoji.premium || (emoji.premium && member.roles.contains(emojiRole)))){
+  if (emoji && (!emoji.premium || (emoji.premium && member.roles.includes(emojiRole)))){
     reply(emoji.content, interaction);
   }
 
