@@ -30,7 +30,8 @@ function help(prefix, command, args) {
 }
 
 function shortHelp(prefix){
-  return `${prefix}remindme - Set a reminder.\n`
+  return `Access text emoji through slash commands. Just hit /\n` 
+       + `${prefix}remindme - Set a reminder.\n`
        + `${prefix}embedify - Create an embeded message.\n`
        + `${prefix}echo - Speak with Spike's voice.\n`
        + `${prefix}clear - Delete a given number of messages.\n`
