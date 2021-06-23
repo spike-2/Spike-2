@@ -55,7 +55,7 @@ ${prefix}buy - Buy something.`
  * the shop text so people know what's for sale
  */
  const shop = (prefix) => { return `Here's what's for sale!
-'${prefix}buy textemojis' (Preorder): $5000 - A whole new list of text emojis!
+'${prefix}buy textemojis': $5000 - Get access to premium text emojis! Use Discord's slash commands to access.
 '${prefix}buy slots': $10000 - Play the slot machine as much as you want and make that money!
 '${prefix}buy echo': $15000 - When you type ${prefix}echo [text], you can make Spike say anything!
 '${prefix}buy highroller': $30000 - An exclusive role, only obtainable by the best gamblers!`;
