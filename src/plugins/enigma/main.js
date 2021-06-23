@@ -97,6 +97,7 @@ function processCommand(command, args, bot, message){
       ),
       message
     );
+    message.delete();
   }
 }
 
