@@ -28,13 +28,17 @@ bot.on('ready', async () => { // when loaded (ready event)
   cron.startJobs(bot);
 
   slashCommands.setBot(bot);
+
+  // Uncomment below to delete all commands
+  // const commands = await slashCommands.getCommands();
+  // for (command of commands){
+    // await slashCommands.deleteCommand(command.id);
+  // }
   slashCommands.addAllCommands();
 
-  const commands = await slashCommands.getCommands();
-  console.log("Commands: " + String(commands));
 
   bot.ws.on("INTERACTION_CREATE", async(interaction) => {
-    slashCommands.handleInteraction(interaction);
+    slashCommands.handleInteraction(interaction, bot);
   });
 
 });

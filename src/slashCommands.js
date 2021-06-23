@@ -58,8 +58,8 @@ const deleteCommand = async(commandId) => {
  * @param {string} response Response to send
  * @param {Object} interaction The interaction to reply to
  */
-const reply = (response, interaction) => {
-  interaction.callback.post({
+const reply = (response, interaction, bot) => {
+  bot.api.interactions(interaction.id, interaction.token).callback.post({
     data: {
       type: 4,
       data: {
@@ -73,13 +73,15 @@ const reply = (response, interaction) => {
  * Bulk add the slash commands we want.
  */
 const addAllCommands = () => {
+  console.log(`Adding Slash Commands...`);
   const emojis = getConsts().emoji;
   for(let [name, params] of Object.entries(emojis)){
     addCommand(
-      name,
-      (params.premium) ? `(Premium) ${params.content}` : params.content 
+      name.toLowerCase(),
+      ((params.premium) ? `[PREMIUM] ${params.content}` : params.content).substring(0, 100)
     );
   }
+  console.log(`All Commands Added.`);
 }
 
 /**
@@ -89,14 +91,15 @@ const addAllCommands = () => {
  * Member: https://discord.com/developers/docs/resources/guild#guild-member-object
  * Options: [{value: "", type: 4, name: "name"}, ...]
  */
-const handleInteraction = async (interaction) => {
-  const {name, options, member} = interaction.data;
+const handleInteraction = async (interaction, bot) => {
+  const {name, options} = interaction.data;
+  const member = interaction.member
   const emojiRole = getConsts().role.emoji;
 
   const emoji = getConsts().emoji[name];
 
   if (emoji && (!emoji.premium || (emoji.premium && member.roles.includes(emojiRole)))){
-    reply(emoji.content, interaction);
+    reply(emoji.content, interaction, bot);
   }
 
 };
