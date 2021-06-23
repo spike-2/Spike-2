@@ -34,7 +34,9 @@ bot.on('ready', async () => { // when loaded (ready event)
   // for (command of commands){
     // await slashCommands.deleteCommand(command.id);
   // }
-  slashCommands.addAllCommands();
+
+  // Uncomment below to add new or update existing commands
+  // slashCommands.addAllCommands();
 
 
   bot.ws.on("INTERACTION_CREATE", async(interaction) => {
