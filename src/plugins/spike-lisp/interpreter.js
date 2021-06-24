@@ -53,7 +53,19 @@
 
       return interpret(input[2], letContext);
     },
-
+    
+    define: function(input, context) {
+      return function() {
+        var defargs = arguments;
+        var defscope = input[1].reduce(function(acc, x, i) {
+          acc[x.value] = defargs[i];
+          return acc;
+        }, {});
+        
+      return interpret(input[2], new Context(defscope, new Context({}, context)));
+      }
+    },
+        
     lambda: function(input, context) {
       return function() {
         var lambdaArguments = arguments;
@@ -120,30 +132,6 @@
         return parenthesize(input, list);
       } else if (token === ")") {
         return list;
-      } else if (token === '+') {
-        return parenthesize(input, 
-          list.concat(
-            categorize( categorize(input.shift()).value + categorize(input.shift()).value )
-          )
-        );
-      } else if (token === '-') {
-        return parenthesize(input, 
-          list.concat(
-            categorize( categorize(input.shift()).value - categorize(input.shift()).value )
-          )
-        );
-      } else if (token === '*') {
-        return parenthesize(input, 
-          list.concat(
-            categorize( categorize(input.shift()).value * categorize(input.shift()).value )
-          )
-        );
-      } else if (token === '/') {
-        return parenthesize(input, 
-          list.concat(
-            categorize( categorize(input.shift()).value / categorize(input.shift()).value )
-          )
-        );
       } else {
         return parenthesize(input, list.concat(categorize(token)));
       }
