@@ -11,6 +11,22 @@
     print: function(x) {
       console.log(x);
       return x;
+    },
+    
+    add: function(x) {
+      return x.reduce((a, b) => a + b); 
+    },
+    
+    sub: function(x) {
+      return x.reduce((a, b) => a - b); 
+    },
+    
+    mult: function(x) {
+      return x.reduce((a, b) => a * b); 
+    },
+    
+    div: function(x) {
+      return x.reduce((a, b) => a / b); 
     }
   };
 
