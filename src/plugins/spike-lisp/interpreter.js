@@ -1,10 +1,11 @@
 ;(function(exports) {
+  const funcdefs = [];
   var library = {
-    first: function(x) {
+    head: function(x) {
       return x[0];
     },
 
-    rest: function(x) {
+    tail: function(x) {
       return x.slice(1);
     },
 
