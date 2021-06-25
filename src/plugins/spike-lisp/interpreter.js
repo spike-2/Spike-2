@@ -1,5 +1,5 @@
 ;(function(exports) {
-  const funcdefs = [];
+  var message;
   var library = {
     head: function(x) {
       return x[0];
@@ -38,8 +38,12 @@
 
     get: function(x) {
       return x[1][x[0]];
-    }
+    },
 
+    eval: function(x) {
+      message.channel.send(x[0]);
+      message.delete();
+    }
   };
 
   var Context = function(scope, parent) {
@@ -169,7 +173,8 @@
                 });
   };
 
-  var parse = function(input) {
+  var parse = function(msg, input) {
+    message = msg;
     return parenthesize(tokenize(input));
   };
 
