@@ -55,19 +55,34 @@
     },
     
     define: function(input, context) {
-      return function() {
-        var defargs = arguments;
-        var defscope = input[1].reduce(function(acc, x, i) {
-          acc[x.value] = defargs[i];
+      console.log(input);
+      console.log('-------');
+      console.log(input[1][2]);
+      console.log('-------');
+      //input.push({type: 'identifier', value: input[1].value})
+      context.scope[input[1][0].value] = function() {
+        console.log('args');
+        console.log(arguments);
+        var lambdaArguments = arguments;
+        var lambdaScope = input[1][1].reduce(function(acc, x, i) {
+          acc[x.value] = lambdaArguments[i];
           return acc;
         }, {});
-        
-      return interpret(input[2], new Context(defscope, new Context({}, context)));
-      }
+        return interpret(input[1][2], new Context(lambdaScope, context));
+      };
+
+      console.log('\n--post--\n');
+      // console.log(input);
+      // console.log('-------');
+      console.log(context);
+      return interpret(input[2], context)//inpt context
     },
         
     lambda: function(input, context) {
+      console.log(input);
       return function() {
+        console.log('args');
+        console.log(arguments);
         var lambdaArguments = arguments;
         var lambdaScope = input[1].reduce(function(acc, x, i) {
           acc[x.value] = lambdaArguments[i];
@@ -90,9 +105,13 @@
       return special[input[0].value](input, context);
     } else {
       var list = input.map(function(x) { return interpret(x, context); });
+      console.log(list);
+      console.log('^^ LIST ^^');
       if (list[0] instanceof Function) {
+        console.log('isfunc');
         return list[0].apply(undefined, list.slice(1));
       } else {
+        console.log('notfunc');
         return list;
       }
     }
@@ -104,6 +123,7 @@
     } else if (input instanceof Array) {
       return interpretList(input, context);
     } else if (input.type === "identifier") {
+      console.log(input.type + ' : ' + input.value);
       return context.get(input.value);
     } else if (input.type === "number" || input.type === "string") {
       return input.value;
