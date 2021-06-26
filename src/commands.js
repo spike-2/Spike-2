@@ -44,7 +44,6 @@ const help = (args, message, PREFIX) => {
     for (const plugin of plugins) {
       const helpCommand = args.split(' ')[0].toLowerCase();
       const helpArgs = args.substring(args.split(' ')[0].length).slice(1);
-      console.log(`${helpCommand} : ${helpArgs}`);
       if (plugin.COMMANDS.includes(helpCommand)){
         console.log(`Getting help for ${PREFIX}${helpCommand} from "${plugin.NAME}"`);
         spikeKit.reply(
