@@ -26,12 +26,12 @@ const COMMANDS = ["exec"];
 function processCommand(command, args, bot, message){
   const cmd = args.slice('\n```lisp\n'.length, args.lastIndexOf('```'));
   try {
-    const content = spikeLisp.interpret(spikeLisp.parse(message, cmd));
+    const content = "" + spikeLisp.interpret(spikeLisp.parse(message, cmd));
 
     spikeKit.reply(
       spikeKit.createEmbed(
         "Spike Lisp",
-        content.length > 1 ? '```' + content + '```' : "",
+        content.length > 0 ? '```' + content + '```' : "",
         false,
         message.author.username,
         message.author.avatarURL()
