@@ -43,6 +43,10 @@
     eval: function(x) {
       message.channel.send(x[0]);
       message.delete();
+    },
+
+    length: function(x) {
+      return x.length;
     }
   };
 
@@ -156,7 +160,8 @@
   };
 
   var tokenize = function(input) {
-    return input.split('"')
+    return input.replace( /\;\;.*?\;\;/, '')
+                .split('"')
                 .map(function(x, i) {
                    if (i % 2 === 0) { // not in string
                      return x.replace(/\(/g, ' ( ')
