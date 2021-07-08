@@ -32,7 +32,7 @@ function startCron(bot){
       const messages = await its.getNewServiceNotes();
       for (const message of messages){
         const embed = spikeKit.createEmbed(
-          message.title,
+          `ITS Service Note: ${message.title}`,
           message.content,
           false,
           `Posted ${message.updated.toUTCString()}`,
