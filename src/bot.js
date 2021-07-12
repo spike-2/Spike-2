@@ -8,7 +8,7 @@
 // dependencies
 require('dotenv').config();
 const {Client} = require('discord.js');
-const {execute} = require('./commands.js');
+const {execute, onBotStart, onReaction } = require('./commands.js');
 const {readIn, addBucks, getConsts} = require('./faccess.js');
 const { verify } = require('./verify.js');
 const cron = require('./botCron.js');
@@ -20,7 +20,7 @@ const PREFIX = '$';
 // starting the bot
 const bot = new Client();
 
-
+const {spikeUID, simoneUID} = getConsts();
 
 bot.on('ready', async () => { // when loaded (ready event)
   console.log(`${bot.user.username} is ready...`);
@@ -43,6 +43,8 @@ bot.on('ready', async () => { // when loaded (ready event)
     slashCommands.handleInteraction(interaction, bot);
   });
 
+  onBotStart();
+
 });
 // on message recieved
 bot.on('message', (message) => {
@@ -64,6 +66,45 @@ bot.on('message', (message) => {
   // if a user sends a message
   if (!message.author.bot)
     addBucks(message.author, 1); 
+});
+
+// on Reactions
+
+bot.on('messageReactionAdd', async (reaction, user) => {
+  // When a reaction is received, check if the structure is partial
+	if (reaction.partial) {
+		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+		try {
+			await reaction.fetch();
+		} catch (error) {
+			console.error('Something went wrong when fetching the message: ', error);
+			// Return as `reaction.message.author` may be undefined/null
+			return;
+		}
+  }
+  // Only deal with Spike and Simone messages with embeds
+  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && reaction.message.embeds.length >= 1) {
+    onReaction(reaction, user, true, bot);
+  }
+  
+});
+
+bot.on('messageReactionRemove', async (reaction, user) => {
+  // When a reaction is received, check if the structure is partial
+	if (reaction.partial) {
+		// If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+		try {
+			await reaction.fetch();
+		} catch (error) {
+			console.error('Something went wrong when fetching the message: ', error);
+			// Return as `reaction.message.author` may be undefined/null
+			return;
+		}
+  }
+  // Only deal with Spike and Simone messages with embeds
+  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && reaction.message.embeds.length >= 1) {
+    onReaction(reaction, user, false, bot);
+  }
 });
 
 // loads in data
