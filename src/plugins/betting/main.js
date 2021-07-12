@@ -74,6 +74,36 @@ function writeBets(bets){
   fs.writeFileSync(BETSFILENAME, JSON.stringify(bets));
 }
 
+/**
+ * Parse an emoji out of a message string.
+ * @param {String} text The emoji to parse, either a unicode character or a guild emoji tag
+ * @param {Discord.guild} guild Discord Guild to seek emoji from
+ * @returns {emoji: Unicode character or numeric ID of guild emoji, printEmoji: Unicode character or text required to display emoji in chat}
+ */
+function parseEmoji(text, guild){
+  const emojiParts = text.trim().match(/^<:[a-z]+:([0-9]+)>$/);
+      if(!emojiParts || emojiParts.length != 2) {
+      // Unicode emoji
+      emoji = printEmoji =text.trim();
+    } else {
+      // Assume custom guild emoji
+      let emojiObj = guild.emojis.resolve(emojiParts[1]);
+      emoji = emojiObj.id;
+      printEmoji = emojiObj.toString();
+    }
+
+    return {
+      emoji: emoji,
+      printEmoji: printEmoji
+    }
+}
+
+/**
+ * Get and reply with active bets.
+ * @param {Discord.Client} bot Instantiated discord client object
+ * @param {Discord.Message} requestMessage Message object for the message that requested active bets
+ * @returns null
+ */
 async function activeBets(bot, requestMessage){
   const bets = getBets();
 
@@ -147,19 +177,7 @@ async function newBet(args, bot, message){
     }
 
     // Get emoji used
-    let emoji;
-    let printEmoji;
-
-    const emojiParts = lineArgs[1].trim().match(/^<:[a-z]+:([0-9]+)>$/);
-      if(!emojiParts || emojiParts.length != 2) {
-      // Unicode emoji
-      emoji = printEmoji = lineArgs[1].trim();
-    } else {
-      // Assume custom guild emoji
-      let emojiObj = message.guild.emojis.resolve(emojiParts[1]);
-      emoji = emojiObj.id;
-      printEmoji = emojiObj.toString();
-    }
+    const {emoji, printEmoji} = parseEmoji(lineArgs[1].trim(), message.guild);
     emojiToReact = [...emojiToReact, emoji]
 
     if (parseInt(lineArgs[2]) == NaN || parseInt(lineArgs[3]) == NaN){
