@@ -107,6 +107,103 @@ async function activeBets(bot, requestMessage){
 }
 
 /**
+ * Create a new bet
+ * Message format (newlines implicit):
+ * $command Title [\n]
+ * Description [\n]
+ * :emoji: bet win Description of wager [\n; not needed on last line]
+ * ...
+ * @param {string} args Arguments from command invocation
+ * @param {Discord.Client} bot instantiated discord bot object
+ * @param {Discord.Message} message discord message object that sent this request
+ */
+async function newBet(args, bot, message){
+  let bets = getBets();
+  const betParts = args.split('\n');
+  if(betParts.length < 3){
+    //TODO Error
+    console.error(`Bet: betParts wrong length. Expected 3, got ${betParts.length}`);
+    return;
+  }
+  let betID = Date.now();
+
+  let bet = {
+    channelID: message.channel.id,
+    title: betParts[0].trim(),
+    description: betParts[1].trim(),
+    createdBy: message.author.id,
+    wagers: {}
+  };
+
+  let betMessage = `ID: ${betID}\n\n${bet.description}\n\n`;
+  let emojiToReact = [];
+
+  for (const line of betParts.slice(2)){
+    const lineArgs = line.trim().match(/^(.+)\s([0-9]+)\s([0-9]+)\s(.*)$/);
+    if(lineArgs.length != 5) {
+      //TODO Error
+      console.error(`Bet: lineArgs wrong length. Expected 3, got ${lineArgs.length}\nLine: ${line}`);
+      return;
+    }
+
+    // Get emoji used
+    let emoji;
+    let printEmoji;
+
+    const emojiParts = lineArgs[1].trim().match(/^<:[a-z]+:([0-9]+)>$/);
+      if(!emojiParts || emojiParts.length != 2) {
+      // Unicode emoji
+      emoji = printEmoji = lineArgs[1].trim();
+    } else {
+      // Assume custom guild emoji
+      let emojiObj = message.guild.emojis.resolve(emojiParts[1]);
+      emoji = emojiObj.id;
+      printEmoji = emojiObj.toString();
+    }
+    emojiToReact = [...emojiToReact, emoji]
+
+    if (parseInt(lineArgs[2]) == NaN || parseInt(lineArgs[3]) == NaN){
+      //TODO Error
+      console.error(`Bet: Got a NaN for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`);
+      return;
+    }
+
+    let wager = {
+      description: lineArgs[4].trim(),
+      bet: parseInt(lineArgs[2]),
+      win: parseInt(lineArgs[3]),
+      bettors: []
+    };
+
+    bet.wagers[emoji] = wager;
+
+    betMessage += `${printEmoji} ${wager.description} (bet ${wager.bet}, win ${wager.win})\n`;
+
+  } // End for each line
+  const embed = spikeKit.createEmbed(
+    `Bet: ${bet.title}`,
+    betMessage,
+    false,
+    message.author.username,
+    message.author.avatarURL()
+  );
+  await spikeKit.reply(embed, message);
+
+  const getLastMessage = await message.channel.messages.fetch({limit: 1});
+  const lastMessage = getLastMessage.first();
+  bet.messageID = lastMessage.id;
+
+  bets[betID] = bet;
+  writeBets(bets);
+
+  for(const emoji of emojiToReact){
+    await lastMessage.react(emoji);
+  }
+  console.log(`Bet ${betID} successfully set up!`);
+
+}
+
+/**
  * Handles incoming commands for this plugin.
  * @param {string} command The command issued, without the prefix.
  * @param {string} args The rest of the message.
@@ -117,6 +214,7 @@ function processCommand(command, args, bot, message){
   if (command === 'bet') {
     //TODO
     // initialize a bet
+    newBet(args, bot, message);
   }
   else if (command === 'activebets') {
     activeBets(bot, message);

@@ -38,14 +38,14 @@ function getChannelID(channelName){
  * @throws "Embed not provided" if Embed is not properly provided.
  * @throws "Channel not found"  if the given channel name is not in our records.
  */
-function send(content, channel, bot){
+async function send(content, channel, bot){
   if (! (content instanceof Discord.MessageEmbed)){
     throw "Embed not provided";
   }
   if (! (bot instanceof Discord.Client)){
     throw "Invalid bot";
   }
-  bot.channels.cache.get(getChannelID(channel)).send(content);
+  await bot.channels.cache.get(getChannelID(channel)).send(content);
 };
 
 /**
@@ -55,14 +55,14 @@ function send(content, channel, bot){
  * @throws "Embed not provided" if Embed is not properly provided.
  * @throws "Invalid message" if the message object is not properly provided.
  */
-function reply(content, message){
+async function reply(content, message){
   if (! (content instanceof Discord.MessageEmbed)){
     throw "Embed not provided";
   }
   if (! (message instanceof Discord.Message)){
     throw "Invalid message";
   }
-  message.channel.send(content)
+  await message.channel.send(content)
 };
 
 /**
