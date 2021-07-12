@@ -5,7 +5,7 @@
  */
 
 const spikeKit = require("../../spikeKit.js");
-const fs = require("fs").promises;
+const fs = require("fs");
 const {getStudent, addBucks, getDat, getConsts} = require('../../faccess.js');
 const {throwErr} = require('../../botErr.js');
 
@@ -18,6 +18,8 @@ const AUTHOR = "Joshua Maxwell and Brandon Ingli";
  * Bad: $command
  */
 const COMMANDS = ["bet", "endbet", "activebets"];
+
+const BETSFILENAME = "plugins/betting/bets.json";
 
 /**
  * Handles help requests for this plugin.
@@ -47,6 +49,28 @@ const COMMANDS = ["bet", "endbet", "activebets"];
 ${prefix}bet - Create a new bet.
 ${prefix}endbet - End a bet you created.
 ${prefix}activebets - See all bets currently active, including IDs and links.`
+}
+
+/**
+ * Read the active bets from the file system.
+ * @returns The active bets on the file system, or the empty object.
+ */
+function getBets() {
+  try {
+    let bets = fs.readFileSync(BETSFILENAME);
+    return JSON.parse(bets);
+  } catch (e){
+    console.error(`${BETSFILENAME} Doesn't Exist or isn't readable. Using empty object instead.`);
+    return {};
+  }
+}
+
+/**
+ * Writes active bets to disk.
+ * @param {Bets} bets Active Bets object
+ */
+function writeBets(bets){
+  fs.writeFileSync(BETSFILENAME, JSON.stringify(bets));
 }
 
 /**

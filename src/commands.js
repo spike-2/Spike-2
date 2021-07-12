@@ -9,6 +9,7 @@ const spikeKit = require("./spikeKit.js");
 const plugins = [
   require("./plugins/core/main.js"),
   require("./plugins/gamble/main.js"),
+  require("./plugins/betting/main.js"),
   require("./plugins/shop/main.js"),
   require("./plugins/enigma/main.js"),
   require("./plugins/spike-lisp/main.js")
