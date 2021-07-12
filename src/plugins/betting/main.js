@@ -222,6 +222,92 @@ async function newBet(args, bot, message){
 }
 
 /**
+ * End an active bet by its ID and winning emoji
+ * $endbet {id} {:emoji:}
+ * @param {string} args Args from the incoming message
+ * @param {Discord.Client} bot Instantiated Discord Client object
+ * @param {Discord.Message} message Incoming Discord Message
+ * @returns null
+ */
+async function endBet(args, bot, message){
+  let bets = getBets();
+
+  const endParts = args.trim().split(' ');
+  if(endParts.length != 2){
+    //TODO Error
+    console.error(`Bet: endParts wrong length. Expected 2, got ${endParts.length}`);
+    return;
+  }
+
+  if(!bets[endParts[0]]){
+    //TODO Error
+    console.error(`Bet: End Bet invalid ID: ${endParts[0]}`);
+    return;
+  }
+
+  const thisBetID = endParts[0];
+  const thisBet = bets[thisBetID];
+
+  if(message.author.id != thisBet.createdBy){
+    //TODO Error
+    console.error(`Bet: User that's not the creator tried to end ${thisBetID}: ${message.author.username}`);
+    return;
+  }
+
+  const winningEmoji = parseEmoji(endParts[1], message.guild);
+  if(!thisBet.wagers[winningEmoji.emoji]){
+    //TODO Error
+    console.error(`Bet: Winning Emoji not a wager: ${winningEmoji.printEmoji}`);
+    return;
+  }
+
+  const winningWager = thisBet.wagers[winningEmoji.emoji];
+
+  // Process winners
+  let winnersNames = [];
+  for(const userID of winningWager.bettors){
+    const user = await bot.users.fetch(userID);
+    try {
+      addBucks(user, winningWager.win);
+      winnersNames = [...winnersNames, user.username];
+    } catch (e) {
+      //TODO Error
+      console.error(`Bet: Couldn't pay ${winningWager.win} to ${user.username}.`);
+    }
+  }
+
+  // Compose message
+
+  const embed = spikeKit.createEmbed(
+    `Bet Ended: ${thisBet.title}`,
+    `ID: ${thisBetID}\n\n${thisBet.description}\n\nWinning Bet: ${winningEmoji.printEmoji} ${winningWager.description}
+Bet ${winningWager.bet}, Win ${winningWager.win}\nWinners:${winnersNames.join(', ')}`,
+    false,
+    ""
+  );
+
+  await bot.channels.cache.get(thisBet.channelID).send(embed);
+
+  // Edit Old Message
+  const oldMessage = await bot.channels.cache.get(thisBet.channelID).messages.fetch(thisBet.messageID);
+  const oldMessageNewEmbed = spikeKit.createEmbed(
+    `Closed Bet: ${thisBet.title}`,
+    oldMessage.embeds[0].description,
+    false,
+    oldMessage.author.username,
+    oldMessage.author.avatarURL()
+  );
+  oldMessage.edit(oldMessageNewEmbed);
+
+  // Remove from the active bets
+  delete bets[thisBetID];
+  writeBets(bets);
+
+  console.log(`Bet ${thisBetID} finished.`);
+
+}
+
+/**
  * Handles incoming commands for this plugin.
  * @param {string} command The command issued, without the prefix.
  * @param {string} args The rest of the message.
@@ -240,6 +326,7 @@ function processCommand(command, args, bot, message){
   else if (command === 'endbet') {
     //TODO
     // ends a given bet
+    endBet(args, bot, message);
   }
 }
 
