@@ -20,6 +20,7 @@ const AUTHOR = "Joshua Maxwell and Brandon Ingli";
 const COMMANDS = ["bet", "endbet", "activebets"];
 
 const BETSFILENAME = "plugins/betting/bets.json";
+const ACTIVE_BETS_EMBED_TITLE = "Active Bets";
 
 /**
  * Handles help requests for this plugin.
@@ -73,6 +74,38 @@ function writeBets(bets){
   fs.writeFileSync(BETSFILENAME, JSON.stringify(bets));
 }
 
+async function activeBets(bot, requestMessage){
+  const bets = getBets();
+
+  if(Object.keys(bets).length == 0){
+    spikeKit.reply(spikeKit.createEmbed(
+      ACTIVE_BETS_EMBED_TITLE,
+      "There are no active bets.",
+      false,
+      requestMessage.author.username,
+      requestMessage.author.avatarURL()
+    ),
+    requestMessage);
+    return;
+  }
+
+  let betsString = "Click on a bet title to visit that message and bet.\n---\n";
+  for(const [betId, bet] of Object.entries(bets)){
+    const message = await bot.channels.cache.get(bet.channelID)
+                          .messages.fetch(bet.messageID);
+    const betAuthor = await bot.users.fetch(bet.createdBy);
+    betsString += `**[${bet.title}](${message.url})**\n*Created by ${betAuthor.username}*\n${bet.description}\n---\n`;
+  }
+  const embedToSend = spikeKit.createEmbed(
+    ACTIVE_BETS_EMBED_TITLE,
+    betsString,
+    false,
+    requestMessage.author.username,
+    requestMessage.author.avatarURL()
+  );
+  spikeKit.reply(embedToSend, requestMessage);
+}
+
 /**
  * Handles incoming commands for this plugin.
  * @param {string} command The command issued, without the prefix.
@@ -86,8 +119,7 @@ function processCommand(command, args, bot, message){
     // initialize a bet
   }
   else if (command === 'activebets') {
-    //TODO
-    // view all ongoing bets (along with a bet id)
+    activeBets(bot, message);
   }
   else if (command === 'endbet') {
     //TODO
