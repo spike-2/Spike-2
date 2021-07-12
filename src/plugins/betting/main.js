@@ -1,18 +1,23 @@
 /**
  * @author Joshua Maxwell
+ * @author Brandon Ingli
+ * A Spike module for making and maintaining bets with Spike Bucks
  */
 
 const spikeKit = require("../../spikeKit.js");
+const fs = require("fs").promises;
+const {getStudent, addBucks, getDat, getConsts} = require('../../faccess.js');
+const {throwErr} = require('../../botErr.js');
 
 
 const NAME = "Bet";
-const AUTHOR = "Joshua Maxwell";
+const AUTHOR = "Joshua Maxwell and Brandon Ingli";
 /**
  * Commands supported by this plugin. Do not include the prefix.
  * Good: command
  * Bad: $command
  */
-const COMMANDS = ["command1", "command2"];
+const COMMANDS = ["bet", "endbet", "activebets"];
 
 /**
  * Handles help requests for this plugin.
@@ -22,7 +27,14 @@ const COMMANDS = ["command1", "command2"];
  * @returns Help text to be sent back to the user.
  */
  function help(prefix, command, args) {
-  return "How to use the command with given args."
+  switch(command){
+    case "bet":
+      return `${prefix}bet - Create a new bet. You cannot wager on a bet you create. Format the message as shown below, noting the newlines. Repeat the last line for every option you want.\n\n${prefix}bet Title\nThis is what the bet is about\n:emoji: {bet amount} {winnings} What this wager means`;
+    case "endbet":
+      return `${prefix}endbet {id} {:emoji:} - Ends a bet. Only the user that starts a bet can end it.\n\n{id} is the bet ID given when created\n{:emoji:} is the emoji representing the winning wager.`
+    case "activebets":
+      return `${prefix}activebets - See all bets currently active, including IDs and links.`
+  }
 }
 
 /**
@@ -31,7 +43,10 @@ const COMMANDS = ["command1", "command2"];
  * @returns Help text for the main help screen.
  */
  function shortHelp(prefix){
-  return `${prefix}proofofconcept - Just a proof of concept.`
+  return `Create and manage option-based wagers.
+${prefix}bet - Create a new bet.
+${prefix}endbet - End a bet you created.
+${prefix}activebets - See all bets currently active, including IDs and links.`
 }
 
 /**
@@ -50,9 +65,9 @@ function processCommand(command, args, bot, message){
     //TODO
     // view all ongoing bets (along with a bet id)
   }
-  else if (command === 'viewBet') {
+  else if (command === 'endbet') {
     //TODO
-    // view the text of a given bet
+    // ends a given bet
   }
 }
 
