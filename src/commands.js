@@ -21,7 +21,7 @@ const plugins = [
 function onBotStart(bot){
   for (const plugin of plugins) {
     if(plugin.onBotStart){
-      plugin.onBotStart()
+      plugin.onBotStart(bot)
     }
   }
 }

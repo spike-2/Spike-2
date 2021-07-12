@@ -43,7 +43,7 @@ bot.on('ready', async () => { // when loaded (ready event)
     slashCommands.handleInteraction(interaction, bot);
   });
 
-  onBotStart();
+  onBotStart(bot);
 
 });
 // on message recieved
@@ -83,7 +83,9 @@ bot.on('messageReactionAdd', async (reaction, user) => {
 		}
   }
   // Only deal with Spike and Simone messages with embeds
-  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && reaction.message.embeds.length >= 1) {
+  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && 
+      (user.id != spikeUID && user.id != simoneUID) &&
+      reaction.message.embeds.length >= 1) {
     onReaction(reaction, user, true, bot);
   }
   
@@ -102,7 +104,9 @@ bot.on('messageReactionRemove', async (reaction, user) => {
 		}
   }
   // Only deal with Spike and Simone messages with embeds
-  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && reaction.message.embeds.length >= 1) {
+  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && 
+      (user.id != spikeUID && user.id != simoneUID) &&
+      reaction.message.embeds.length >= 1) {
     onReaction(reaction, user, false, bot);
   }
 });
