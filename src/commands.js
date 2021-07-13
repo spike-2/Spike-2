@@ -110,7 +110,7 @@ function onReaction(reaction, user, add, bot){
     let found = false;
     for (plugin of plugins){
       if(found){continue;}
-      if (plugin.processReaction && embed.title.toLowerCase().includes(plugin.NAME.toLowerCase())){
+      if (plugin.processReaction && embed.title.toLowerCase().startsWith(`${plugin.NAME.toLowerCase()}: `)){
         console.log(`Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`)
         plugin.processReaction(reaction, user, add, bot);
         found = true;

@@ -70,6 +70,18 @@ bot.on('message', (message) => {
 
 // on Reactions
 
+/**
+ * Determine if a reaction should be processed
+ * @param {Discord.MessageReaction} reaction Reaction triggered
+ * @param {Discord.User} user User triggering reaction
+ * @returns {boolean} true if reaction should be processed, false otherwise
+ */
+function reactionShouldBeProcessed(reaction, user){
+  return ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && 
+  (user.id != spikeUID && user.id != simoneUID) &&
+  reaction.message.embeds.length >= 1)
+}
+
 bot.on('messageReactionAdd', async (reaction, user) => {
   // When a reaction is received, check if the structure is partial
 	if (reaction.partial) {
@@ -83,9 +95,7 @@ bot.on('messageReactionAdd', async (reaction, user) => {
 		}
   }
   // Only deal with Spike and Simone messages with embeds
-  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && 
-      (user.id != spikeUID && user.id != simoneUID) &&
-      reaction.message.embeds.length >= 1) {
+  if (reactionShouldBeProcessed(reaction, user)) {
     onReaction(reaction, user, true, bot);
   }
   
@@ -104,9 +114,7 @@ bot.on('messageReactionRemove', async (reaction, user) => {
 		}
   }
   // Only deal with Spike and Simone messages with embeds
-  if ((reaction.message.author.id == spikeUID || reaction.message.author.id == simoneUID) && 
-      (user.id != spikeUID && user.id != simoneUID) &&
-      reaction.message.embeds.length >= 1) {
+  if (reactionShouldBeProcessed(reaction, user)) {
     onReaction(reaction, user, false, bot);
   }
 });
