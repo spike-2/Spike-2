@@ -16,6 +16,18 @@ const plugins = [
 ];
 
 /**
+ * Runs startup functions for all plugins.
+ * @param {Discord.Client} bot The instantiated Discord Bot object.
+ */
+function onBotStart(bot){
+  for (const plugin of plugins) {
+    if(plugin.onBotStart){
+      plugin.onBotStart(bot)
+    }
+  }
+}
+
+/**
  * This will get help for a given command and arguments
  * @param {string} args The arguments of the help command
  * @param {Message} message the message sent by the user
@@ -87,4 +99,25 @@ const execute = (message, bot, PREFIX) => {
   }
 }
 
-module.exports = { execute }
+/**
+ * 
+ * @param {Discord.Messageeaction} reaction Message Reaction object for the reaction added/removed.
+ * @param {Discord.User} user User who applied reaction/User whose reaction was removed.
+ * @param {boolean} add True if reaction added, False if removed.
+ * @param {Discord.Client} bot The instantiated Discord Bot object.
+ */
+function onReaction(reaction, user, add, bot){
+  for (embed of reaction.message.embeds) {
+    let found = false;
+    for (plugin of plugins){
+      if(found){continue;}
+      if (plugin.processReaction && embed.title.toLowerCase().startsWith(`${plugin.NAME.toLowerCase()}: `)){
+        console.log(`Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`)
+        plugin.processReaction(reaction, user, add, bot);
+        found = true;
+      }
+    }
+  }
+}
+
+module.exports = { execute, onBotStart, onReaction }
