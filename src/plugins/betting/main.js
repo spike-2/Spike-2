@@ -278,24 +278,29 @@ async function endBet(args, bot, message){
 
   // Compose message
 
+  const oldMessage = await bot.channels.cache.get(thisBet.channelID).messages.fetch(thisBet.messageID);
+  const betAuthor = await bot.users.fetch(thisBet.createdBy);
+
   const embed = spikeKit.createEmbed(
     `Bet Ended: ${thisBet.title}`,
     `ID: ${thisBetID}\n\n${thisBet.description}\n\nWinning Bet: ${winningEmoji.printEmoji} ${winningWager.description}
-Bet ${winningWager.bet}, Win ${winningWager.win}\nWinners:${winnersNames.join(', ')}`,
+Bet ${winningWager.bet}, Win ${winningWager.win}\nWinners:${winnersNames.join(', ')}\n\n[View Original Message](${oldMessage.url})`,
     false,
-    ""
+    betAuthor.username,
+    betAuthor.avatarURL()
   );
 
   await bot.channels.cache.get(thisBet.channelID).send(embed);
+  const getLastMessage = await message.channel.messages.fetch({limit: 1});
+  const lastMessage = getLastMessage.first();
 
   // Edit Old Message
-  const oldMessage = await bot.channels.cache.get(thisBet.channelID).messages.fetch(thisBet.messageID);
   const oldMessageNewEmbed = spikeKit.createEmbed(
     `Closed Bet: ${thisBet.title}`,
-    oldMessage.embeds[0].description,
+    `${oldMessage.embeds[0].description}\n\n[Results](${lastMessage.url})`,
     false,
-    oldMessage.author.username,
-    oldMessage.author.avatarURL()
+   betAuthor.username,
+   betAuthor.avatarURL()
   );
   oldMessage.edit(oldMessageNewEmbed);
 
