@@ -76,7 +76,7 @@ function writeBets(bets){
  * @returns {emoji: Unicode character or numeric ID of guild emoji, printEmoji: Unicode character or text required to display emoji in chat}
  */
 function parseEmoji(text, guild){
-  const emojiParts = text.trim().match(/^<:[a-z]+:([0-9]+)>$/);
+  const emojiParts = text.trim().match(/^<:[a-zA-Z0-9]+:([0-9]+)>$/);
       if(!emojiParts || emojiParts.length != 2) {
       // Unicode emoji
       emoji = printEmoji = text.trim();
@@ -165,9 +165,9 @@ async function newBet(args, bot, message){
 
   for (const line of betParts.slice(2)){
     const lineArgs = line.trim().match(/^(.+)\s([0-9]+)\s([0-9]+)\s(.*)$/);
-    if(lineArgs.length != 5) {
+    if(lineArgs == null || lineArgs.length != 5) {
       //TODO Error
-      console.error(`Bet: lineArgs wrong length. Expected 3, got ${lineArgs.length}\nLine: ${line}`);
+      console.error(`Bet: lineArgs wrong length. Expected 3, got ${lineArgs ? lineArgs.length : "null"}\nLine: ${line}`);
       return;
     }
 
@@ -180,6 +180,11 @@ async function newBet(args, bot, message){
       console.error(`Bet: Got a NaN for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`);
       return;
     }
+    if (parseInt(lineArgs[2]) <= 0|| parseInt(lineArgs[3]) <= 0) {
+      //TODO Error
+      console.error(`Bet: Got a non-zero value for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`);
+      return;
+      }
 
     let wager = {
       description: lineArgs[4].trim(),
@@ -279,7 +284,7 @@ async function endBet(args, bot, message){
   const embed = spikeKit.createEmbed(
     `Bet Ended: ${thisBet.title}`,
     `ID: ${thisBetID}\n\n${thisBet.description}\n\nWinning Bet: ${winningEmoji.printEmoji} ${winningWager.description}
-Bet ${winningWager.bet}, Win ${winningWager.win}\nWinners:${winnersNames.join(', ')}\n\n[View Original Message](${oldMessage.url})`,
+Bet ${winningWager.bet}, Win ${winningWager.win}\nWinners: ${winnersNames.join(', ')}\n\n[View Original Message](${oldMessage.url})`,
     false,
     betAuthor.username,
     betAuthor.avatarURL()
@@ -330,4 +335,135 @@ function processCommand(command, args, bot, message){
   }
 }
 
-module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};
+/**
+ * Handles reactions added/removed to embeds sent by this plugin. To receive anything in this function, plugins must...
+ *  + Have this function exported
+ *  + Send a message as an embed through Spike (or Simone)
+ *  + Have the sent message cached. Either the message was sent during the current running session of the bot, or cached using onBotStart
+ *  + The title of the embed starts with `${NAME}: `
+ *  + A user other than Spike (or Simone) added or removed the reaction
+ * @param {Discord.MessageReaction} reaction Message Reaction object for the reaction added/removed.
+ * @param {Discord.User} user User who applied reaction/User whose reaction was removed.
+ * @param {boolean} add True if reaction added, False if removed.
+ * @param {Discord.Client} bot The instantiated Discord Bot object.
+ */
+ function processReaction(reaction, user, add, bot){
+  console.log(`${user.username} ${add ? "Added" : "Removed"} a reaction on ${reaction.message.author.username}'s message: :${reaction.emoji.name}:.`) 
+  
+  // Get the correct bet
+  let bets = getBets();
+  const thisBetReduced = Object.entries(bets).filter(([k,b]) => (b.channelID == reaction.message.channel.id && b.messageID == reaction.message.id));
+  if (thisBetReduced.length != 1){
+    //TODO Error
+    console.error(`Bet: Expected to find one bet, got ${thisBetReduced.length}`);
+    reaction.users.remove(user.id);
+    return;
+  }
+  const [thisBetID, thisBet] = thisBetReduced[0];
+
+  // Verify that they can bet
+  if(thisBet.createdBy == user.id){
+    //TODO Error
+    console.error(`Bet: ${user.username} tried to wager on their own bet ${thisBetID}`);
+    reaction.users.remove(user.id);
+    return;
+  }
+
+  // Get the student
+  let student;
+  try {
+    student = getStudent(user.id)
+    if (student === null){
+      throw "Doesn't Exist"
+    }
+  } catch (e){
+    //TODO Error
+    console.error(`Bet: Student ${user.id} doesn't exist.`);
+    reaction.users.remove(user.id);
+    return;
+  }
+  
+  // Get emoji
+  const emoji = (reaction.emoji.id ? reaction.emoji.id : reaction.emoji.name);
+
+  // Verify emoji
+  if (!Object.keys(thisBet.wagers).includes(emoji)){
+    //TODO Error
+    console.error(`Bet: Emoji ${emoji} not a wager on ${thisBetID}`);
+    reaction.users.remove(user.id);
+    return;
+  }
+
+  if (add){
+   // Verify the funds exist to bet
+   if (student.wallet < thisBet.wagers[emoji].bet){
+    //TODO Error
+    console.error(`Bet: Student ${user.username} doesn't have enough to bet ${thisBet.wagers[emoji].bet} (Wallet ${student.wallet})`);
+    reaction.users.remove(user.id);
+    return;
+   } 
+
+   // Take the money
+   try {
+     addBucks(user, parseInt(-1 * thisBet.wagers[emoji].bet));
+   } catch (e){
+     //TODO Error
+     console.error(`Bet: Couldn't take ${thisBet.wagers[emoji].bet} from ${user.username}`);
+     reaction.users.remove(user.id);
+     return;
+   }
+
+   // Add to array
+   thisBet.wagers[emoji].bettors = [...thisBet.wagers[emoji].bettors, user.id];
+
+   // Update bets
+   bets[thisBetID] = thisBet;
+   writeBets(bets);
+
+   console.log(`Bet: ${user.username} bet ${thisBet.wagers[emoji].bet} for ${emoji} on ${thisBetID}`);
+
+  } else {
+    // Verify they betted this
+    if(!thisBet.wagers[emoji].bettors.includes(user.id)){
+      //TODO Error
+      console.error(`Bet: User ${user.username} didn't wager ${emoji} on ${thisBetID}`);
+      return;
+    }
+
+    // Remove from array
+    thisBet.wagers[emoji].bettors.splice(thisBet.wagers[emoji].bettors.indexOf(user.id), 1);
+
+    // Update bets
+    bets[thisBetID] = thisBet;
+    writeBets(bets);
+
+    // Add money
+    try {
+      addBucks(user, thisBet.wagers[emoji].bet)
+    } catch (e){
+      //TODO Error
+      console.error(`Bet: Couldn't refund ${thisBet.wagers[emoji].bet} to ${user.username}.`);
+      return;
+    }
+    
+  }
+  
+}
+
+/**
+ * Runs when the bot is first started if exported below.
+ * @param {Discord.Client} bot The instantiated Discord Bot object.
+ */
+function onBotStart(bot){
+  // Cache all active betting messages.
+  const bets = getBets();
+  if(Object.keys(bets).length > 0){
+    for(const [betId, bet] of Object.entries(bets)){
+      console.log(`Caching Bet ${bet.title}`);
+      bot.channels.cache.get(bet.channelID).messages.fetch(bet.messageID);
+    }
+  }
+  console.log(`${NAME} has started.`)
+}
+
+module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand, processReaction, onBotStart};
