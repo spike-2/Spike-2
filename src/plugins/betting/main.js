@@ -12,11 +12,6 @@ const {throwErr} = require('../../botErr.js');
 
 const NAME = "Bet";
 const AUTHOR = "Joshua Maxwell and Brandon Ingli";
-/**
- * Commands supported by this plugin. Do not include the prefix.
- * Good: command
- * Bad: $command
- */
 const COMMANDS = ["bet", "endbet", "activebets"];
 
 const BETSFILENAME = "plugins/betting/bets.json";
@@ -84,7 +79,7 @@ function parseEmoji(text, guild){
   const emojiParts = text.trim().match(/^<:[a-z]+:([0-9]+)>$/);
       if(!emojiParts || emojiParts.length != 2) {
       // Unicode emoji
-      emoji = printEmoji =text.trim();
+      emoji = printEmoji = text.trim();
     } else {
       // Assume custom guild emoji
       let emojiObj = guild.emojis.resolve(emojiParts[1]);
