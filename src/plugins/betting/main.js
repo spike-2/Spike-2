@@ -27,7 +27,7 @@ const ACTIVE_BETS_EMBED_TITLE = "Active Bets";
  function help(prefix, command, args) {
   switch(command){
     case "bet":
-      return `${prefix}bet - Create a new bet. You cannot wager on a bet you create. Format the message as shown below, noting the newlines. Repeat the last line for every option you want.\n\n${prefix}bet Title\nThis is what the bet is about\n:emoji: {bet amount} {winnings} What this wager means`;
+      return `${prefix}bet - Create a new bet.\nYou cannot wager on a bet you create.\nCreator will lose the winnings from their wallet on end, up to all money in wallet.\nWinners will receive the listed winnings if funds exist, or their bet + 1 if funds don't exist.\n\nFormat the message as shown below, noting the newlines. Repeat the last line for every option you want.\n\n${prefix}bet Title\nThis is what the bet is about\n:emoji: {bet amount} {winnings} What this wager means`;
     case "endbet":
       return `${prefix}endbet {id} {:emoji:} - Ends a bet. Only the user that starts a bet can end it.\n\n{id} is the bet ID given when created\n{:emoji:} is the emoji representing the winning wager.`
     case "activebets":
@@ -150,6 +150,17 @@ async function newBet(args, bot, message){
     console.error(`Bet: betParts wrong length. Expected 3, got ${betParts.length}`);
     return;
   }
+
+  // Verify user can start a bet
+  try {
+    let student = getStudent(message.author.id);
+    if (student.wallet <= 0) {throw "No funds!"}
+  } catch (e){
+    //TODO Error
+    console.error(`Bet: User ${message.author.username} doesn't have funds to set up wager.`);
+    return;
+  }
+
   let betID = Date.now();
 
   let bet = {
@@ -195,7 +206,7 @@ async function newBet(args, bot, message){
 
     bet.wagers[emoji] = wager;
 
-    betMessage += `${printEmoji} ${wager.description} (bet ${wager.bet}, win ${wager.win})\n`;
+    betMessage += `${printEmoji} ${wager.description} (bet ${wager.bet}, win ${wager.win}\\*)\n`;
 
   } // End for each line
   const embed = spikeKit.createEmbed(
@@ -263,28 +274,71 @@ async function endBet(args, bot, message){
 
   const winningWager = thisBet.wagers[winningEmoji.emoji];
 
+  // Calculate pot
+  let pot = 0;
+  for (const wager of Object.values(thisBet.wagers)) {
+    pot += (wager.bet * wager.bettors.length);
+  }
+  console.log(`Pot: ${pot}`);
+
+  let winnings = winningWager.bettors.length * winningWager.win;
+
+  const betAuthor = await bot.users.fetch(thisBet.createdBy);
+
+  // Determine the actual winnings based on funding.
+  let student;
+  try {
+    student = getStudent(betAuthor.id);
+    if (!student) {throw "Doesn't Exist"}
+  } catch (e){
+    //TODO Error
+    console.error(`Bet: User ${user.username} doesn't exist.`);
+    return;
+  }
+
+  let bucksToAdjust;
+  let winningsPerPerson;
+  if (student.wallet + pot < winnings){
+    // Creator can't pay full winnings. Wipe them out and pay bet + 1
+    winnings = (winningWager.bet + 1) * winningWager.bettors.length;
+    bucksToAdjust = -1 * (student.wallet); // Wipe to Zero
+    winningsPerPerson = winningWager.bet + 1;
+  } else {
+    // Creator can pay full winnings.
+    bucksToAdjust = -1 * (winnings - pot);
+    winningsPerPerson = winningWager.win;
+  }
+
+  // Adjust the creator's bank
+  try {
+    addBucks(betAuthor, bucksToAdjust)
+  } catch (e) {
+    //TODO Error
+    console.error(`Bet: Couldn't adjust ${betAuthor.username}'s bank by ${bucksToAdjust}`);
+    return;
+  }
+
   // Process winners
   let winnersNames = [];
   for(const userID of winningWager.bettors){
     const user = await bot.users.fetch(userID);
     try {
-      addBucks(user, winningWager.win);
+      addBucks(user, winningsPerPerson);
       winnersNames = [...winnersNames, user.username];
     } catch (e) {
       //TODO Error
-      console.error(`Bet: Couldn't pay ${winningWager.win} to ${user.username}.`);
+      console.error(`Bet: Couldn't pay ${winningsPerPerson} to ${user.username}.`);
     }
   }
 
   // Compose message
 
   const oldMessage = await bot.channels.cache.get(thisBet.channelID).messages.fetch(thisBet.messageID);
-  const betAuthor = await bot.users.fetch(thisBet.createdBy);
 
   const embed = spikeKit.createEmbed(
     `Bet Ended: ${thisBet.title}`,
     `ID: ${thisBetID}\n\n${thisBet.description}\n\nWinning Bet: ${winningEmoji.printEmoji} ${winningWager.description}
-Bet ${winningWager.bet}, Win ${winningWager.win}\nWinners: ${winnersNames.join(', ')}\n\n[View Original Message](${oldMessage.url})`,
+Bet ${winningWager.bet}, Win ${winningsPerPerson}\nWinners: ${winnersNames.join(', ')}\nTotal Winnings: ${winnings}\n\n[View Original Message](${oldMessage.url})`,
     false,
     betAuthor.username,
     betAuthor.avatarURL()
@@ -395,6 +449,13 @@ function processCommand(command, args, bot, message){
   }
 
   if (add){
+   // Verify that the user didn't already bet
+   if(thisBet.wagers[emoji].bettors.includes(user.id)){
+    //TODO Error
+    console.error(`Bet: User ${user.username} already wagered ${emoji} on ${thisBetID}`);
+    return;
+  }
+
    // Verify the funds exist to bet
    if (student.wallet < thisBet.wagers[emoji].bet){
     //TODO Error
