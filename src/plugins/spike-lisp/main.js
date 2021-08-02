@@ -3,6 +3,8 @@
  */
 const spikeKit = require("../../spikeKit.js");
 const spikeLisp = require("./interpreter.js").littleLisp;
+fs = require('fs');
+const FILENAME = './mount.json';
 
 const NAME = "Lisp Interpreter";
 const AUTHOR = "Joshua Maxwell and maryrosecook";
@@ -23,11 +25,64 @@ const COMMANDS = ["exec"];
   return `${prefix}exec - Execute Spike-lisp code.`
 }
 
-function processCommand(command, args, bot, message){
+function mount(args, message) {
+  let dat = fs.readFileSync(FILENAME, {encoding: 'utf8', flag:'r'});
+  dat = JSON.parse(dat);
+
+  if (dat[args.split(' ')[0]]) {
+    spikeKit.reply(
+      spikeKit.createEmbed(
+        "Spike Lisp: ERROR",
+        `Program ${dat[args.split(' ')[0]]} already mounted`,
+        false,
+        message.author.username,
+        message.author.avatarURL()
+        ),
+      message);
+    return;
+  }
+
+  fs.writeFile(FILENAME, JSON.stringify(dat), (err, t) => {
+    if (err)
+      return console.log(err);
+    console.log(`${JSON.stringify(dat)} > ${FILENAME}`);
+  });
+
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Spike Lisp: ERROR",
+      `Program ${dat[args.split(' ')[0]]} has been mounted`,
+      false,
+      message.author.username,
+      message.author.avatarURL()
+      ),
+    message);
+}
+
+function call(args, message) {
+  let dat = fs.readFileSync(FILENAME, {encoding: 'utf8', flag:'r'});
+  dat = JSON.parse(dat);
+
+  if (!dat[args.split(' ')[0]]) {
+    spikeKit.reply(
+      spikeKit.createEmbed(
+        "Spike Lisp: ERROR",
+        `Program ${dat[args.split(' ')[0]]} has not been mounted`,
+        false,
+        message.author.username,
+        message.author.avatarURL()
+        ),
+      message);
+    return;
+  }
+
+  interp(dat[args.split(' ')[0]], message);
+}
+
+function interp(args, message) {
   const cmd = args.slice('\n```lisp\n'.length, args.lastIndexOf('```'));
   try {
     const content = "" + spikeLisp.interpret(spikeLisp.parse(message, cmd));
-
     spikeKit.reply(
       spikeKit.createEmbed(
         "Spike Lisp",
@@ -51,6 +106,13 @@ function processCommand(command, args, bot, message){
         ),
       message);
   }
+}
+
+function processCommand(command, args, bot, message) {
+  if (command === 'exec')
+    interp(args, message);
+  else if (command === 'mount') 
+    mount(args, message);
 }
 
 module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};
