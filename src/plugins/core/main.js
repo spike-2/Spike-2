@@ -165,7 +165,8 @@ const info = async (msg) => {
                   `Committed: ${new Date(parseInt(commit_response_obj.committedOn*1000)).toUTCString()}\n` +
                   `Language: ${package.language}\n` + 
                   `Creation date: ${package.created}\n` +
-                  `Repository: ${package.repository.gh_url}`;
+                  `Repository: ${package.repository.gh_url}\n` +
+                  `Wiki: ${package.repository.wiki}`;
   spikeKit.reply(
     spikeKit.createEmbed(
       `${package.fullName} info`,
