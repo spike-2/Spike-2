@@ -47,6 +47,10 @@
 
     length: function(x) {
       return x.length;
+    },
+
+    range: function(x) {
+      return [...Array(x[1] - x[0]).keys()].map(t => t + x[0]);
     }
   };
 
