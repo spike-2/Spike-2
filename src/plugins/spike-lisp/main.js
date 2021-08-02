@@ -8,7 +8,7 @@ const FILENAME = './mount.json';
 
 const NAME = "Lisp Interpreter";
 const AUTHOR = "Joshua Maxwell and maryrosecook";
-const COMMANDS = ["exec"];
+const COMMANDS = ["exec", "mount", "call"];
 
  function help(prefix, command, args) {
   return `${prefix}exec [code]\n`
@@ -113,6 +113,8 @@ function processCommand(command, args, bot, message) {
     interp(args, message);
   else if (command === 'mount') 
     mount(args, message);
+  else if (command === 'call') 
+    call(args, message);
 }
 
 module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};
