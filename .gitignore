@@ -1,3 +1,4 @@
 lastCheckTime.txt
 node_modules
 Makefile
+.env
