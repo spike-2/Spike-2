@@ -30,6 +30,10 @@
       return x.reduce((a, b) => a / b); 
     },
 
+    mod: function(x) {
+      return x.reduce((a, b) => a % b);
+    },
+
     push: function(x) {
       const result = x[1]
       result.push(x[0]);
