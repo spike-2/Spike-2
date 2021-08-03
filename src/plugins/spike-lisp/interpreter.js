@@ -43,11 +43,11 @@
     },
 
     gt: function(x) {
-      return x.every((val, i) => val === x.sort()[i]);
+      return x.every((val, i) => val === x.sort().reverse()[i]);
     },
 
     lt: function(x) {
-      return x.every((val, i) => val === x.sort().reverse()[i]);
+      return x.every((val, i) => val === x.sort()[i]);
     },
 
     and: function(x) {
