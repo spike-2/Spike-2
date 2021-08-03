@@ -4,7 +4,7 @@
 const spikeKit = require("../../spikeKit.js");
 const spikeLisp = require("./interpreter.js").littleLisp;
 fs = require('fs');
-const FILENAME = './mount.json';
+const FILENAME = 'plugins/spike-lisp/mount.json';
 
 const NAME = "Lisp Interpreter";
 const AUTHOR = "Joshua Maxwell and maryrosecook";
@@ -42,6 +42,8 @@ function mount(args, message) {
     return;
   }
 
+  dat[args.split('\n')[0]] = args.slice(args.indexOf('\n'));
+
   fs.writeFile(FILENAME, JSON.stringify(dat), (err, t) => {
     if (err)
       return console.log(err);
@@ -50,8 +52,8 @@ function mount(args, message) {
 
   spikeKit.reply(
     spikeKit.createEmbed(
-      "Spike Lisp: ERROR",
-      `Program ${dat[args.split(' ')[0]]} has been mounted`,
+      "Spike Lisp: SUCCESS",
+      `Program ${args.split('\n')[0]} has been mounted`,
       false,
       message.author.username,
       message.author.avatarURL()
@@ -67,7 +69,7 @@ function call(args, message) {
     spikeKit.reply(
       spikeKit.createEmbed(
         "Spike Lisp: ERROR",
-        `Program ${dat[args.split(' ')[0]]} has not been mounted`,
+        `Program ${dat[args.split('\n')[0]]} has not been mounted`,
         false,
         message.author.username,
         message.author.avatarURL()
