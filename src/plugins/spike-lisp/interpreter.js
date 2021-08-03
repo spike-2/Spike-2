@@ -34,6 +34,34 @@
       return x.reduce((a, b) => a % b);
     },
 
+    eq: function(x) {
+      return x.every((val, i, arr) => val === arr[0]);
+    },
+
+    neq: function(x) {
+      return !x.every((val, i, arr) => val === arr[0]);
+    },
+
+    gt: function(x) {
+      return x.every((val, i) => val === x.sort()[i]);
+    },
+
+    lt: function(x) {
+      return x.every((val, i) => val === x.sort().reverse()[i]);
+    },
+
+    and: function(x) {
+      return x.every(t => t)
+    },
+
+    or: function(x) {
+      return x.some(t => t);
+    },
+
+    sort: function(x) {
+      return x.sort()
+    },
+
     push: function(x) {
       const result = x[1]
       result.push(x[0]);
