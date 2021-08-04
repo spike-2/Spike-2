@@ -222,7 +222,7 @@ function wiki(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Wiki",
-      "[Visit the Wiki](https://github.com/jwMaxwell/Spike-2/wiki) for more detailed documentation, contribution information, and more!.",
+      "[Visit the Wiki](https://github.com/jwMaxwell/Spike-2/wiki) for more detailed documentation, contribution information, and more!",
       false,
       msg.author.username,
       msg.author.avatarURL()
