@@ -72,6 +72,10 @@
       return x[1][x[0]];
     },
 
+    cp: function(x) {
+      return x;
+    },
+
     eval: function(x) {
       message.channel.send(x[0]);
       message.delete();
@@ -111,7 +115,7 @@
     
     define: function(input, context) {
       context.scope[input[1][0].value] = function() {
-        console.log('args');
+        console.log(`${input[1][0].value} args`);
         console.log(arguments);
         var lambdaArguments = arguments;
         var lambdaScope = input[1][1].reduce(function(acc, x, i) {
