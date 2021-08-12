@@ -2,3 +2,4 @@ lastCheckTime.txt
 node_modules
 Makefile
 bets.json
+.env

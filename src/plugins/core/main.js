@@ -10,7 +10,7 @@ const {throwErr} = require("../../botErr.js");
 
 const NAME = "Core";
 const AUTHOR = "Joshua Maxwell and Brandon Ingli";
-const COMMANDS = ['remindme', 'embedify', 'echo', 'clear', 'info'];
+const COMMANDS = ['remindme', 'embedify', 'echo', 'clear', 'info', 'bug', 'request', 'pr', 'wiki'];
 
 function help(prefix, command, args) {
   switch(command){
@@ -24,6 +24,14 @@ function help(prefix, command, args) {
       return `${prefix}clear [2 <= x <= 100]\nIn order to use this command, you must have administrator permissions or the Bot Expert role.\n\nDelete the last x messages from the channel, including the clear command itself.`;
     case "info":
       return `By typing '${prefix}info', you can see plenty of information about the bot.`
+    case "bug":
+      return `${prefix}bug\nLearn how to submit a bug report.`
+    case "request":
+      return `${prefix}request\nLearn how to submit a feature request.`
+    case "pr":
+        return `${prefix}pr\nLearn how to submit a pull request for a new feature, bug fix, or plugin.`
+    case "wiki":
+        return `${prefix}wiki\nLearn how to visit the wiki.`
     default:
       return "Command not found."
   }
@@ -35,7 +43,11 @@ function shortHelp(prefix){
        + `${prefix}embedify - Create an embeded message.\n`
        + `${prefix}echo - Speak with Spike's voice.\n`
        + `${prefix}clear - Delete a given number of messages.\n`
-       + `${prefix}info - View bot information.`;
+       + `${prefix}info - View bot information.\n`
+       + `${prefix}bug - Learn how to submit bug report.\n`
+       + `${prefix}request - Learn how to submit a feature request.\n`
+       + `${prefix}pr - Learn how to submit new code via a PR.\n`
+       + `${prefix}wiki - Get a link to the wiki.`;
 }
 
 const remindMe = (msg) => {
@@ -153,12 +165,65 @@ const info = async (msg) => {
                   `Committed: ${new Date(parseInt(commit_response_obj.committedOn*1000)).toUTCString()}\n` +
                   `Language: ${package.language}\n` + 
                   `Creation date: ${package.created}\n` +
-                  `Repository: ${package.repository.gh_url}`;
+                  `Repository: ${package.repository.gh_url}\n` +
+                  `Wiki: ${package.repository.wiki}`;
   spikeKit.reply(
     spikeKit.createEmbed(
       `${package.fullName} info`,
       content,
       true,
+      msg.author.username,
+      msg.author.avatarURL()
+    ),
+    msg
+  );
+}
+
+function bug(msg) {
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Bug Report",
+      "To learn more about submitting a bug report, visit the [Bug Report Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Bug-Reports).",
+      false,
+      msg.author.username,
+      msg.author.avatarURL()
+    ),
+    msg
+  );
+}
+
+function request(msg) {
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Feature Request",
+      "To learn more about submitting a feature request, visit the [Feature Request Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Feature-Requests).",
+      false,
+      msg.author.username,
+      msg.author.avatarURL()
+    ),
+    msg
+  );
+}
+
+function pr(msg) {
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Pull Request",
+      "To learn more about submitting a pull request, visit the [Pull Request Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Submitting-a-Pull-Request).",
+      false,
+      msg.author.username,
+      msg.author.avatarURL()
+    ),
+    msg
+  );
+}
+
+function wiki(msg) {
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Wiki",
+      "[Visit the Wiki](https://github.com/jwMaxwell/Spike-2/wiki) for more detailed documentation, contribution information, and more!",
+      false,
       msg.author.username,
       msg.author.avatarURL()
     ),
@@ -177,6 +242,14 @@ function processCommand(command, args, bot, message) {
     echo(args, message);
   else if (command === 'info')
     info(message);
+  else if (command === 'bug')
+    bug(message);
+  else if (command === 'request')
+    request(message);
+  else if (command === 'pr')
+    pr(message);
+  else if (command === 'wiki')
+    wiki(message);
 }
 
 module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};
