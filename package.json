@@ -24,5 +24,6 @@
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "git-last-commit": "^1.0.0"
-  }
+  },
+  "prettier": {}
 }
