@@ -3,7 +3,7 @@
  * This file contains common server commands and trasfers control
  */
 
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const spikeKit = require("./spikeKit.js");
 
 const plugins = [
@@ -12,17 +12,18 @@ const plugins = [
   require("./plugins/betting/main.js"),
   require("./plugins/shop/main.js"),
   require("./plugins/enigma/main.js"),
-  require("./plugins/spike-lisp/main.js")
+  require("./plugins/spike-lisp/main.js"),
+  require("./plugins/adminAnnounce/main.js"),
 ];
 
 /**
  * Runs startup functions for all plugins.
  * @param {Discord.Client} bot The instantiated Discord Bot object.
  */
-function onBotStart(bot){
+function onBotStart(bot) {
   for (const plugin of plugins) {
-    if(plugin.onBotStart){
-      plugin.onBotStart(bot)
+    if (plugin.onBotStart) {
+      plugin.onBotStart(bot);
     }
   }
 }
@@ -39,8 +40,10 @@ const help = (args, message, PREFIX) => {
     // Default Help Screen
     console.log("Getting default help");
     let messageText = `Use '${PREFIX}help [c]' or '${PREFIX}man [c]' to find more information about these commands.`;
-    for (const plugin of plugins){
-      messageText += `\n-------\n${plugin.NAME}\nby ${plugin.AUTHOR}\n\n${plugin.shortHelp(PREFIX)}`;
+    for (const plugin of plugins) {
+      messageText += `\n-------\n${plugin.NAME}\nby ${
+        plugin.AUTHOR
+      }\n\n${plugin.shortHelp(PREFIX)}`;
     }
     spikeKit.reply(
       spikeKit.createEmbed(
@@ -55,10 +58,12 @@ const help = (args, message, PREFIX) => {
   } else {
     // Not default, so find the right plugin to get help from
     for (const plugin of plugins) {
-      const helpCommand = args.split(' ')[0].toLowerCase();
-      const helpArgs = args.substring(args.split(' ')[0].length).slice(1);
-      if (plugin.COMMANDS.includes(helpCommand)){
-        console.log(`Getting help for ${PREFIX}${helpCommand} from "${plugin.NAME}"`);
+      const helpCommand = args.split(" ")[0].toLowerCase();
+      const helpArgs = args.substring(args.split(" ")[0].length).slice(1);
+      if (plugin.COMMANDS.includes(helpCommand)) {
+        console.log(
+          `Getting help for ${PREFIX}${helpCommand} from "${plugin.NAME}"`
+        );
         spikeKit.reply(
           spikeKit.createEmbed(
             `${plugin.NAME} Help`,
@@ -73,7 +78,7 @@ const help = (args, message, PREFIX) => {
       }
     }
   }
-}
+};
 
 /**
  * This will select an action depending on the command given
@@ -82,14 +87,16 @@ const help = (args, message, PREFIX) => {
  */
 const execute = (message, bot, PREFIX) => {
   const command = message.content.split(/\s/)[0].toLowerCase().slice(1);
-  const args = message.content.substring(message.content.split(/\s/)[0].length).slice(1);
-  if (command === "help" || command === "man"){
+  const args = message.content
+    .substring(message.content.split(/\s/)[0].length)
+    .slice(1);
+  if (command === "help" || command === "man") {
     help(args, message, PREFIX);
   } else {
     // Not a help command, so find the right plugin for the command
     let found = false;
     for (const plugin of plugins) {
-      if (plugin.COMMANDS.includes(command)){
+      if (plugin.COMMANDS.includes(command)) {
         console.log(`Running ${PREFIX}${command} from "${plugin.NAME}"`);
         plugin.processCommand(command, args, bot, message);
         found = true;
@@ -97,22 +104,28 @@ const execute = (message, bot, PREFIX) => {
       }
     }
   }
-}
+};
 
 /**
- * 
+ *
  * @param {Discord.Messageeaction} reaction Message Reaction object for the reaction added/removed.
  * @param {Discord.User} user User who applied reaction/User whose reaction was removed.
  * @param {boolean} add True if reaction added, False if removed.
  * @param {Discord.Client} bot The instantiated Discord Bot object.
  */
-function onReaction(reaction, user, add, bot){
+function onReaction(reaction, user, add, bot) {
   for (embed of reaction.message.embeds) {
     let found = false;
-    for (plugin of plugins){
-      if(found){continue;}
-      if (plugin.processReaction && embed.title.toLowerCase().startsWith(`${plugin.NAME.toLowerCase()}: `)){
-        console.log(`Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`)
+    for (plugin of plugins) {
+      if (found) {
+        continue;
+      }
+      if (
+        plugin.processReaction &&
+        embed.title.toLowerCase().startsWith(`${plugin.NAME.toLowerCase()}: `)
+      ) {
+        // prettier-ignore
+        console.log(`Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`);
         plugin.processReaction(reaction, user, add, bot);
         found = true;
       }
@@ -120,4 +133,4 @@ function onReaction(reaction, user, add, bot){
   }
 }
 
-module.exports = { execute, onBotStart, onReaction }
+module.exports = { execute, onBotStart, onReaction };

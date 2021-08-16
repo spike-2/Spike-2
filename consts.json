@@ -9,7 +9,7 @@
 		"d10": "  ____    \n /\\ . \\ \n/: \\___\\\n\\' /'.'/ \n \\/'_'/  \n          \n",
 		"d20": "  ____    \n /\\' .\\ \n/: \\___\\\n\\' / . / \n \\/___/  \n          \n",
 		"d30": "  ____    \n /\\'. \\ \n/.:\\_'_\\\n\\.'/ . / \n \\/___/  \n          \n",
-		"d40": "  ____    \n /\\' '\\ \n/ .\\'_'\\\n\\  /'.'/ \n \\/'_'/  \n          \n",	
+		"d40": "  ____    \n /\\' '\\ \n/ .\\'_'\\\n\\  /'.'/ \n \\/'_'/  \n          \n",
 		"d50": "  ____    \n /\\'.'\\ \n/: \\'_'\\\n\\' /: :/ \n \\/'_'/  \n          \n",
 		"d60": "  ____    \n /\\: :\\ \n/: \\'_'\\\n\\' /.  / \n \\/__'/  \n          \n",
 		"d01": "           \r\n   _____   \r\n  / .  /\\ \r\n/____/..\\ \r\n\\'  '\\  /\r\n\\'__'\\/  \r\n",
@@ -28,6 +28,8 @@
 		"botexpert": "824776127372591105"
 	},
 	"channel": {
+		"announcements": "689264072084029544",
+		"admin-spam": "748358241276264629",
 		"introductions": "689243733035974720",
 		"bot-commands": "689298597837144146",
 		"admin-notifications": "748357727872614411",
@@ -65,123 +67,123 @@
 		"sent-msg": "The admins have been notified about your unmute request!"
 	},
 	"emoji": {
-		"lenny":{
+		"lenny": {
 			"premium": false,
 			"content": "( ͡° ͜ʖ ͡°)"
 		},
-		"lennyshrug":{
+		"lennyshrug": {
 			"premium": false,
 			"content": "¯\\\\_( ͡° ͜ʖ ͡°)\\_/¯"
 		},
-		"fightme":{
+		"fightme": {
 			"premium": false,
 			"content": "(ง'̀-'́)ง"
 		},
-		"eyefallsout":{
+		"eyefallsout": {
 			"premium": false,
 			"content": "( ಠ ͜ʖರೃ)"
 		},
-		"owo":{
+		"owo": {
 			"premium": false,
 			"content": "(´・ω・`)"
 		},
-		"highfive":{
+		"highfive": {
 			"premium": false,
 			"content": "( ⌒o⌒)人(⌒-⌒ )v"
 		},
-		"noyou":{
+		"noyou": {
 			"premium": false,
 			"content": "(☞ﾟヮﾟ)☞ ☜(ﾟヮﾟ☜) "
 		},
-		"excuse":{
+		"excuse": {
 			"premium": false,
 			"content": "ಠ_ಠ"
 		},
-		"upsetti":{
+		"upsetti": {
 			"premium": false,
 			"content": "ಠ╭╮ಠ"
 		},
-		"hugpls":{
+		"hugpls": {
 			"premium": false,
 			"content": "༼ つ ◕_◕ ༽つ"
 		},
-		"canthearyou":{
+		"canthearyou": {
 			"premium": false,
 			"content": "ᕦ(ò_óˇ)ᕤ"
 		},
-		"frickyou":{
+		"frickyou": {
 			"premium": false,
 			"content": "╭∩╮(ಠ۝ಠ)╭∩╮"
 		},
-		"listening":{
+		"listening": {
 			"premium": false,
 			"content": "ʕ ͠° ʖ̫ °͠ ʔ"
 		},
-		"cri":{
+		"cri": {
 			"premium": true,
 			"content": "(ಥ﹏ಥ)"
 		},
-		"sad":{
+		"sad": {
 			"premium": true,
 			"content": "ಥ_ಥ"
 		},
-		"smooch":{
+		"smooch": {
 			"premium": true,
 			"content": "( ˘ ³˘)❤"
 		},
-		"uhohlenny":{
+		"uhohlenny": {
 			"premium": true,
 			"content": "( ͡ʘ ͜ʖ ͡ʘ)"
 		},
-		"unsettlinglenny":{
+		"unsettlinglenny": {
 			"premium": true,
 			"content": "( ͡👁️ ͜ʖ ͡👁️)"
 		},
-		"happy":{
+		"happy": {
 			"premium": true,
 			"content": "( ﾟヮﾟ)"
 		},
-		"depressed":{
+		"depressed": {
 			"premium": true,
 			"content": "（ ´,_ゝ`)"
 		},
-		"no":{
+		"no": {
 			"premium": true,
 			"content": "(╬ ಠ益ಠ)"
 		},
-		"intensifies":{
+		"intensifies": {
 			"premium": true,
 			"content": "(≧ロ≦)"
 		},
-		"yay":{
+		"yay": {
 			"premium": true,
 			"content": "ヽ(´▽`)/"
 		},
-		"ayy":{
+		"ayy": {
 			"premium": true,
 			"content": "(☞ﾟヮﾟ)☞"
 		},
-		"stare":{
+		"stare": {
 			"premium": true,
 			"content": "(*′☉.̫☉)"
 		},
-		"smug":{
+		"smug": {
 			"premium": true,
 			"content": "( ‾ʖ̫‾)"
 		},
-		"imfine":{
+		"imfine": {
 			"premium": true,
 			"content": "(¬‿¬)"
 		},
-		"sopretty":{
+		"sopretty": {
 			"premium": true,
 			"content": "(•‾̑⌣‾̑•)"
 		},
-		"imthebest":{
+		"imthebest": {
 			"premium": true,
 			"content": "☆(◒‿◒)☆"
 		},
-		"catdance":{
+		"catdance": {
 			"premium": true,
 			"content": "⊂ヽ \n　 ＼＼ Λ＿Λ\n 　　 ＼( 'ㅅ' )\n 　　　 >　⌒ヽ\n 　　　/ 　 へ  ＼\n 　　 /　　/　＼＼\n 　　 ﾚ　ノ　　 ヽつ\n 　　/　/ \n 　 /　/| \n 　(　(ヽ \n 　|　|、＼ \n 　| 丿 ＼ ⌒) \n 　| |　　)"
 		}
