@@ -65,7 +65,9 @@ function call(args, message) {
   let dat = fs.readFileSync(FILENAME, {encoding: 'utf8', flag:'r'});
   dat = JSON.parse(dat);
 
-  if (!dat[args.split(' ')[0]]) {
+  const content = dat[args.split(' ')[0]];
+
+  if (!content) {
     spikeKit.reply(
       spikeKit.createEmbed(
         "Spike Lisp: ERROR",
@@ -78,7 +80,17 @@ function call(args, message) {
     return;
   }
 
-  interp(dat[args.split(' ')[0]], message);
+  interp(argify(content, args.slice(args.indexOf(' ')).split(/,\s+/)), message);
+}
+
+function argify(content, args) {
+  let result = content;
+  for (let i = 0; i < args.length; ++i) {
+    if (result.includes(`$${i}`))
+      result = result.replaceAll(`$${i}`, args[i]);
+  }
+
+  return result;
 }
 
 function interp(args, message) {
