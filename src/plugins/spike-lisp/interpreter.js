@@ -30,6 +30,38 @@
       return x.reduce((a, b) => a / b); 
     },
 
+    mod: function(x) {
+      return x.reduce((a, b) => a % b);
+    },
+
+    eq: function(x) {
+      return x.every((val, i, arr) => val === arr[0]);
+    },
+
+    neq: function(x) {
+      return !x.every((val, i, arr) => val === arr[0]);
+    },
+
+    gt: function(x) {
+      return x.every((val, i) => val === x.sort().reverse()[i]);
+    },
+
+    lt: function(x) {
+      return x.every((val, i) => val === x.sort()[i]);
+    },
+
+    and: function(x) {
+      return x.every(t => t)
+    },
+
+    or: function(x) {
+      return x.some(t => t);
+    },
+
+    sort: function(x) {
+      return x.sort()
+    },
+
     push: function(x) {
       const result = x[1]
       result.push(x[0]);
@@ -38,6 +70,10 @@
 
     get: function(x) {
       return x[1][x[0]];
+    },
+
+    cp: function(x) {
+      return x;
     },
 
     eval: function(x) {
@@ -79,7 +115,7 @@
     
     define: function(input, context) {
       context.scope[input[1][0].value] = function() {
-        console.log('args');
+        console.log(`${input[1][0].value} args`);
         console.log(arguments);
         var lambdaArguments = arguments;
         var lambdaScope = input[1][1].reduce(function(acc, x, i) {
