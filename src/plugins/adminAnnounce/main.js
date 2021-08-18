@@ -297,7 +297,7 @@ async function processReaction(reaction, user, add, bot) {
     spikeKit.send(
       spikeKit.createEmbed(
         ancmts[thisAncmtID].title,
-        `@here\n${ancmts[thisAncmtID].description}`,
+        `@everyone\n${ancmts[thisAncmtID].description}`,
         false,
         user.username,
         user.avatarURL()
