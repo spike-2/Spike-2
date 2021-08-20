@@ -47,17 +47,22 @@
   };
 
   var operators = {
-    "+": (op = (x) => x.reduce((a, b) => a + b)),
-    "-": (op = (x) => x.reduce((a, b) => a - b)),
-    "*": (op = (x) => x.reduce((a, b) => a * b)),
-    "/": (op = (x) => x.reduce((a, b) => a / b)),
-    "%": (op = (x) => x.reduce((a, b) => a % b)),
-    "|": (op = (x) => x.some((t) => t)),
-    "&": (op = (x) => x.every((t) => t)),
-    ">": (op = (x) => x.every((val, i) => val === x.sort().reverse()[i])),
-    "<": (op = (x) => x.every((val, i) => val === x.sort()[i])),
-    "=": (op = (x) => x.every((val, i, arr) => val === arr[0])),
-    "~": (op = (x) => !x.every((val, i, arr) => val === arr[0])),
+    "+": (x) => x.reduce((a, b) => a + b),
+    "-": (x) => x.reduce((a, b) => a - b),
+    "*": (x) => x.reduce((a, b) => a * b),
+    "/": (x) => x.reduce((a, b) => a / b),
+    "%": (x) => x.reduce((a, b) => a % b),
+    "|": (x) => x.some((t) => t),
+    "&": (x) => x.every((t) => t),
+    ">": (x) =>
+      x.every((val, i) => val === x.sort().reverse()[i]) &&
+      !x.some((a, b) => a === b),
+    "<": (x) =>
+      x.every((val, i) => val === x.sort()[i]) && !x.some((a, b) => a === b),
+    ">=": (x) => x.every((val, i) => val === x.sort().reverse()[i]),
+    "<=": (x) => x.every((val, i) => val === x.sort()[i]),
+    "=": (x) => x.every((val, i, arr) => val === arr[0]),
+    "~": (x) => !x.every((val, i, arr) => val === arr[0]),
   };
 
   var Context = function (scope, parent) {
@@ -125,7 +130,7 @@
       var list = input.map(function (x) {
         return interpret(x, context);
       });
-      if (list[0] instanceof Function && list[0].name === "op") {
+      if (list[0] instanceof Function && list[0].name in operators) {
         return list[0].apply(null, [list.slice(1)]);
       } else if (list[0] instanceof Function) {
         return list[0].apply(null, list.slice(1));
