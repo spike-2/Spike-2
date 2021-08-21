@@ -214,6 +214,12 @@ const transactionErr = (msg) => {
   errEmbed(msg, title, description);
 };
 
+const ancmtPartsErr = (msg) => {
+  const title = "Announce Parts Error";
+  const description = "Announcement Parts wrong length: Expected 2";
+  errEmbed(msg, title, description);
+};
+
 /**
  * throws the specified error
  * @param {Message} msg the message sent by the user
@@ -249,6 +255,7 @@ const throwErr = (msg, errType) => {
   else if (errType === "betOwnerBets") betOwnerBetsErr(msg);
   else if (errType === "invalidEndPartsErr") invalidEndPartsErr(msg);
   else if (errType === "transaction") transactionErr(msg);
+  else if (errType === "invalidAnnouncePartsErr") ancmtPartsErr(msg);
 };
 
 module.exports = { throwErr };
