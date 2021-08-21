@@ -4,3 +4,4 @@ Makefile
 bets.json
 .env
 announcements.json
+records.json
