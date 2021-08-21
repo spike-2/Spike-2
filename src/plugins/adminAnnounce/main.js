@@ -220,7 +220,10 @@ async function processReaction(reaction, user, add, bot) {
       a.channelID == reaction.message.channel.id &&
       a.messageID == reaction.message.id
   );
-  if (thisAncmtReduced.length != 1) {
+  if (thisAncmtReduced <= 0) {
+    return;
+  }
+  if (thisAncmtReduced.length > 1) {
     throwErr(reaction.message, "multipleMessageReaction");
     // prettier-ignore
     console.error(`Admin Announcement: Expected to find one announcement, got ${thisAncmtReduced.length}`);
@@ -235,6 +238,11 @@ async function processReaction(reaction, user, add, bot) {
     reaction.emoji.name === APPROVE_EMOJI &&
     !ancmts[thisAncmtID].approvals.includes(user.id)
   ) {
+    if (user.id == ancmts[thisAncmtID].createdBy) {
+      reaction.users.remove(user.id);
+      return;
+    }
+
     ancmts[thisAncmtID].approvals.push(user.id);
 
     if (
@@ -293,14 +301,17 @@ async function processReaction(reaction, user, add, bot) {
 
   // Sending
   else if (add && reaction.emoji.name === SEND_EMOJI) {
+    const member = reaction.message.guild.members.cache.get(
+      ancmts[thisAncmtID].createdBy
+    ).user;
     // Send the announcement
     spikeKit.send(
       spikeKit.createEmbed(
         ancmts[thisAncmtID].title,
         `@everyone\n${ancmts[thisAncmtID].description}`,
         false,
-        user.username,
-        user.avatarURL()
+        member.username,
+        member.avatarURL()
       ),
       "announcements",
       bot
