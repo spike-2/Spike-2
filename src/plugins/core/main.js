@@ -71,13 +71,11 @@ const remindMe = (msg) => {
     parseInt(segs[1]) * spikeKit.MINUTE +
     parseInt(segs[2]) * spikeKit.SECOND;
 
-  const reminder =
-    msg.author.toString() +
-    "\n" +
-    msg.content
-      .slice(msg.content.indexOf(" ") + 1)
-      .slice(msg.content.indexOf(" "));
+  const reminder = msg.content
+    .slice(msg.content.indexOf(" ") + 1)
+    .slice(msg.content.indexOf(" "));
   setTimeout((_) => {
+    spikeKit.reply(msg.author.toString(), msg);
     spikeKit.reply(
       spikeKit.createEmbed(
         "Reminder :bell:",
