@@ -62,24 +62,26 @@ function shortHelp(prefix) {
   );
 }
 
-const remindMe = (msg) => {
-  //splits first arg into time intervals
-  const segs = msg.content.split(" ")[1].split(":");
+const remindMe = (msg, args) => {
+  const regexp = /^(\d{1,2}):(\d{1,2}):(\d{1,2})\s(.*)$/;
+  const segs = args.match(regexp);
+
+  if (!segs || segs.length != 5) {
+    throwErr(msg, "syntax");
+    return;
+  }
 
   const time =
-    parseInt(segs[0]) * spikeKit.HOUR +
-    parseInt(segs[1]) * spikeKit.MINUTE +
-    parseInt(segs[2]) * spikeKit.SECOND;
+    parseInt(segs[1]) * spikeKit.HOUR +
+    parseInt(segs[2]) * spikeKit.MINUTE +
+    parseInt(segs[3]) * spikeKit.SECOND;
 
-  const reminder = msg.content
-    .slice(msg.content.indexOf(" ") + 1)
-    .slice(msg.content.indexOf(" "));
   setTimeout((_) => {
     spikeKit.reply(msg.author.toString(), msg);
     spikeKit.reply(
       spikeKit.createEmbed(
         "Reminder :bell:",
-        reminder,
+        segs[4],
         false,
         msg.author.username,
         msg.author.avatarURL()
@@ -276,7 +278,7 @@ function wiki(msg) {
 }
 
 function processCommand(command, args, bot, message) {
-  if (command.toLowerCase() === "remindme") remindMe(message);
+  if (command.toLowerCase() === "remindme") remindMe(message, args);
   else if (command === "embedify") embedify(args, message);
   else if (command === "clear") clear(message);
   else if (command === "echo") echo(args, message);
