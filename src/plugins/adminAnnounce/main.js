@@ -305,10 +305,11 @@ async function processReaction(reaction, user, add, bot) {
       ancmts[thisAncmtID].createdBy
     ).user;
     // Send the announcement
+    spikeKit.send("@everyone", "announcements", bot);
     spikeKit.send(
       spikeKit.createEmbed(
         ancmts[thisAncmtID].title,
-        `@everyone\n${ancmts[thisAncmtID].description}`,
+        ancmts[thisAncmtID].description,
         false,
         member.username,
         member.avatarURL()
