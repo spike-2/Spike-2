@@ -70,7 +70,7 @@ const commandErr = (msg) => {
 const noItemErr = (msg) => {
   const title = "Item not found";
   const description =
-    'The given item does not exist. To view the Spike Shop, type "$Shop"';
+    'The given item does not exist. To view the Spike Shop, type "$help shop"';
   errEmbed(msg, title, description);
 };
 
