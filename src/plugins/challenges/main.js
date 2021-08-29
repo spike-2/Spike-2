@@ -34,7 +34,25 @@ const listChallenges = (bot, requestMessage) => {
     return;
   }
 
-  for ()
+  // for ()
+};
+
+async function validateCode(language, code, stdin = "", expectedOutput = "") {
+  if (language == "" || code == "") {
+    throw "Missing Arguments";
+  }
+  const { piston } = await import("piston-client");
+  const client = piston({ server: "https://emkc.org" });
+  const result = await client.execute(language, code, { stdin: stdin });
+
+  return {
+    validated: result.run.output === expectedOutput,
+    success:
+      result.success ??
+      (result.run.signal === null && result.run.stderr === ""),
+    output: result.run.output,
+    error: result.error ?? result.run.code !== 0,
+  };
 }
 
 /**
@@ -45,10 +63,8 @@ const listChallenges = (bot, requestMessage) => {
  * @param {Discord.Message} message An object representing the message sent.
  */
 function processCommand(command, args, bot, message) {
-  if (command === 'challenges')
-    let x = 0;
-  else if (command === 'submitchallenge')
-    let x = 0;
+  if (command === "challenges") return;
+  else if (command === "submitchallenge") return;
 }
 
 /**
@@ -81,7 +97,7 @@ const loadFile = () => {
     );
     return {};
   }
-}
+};
 
 /**
  * Runs when the bot is first started if exported below.
@@ -101,3 +117,17 @@ module.exports = {
   // processReaction,
   // onBotStart,
 };
+
+/**
+ * Run `node main.js` to test piston with a python3 fizzbuzz
+ */
+if (require.main === module) {
+  //prettier-ignore
+  const code = 'import sys\nfor line in sys.stdin:\n  if line.rstrip() == "":\n    continue\n  num = int(line.rstrip())\n  output = ""\n  if num % 3 == 0:\n    output += "fizz"\n  if num % 5 == 0:\n    output += "buzz"\n  if output == "":\n    output = str(num)\n  print(output)';
+  validateCode(
+    "python",
+    code,
+    "1\n2\n3\n4\n5\n15\n",
+    "1\n2\nfizz\n4\nbuzz\nfizzbuzz\n"
+  ).then(console.log);
+}

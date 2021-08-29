@@ -23,7 +23,8 @@
   "dependencies": {
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
-    "git-last-commit": "^1.0.0"
+    "git-last-commit": "^1.0.0",
+    "piston-client": "^1.0.2"
   },
   "prettier": {}
 }
