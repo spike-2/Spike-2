@@ -8,8 +8,8 @@
  * A one stop shop for all things a Spike Plugin could need!
  */
 const spikeKit = require("../../spikeKit.js");
-const {throwErr} = require('../../botErr.js')
-const {getStudent, addBucks} = require('../../faccess.js');
+const { throwErr } = require("../../botErr.js");
+const { getStudent, addBucks, getConsts } = require("../../faccess.js");
 
 /**
  * The display name of the plugin.
@@ -26,6 +26,71 @@ const AUTHOR = "Joshua Maxwell and Brandon Ingli";
  */
 const COMMANDS = ["shop", "buy"];
 
+const ITEMS = {
+  textemojis: {
+    roleName: "emoji", // Name in consts.json
+    price: 5000,
+    description:
+      "Get access to premium text emojis! Use Discord's slash commands to access.",
+    forSale: true,
+  },
+  slots: {
+    roleName: "slots",
+    price: 10000,
+    description:
+      "Play the slot machine as much as you want and make that money!",
+    forSale: true,
+  },
+  echo: {
+    roleName: "echo",
+    price: 15000,
+    description:
+      "Use the `echo` command to make Spike say anything! Not available in all channels.",
+    forSale: true,
+  },
+  highroller: {
+    roleName: "highroller",
+    price: 30000,
+    description: "An exclusive role, only obtainable by the best gamblers!",
+    forSale: true,
+  },
+  foundingbulldog: {
+    roleName: "founding",
+    price: 250,
+    description:
+      "[ON SALE FOR A LIMITED TIME] You were there when Spike left beta! Enjoy being distinguished in the roles list and other future perks!",
+    forSale: false,
+  },
+  earlyaccess: {
+    roleName: "earlyaccess",
+    price: 5000,
+    description:
+      "Unlock early access to select new features. Be the early adopter you know you are.",
+    forSale: false,
+  },
+  "2xmult": {
+    roleName: "2xmult",
+    price: 10000,
+    description:
+      "Earn double the Spike Bucks for every message sent! Only the highest multiplier owned is applied.",
+    forSale: false,
+  },
+  "3xmult": {
+    roleName: "3xmult",
+    price: 20000,
+    description:
+      "Earn triple the Spike Bucks for every message sent! Only the highest multiplier owned is applied.",
+    forSale: false,
+  },
+  "4xmult": {
+    roleName: "4xmult",
+    price: 30000,
+    description:
+      "Earn quadruple the Spike Bucks for every message sent! Only the highest multiplier owned is applied.",
+    forSale: false,
+  },
+};
+
 /**
  * Handles help requests for this plugin.
  * @param {string} prefix The command prefix.
@@ -33,10 +98,10 @@ const COMMANDS = ["shop", "buy"];
  * @param {string} args The rest of the message.
  * @returns Help text to be sent back to the user.
  */
- function help(prefix, command, args) {
-  if (command == "shop"){
+function help(prefix, command, args) {
+  if (command == "shop") {
     return shop(prefix);
-  } else if (command == "buy"){
+  } else if (command == "buy") {
     return `${prefix}buy [item]\nYou can use this command to make purchases from the Spike Shop. If you don't have enough money, talk more or try gambling!`;
   }
 }
@@ -46,76 +111,66 @@ const COMMANDS = ["shop", "buy"];
  * @param {string} prefix The command prefix.
  * @returns Help text for the main help screen.
  */
- function shortHelp(prefix){
+function shortHelp(prefix) {
   return `${prefix}help shop - See what's for sale.
-${prefix}buy - Buy something.`
+${prefix}buy - Buy something.`;
 }
 
 /**
  * the shop text so people know what's for sale
  */
- const shop = (prefix) => { return `Here's what's for sale!
-'${prefix}buy textemojis': $5000 - Get access to premium text emojis! Use Discord's slash commands to access.
-'${prefix}buy slots': $10000 - Play the slot machine as much as you want and make that money!
-'${prefix}buy echo': $15000 - When you type ${prefix}echo [text], you can make Spike say anything!
-'${prefix}buy highroller': $30000 - An exclusive role, only obtainable by the best gamblers!`;
-}
+const shop = (prefix) => {
+  let text = "Here's what's for sale!\n\n";
+  for (const [key, info] of Object.entries(ITEMS)) {
+    if (info.forSale) {
+      text += `\`${prefix}buy ${key}\`: \$${info.price} - ${info.description}\n\n`;
+    }
+  }
+  return text;
+};
 
- /**
-  * facilitates a user's purchase
-  * @param {Message} msg the message sent by the user
-  */
- const buy = (msg) => {
-   // [role id, price]
-   const EMOJIS_ROLE = ['692222442801987635', 5000];
-   const SLOTS_ROLE = ['810249172606910494', 10000];
-   const ECHO_ROLE = ['809151273554804806', 15000];
-   const HIGHROLLER_ROLE = ['809127293955211274', 30000];
- 
-   // what did they pick?
-   const buyName = msg.content.split(' ')[1].toLowerCase();
-   let choice;
-   if (buyName === 'textemojis')
-     choice = EMOJIS_ROLE;
-   else if (buyName === 'slots')
-     choice = SLOTS_ROLE;
-   else if (buyName === 'echo')
-     choice = ECHO_ROLE;
-   else if (buyName === 'highroller')
-     choice = HIGHROLLER_ROLE;
-   else {
-     throwErr(msg, 'noItemErr');
-     return;
-   }
- 
-   // do they own it?
-   if (msg.member.roles.cache.has(choice[0])) {
-     throwErr(msg, 'ownedItemErr');
-     return;
-   }
-   //do they have the money?
-   else if (getStudent(msg.author.id)['wallet'] < choice[1]) {
-     throwErr(msg, 'tooPoorErr');
-     return;
-   }
- 
-   addBucks(msg.author, -choice[1]);
-   msg.member.roles.add(choice[0]);
- 
-   const roleName = msg.guild.roles.resolve(choice[0]).name
+/**
+ * facilitates a user's purchase
+ */
+const buy = (msg, arg) => {
+  const roles = getConsts()["role"];
 
-   spikeKit.reply(
-     spikeKit.createEmbed(
-       "Purchase Confirmation",
-       `You have purchased ${msg.content.split(' ')[1]} ` +
-       `for ${choice[1]} Spike Bucks.\nPlease come again!`,
-       true,
-       msg.author.username,
-       msg.author.avatarURL()
-     ),
-     msg
-   );
- }
+  // what did they pick?
+  const buyName = arg.toLowerCase().trim();
+  let choice;
+  if (Object.keys(ITEMS).includes(buyName) && ITEMS[buyName].forSale) {
+    choice = ITEMS[buyName];
+  } else {
+    throwErr(msg, "noItemErr");
+    return;
+  }
+
+  // do they own it?
+  if (msg.member.roles.cache.has(roles[choice.roleName])) {
+    throwErr(msg, "ownedItemErr");
+    return;
+  }
+  //do they have the money?
+  else if (getStudent(msg.author.id)["wallet"] < choice.price) {
+    throwErr(msg, "tooPoorErr");
+    return;
+  }
+
+  addBucks(msg.author, -1 * choice.price);
+  msg.member.roles.add(roles[choice.roleName]);
+
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Purchase Confirmation",
+      `You have purchased ${buyName} ` +
+        `for \$${choice.price} Spike Bucks.\nPlease come again!`,
+      true,
+      msg.author.username,
+      msg.author.avatarURL()
+    ),
+    msg
+  );
+};
 
 /**
  * Handles incoming commands for this plugin.
@@ -124,8 +179,8 @@ ${prefix}buy - Buy something.`
  * @param {Discord.Client} bot The instantiated Discord Bot object.
  * @param {Discord.Message} message An object representing the message sent.
  */
-function processCommand(command, args, bot, message){
-  if (command == "shop"){
+function processCommand(command, args, bot, message) {
+  if (command == "shop") {
     spikeKit.reply(
       spikeKit.createEmbed(
         "Spike Shop",
@@ -135,10 +190,10 @@ function processCommand(command, args, bot, message){
         message.author.avatarURL()
       ),
       message
-    )
-  } else if (command == "buy"){
-    buy(message);
+    );
+  } else if (command == "buy") {
+    buy(message, args);
   }
 }
 
-module.exports = {NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand};
+module.exports = { NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand };
