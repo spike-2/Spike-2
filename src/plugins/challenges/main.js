@@ -7,7 +7,7 @@ const fs = require("fs");
 
 const NAME = "Programming Challenges";
 const AUTHOR = "Joshua Maxwell";
-const COMMANDS = ["challenges", "submitchallenge"];
+const COMMANDS = ["challenges", "submitcode"];
 const FILENAME = "plugins/challenges/challenges.json";
 let challenges;
 
@@ -19,7 +19,7 @@ function shortHelp(prefix) {
   return `${prefix}proofofconcept - Just a proof of concept.`;
 }
 
-const listChallenges = (bot, requestMessage) => {
+const listChallenges = async (bot, requestMessage) => {
   if (Object.keys(challenges).length === 0) {
     spikeKit.reply(
       spikeKit.createEmbed(
@@ -34,7 +34,21 @@ const listChallenges = (bot, requestMessage) => {
     return;
   }
 
-  // for ()
+  let message = "Here are the active programming challenges.\n---\n";
+  for ([id, challenge] of Object.entries(challenges)) {
+    const creator = await bot.users.fetch(challenge.creator);
+    message += `**${challenge.title}**\n*Created by ${creator}*\n*ID: \`${id}\`*\n${challenge.challenge}\n---\n`;
+  }
+  spikeKit.reply(
+    spikeKit.createEmbed(
+      "Programming Challenges",
+      message,
+      false,
+      requestMessage.author.username,
+      requestMessage.author.avatarURL()
+    ),
+    requestMessage
+  );
 };
 
 async function validateCode(language, code, stdin = "", expectedOutput = "") {
@@ -73,8 +87,8 @@ async function validateCode(language, code, stdin = "", expectedOutput = "") {
  * @param {Discord.Message} message An object representing the message sent.
  */
 function processCommand(command, args, bot, message) {
-  if (command === "challenges") return;
-  else if (command === "submitchallenge") return;
+  if (command === "challenges") listChallenges(bot, message);
+  else if (command === "submitcode") return;
 }
 
 /**
@@ -115,6 +129,7 @@ const loadFile = () => {
  */
 function onBotStart(bot) {
   challenges = loadFile();
+  console.log(`${NAME} has started.`);
 }
 
 module.exports = {
@@ -125,7 +140,7 @@ module.exports = {
   help,
   processCommand,
   // processReaction,
-  // onBotStart,
+  onBotStart,
 };
 
 /**
