@@ -43,6 +43,16 @@ async function validateCode(language, code, stdin = "", expectedOutput = "") {
   }
   const { piston } = await import("piston-client");
   const client = piston({ server: "https://emkc.org" });
+  const runtimes = await client.runtimes();
+  const runtimes_filtered = runtimes.filter((obj) => obj.language == language);
+  if (runtimes_filtered.length != 1) {
+    return {
+      validated: false,
+      success: false,
+      error: true,
+      output: "Language is not a valid option.",
+    };
+  }
   const result = await client.execute(language, code, { stdin: stdin });
 
   return {
