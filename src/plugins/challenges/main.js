@@ -4,6 +4,7 @@
 
 const spikeKit = require("../../spikeKit.js");
 const fs = require("fs");
+const { throwErr } = require("../../botErr.js");
 
 const NAME = "Programming Challenges";
 const AUTHOR = "Joshua Maxwell";
@@ -37,7 +38,19 @@ const listChallenges = async (bot, requestMessage) => {
   let message = "Here are the active programming challenges.\n---\n";
   for ([id, challenge] of Object.entries(challenges)) {
     const creator = await bot.users.fetch(challenge.creator);
-    message += `**${challenge.title}**\n*Created by ${creator}*\n*ID: \`${id}\`*\n${challenge.challenge}\n---\n`;
+    let completers = "";
+    for (completer of challenge.passed) {
+      completers += `${await bot.users.fetch(completer.submittedBy)}, `;
+    }
+    if (completers == "") {
+      completers = "nobody!  "; // 2 extra spaces to account for slice
+    }
+    message += `**${
+      challenge.title
+    }**\n*Created by ${creator}*\n*ID: \`${id}\`*\n*Completed by ${completers.slice(
+      0,
+      -2
+    )}*\n\n${challenge.challenge}\n---\n`;
   }
   spikeKit.reply(
     spikeKit.createEmbed(
@@ -58,16 +71,32 @@ async function validateCode(language, code, stdin = "", expectedOutput = "") {
   const { piston } = await import("piston-client");
   const client = piston({ server: "https://emkc.org" });
   const runtimes = await client.runtimes();
-  const runtimes_filtered = runtimes.filter((obj) => obj.language == language);
-  if (runtimes_filtered.length != 1) {
+  let runtimes_filtered = runtimes.filter(
+    (obj) => obj.language == language || obj.aliases.includes(language)
+  );
+  if (runtimes_filtered.length > 1) {
+    runtimes_filtered = runtimes_filtered.filter(
+      (obj) => obj.runtime != "deno"
+    );
+  }
+  if (runtimes_filtered.length == 0) {
     return {
       validated: false,
       success: false,
       error: true,
       output: "Language is not a valid option.",
     };
+  } else if (runtimes_filtered.length > 1) {
+    return {
+      validated: false,
+      success: false,
+      error: true,
+      output: "Language is ambiguous. Please try another name or alias.",
+    };
   }
-  const result = await client.execute(language, code, { stdin: stdin });
+  const result = await client.execute(runtimes_filtered[0].language, code, {
+    stdin: stdin,
+  });
 
   return {
     validated: result.run.output === expectedOutput,
@@ -79,6 +108,83 @@ async function validateCode(language, code, stdin = "", expectedOutput = "") {
   };
 }
 
+async function submitCode(args, bot, message) {
+  // message.delete();
+  // Check message format
+  const messageFormat = /^(\d+)\n\`\`\`(.+)\n((.|\n)+)\n\`\`\`\n?$/;
+  const segs = args.match(messageFormat);
+  if (!segs || segs.length < 4) {
+    throwErr(message, "syntax");
+    return;
+  }
+
+  // Validate challenge
+  if (!Object.keys(challenges).includes(segs[1])) {
+    throwErr(message, "invalidChallengeIdErr");
+    return;
+  }
+
+  const challenge = challenges[segs[1]];
+
+  // Only allow one submission
+  if (
+    challenge.passed.filter((obj) => obj.submittedBy == message.author.id)
+      .length != 0
+  ) {
+    throwErr(message, "alreadySubmittedChallengeErr");
+    return;
+  }
+
+  // Validate code
+  const codeValidation = await validateCode(
+    segs[2],
+    segs[3],
+    challenge.input,
+    challenge.expected
+  );
+
+  if (codeValidation.validated) {
+    spikeKit.reply(
+      spikeKit.createEmbed(
+        `Programming Challenges: ${challenge.title}`,
+        `Your submission passed validation! Congratulations!`,
+        false,
+        message.author.username,
+        message.author.avatarURL()
+      ),
+      message
+    );
+    challenges[segs[1]].passed.push({
+      submittedBy: message.author.id,
+      language: segs[2],
+      code: segs[3],
+    });
+    writeChallenges(challenges);
+  } else if (codeValidation.success) {
+    spikeKit.reply(
+      spikeKit.createEmbed(
+        `Programming Challenges: ${challenge.title}`,
+        `Your submission ran successfully, but produced incorrect output.`,
+        false,
+        message.author.username,
+        message.author.avatarURL()
+      ),
+      message
+    );
+  } else {
+    spikeKit.reply(
+      spikeKit.createEmbed(
+        `Programming Challenges: ${challenge.title}`,
+        `Your submission only produced error output:\n\`\`\`\n${codeValidation.output}\n\`\`\``,
+        false,
+        message.author.username,
+        message.author.avatarURL()
+      ),
+      message
+    );
+  }
+}
+
 /**
  * Handles incoming commands for this plugin.
  * @param {string} command The command issued, without the prefix.
@@ -88,7 +194,7 @@ async function validateCode(language, code, stdin = "", expectedOutput = "") {
  */
 function processCommand(command, args, bot, message) {
   if (command === "challenges") listChallenges(bot, message);
-  else if (command === "submitcode") return;
+  else if (command === "submitcode") submitCode(args, bot, message);
 }
 
 /**
@@ -122,6 +228,14 @@ const loadFile = () => {
     return {};
   }
 };
+
+/**
+ * Writes active challenges to disk.
+ * @param {Challenges} challenges Active Challenges object
+ */
+function writeChallenges(challenges) {
+  fs.writeFileSync(FILENAME, JSON.stringify(challenges));
+}
 
 /**
  * Runs when the bot is first started if exported below.
