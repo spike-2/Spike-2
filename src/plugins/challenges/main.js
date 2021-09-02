@@ -17,7 +17,7 @@ function help(prefix, command, args) {
     case "challenges":
       return `${prefix}challenges\nRun this command to see what challenges are available.`;
     case "submitcode":
-      return `${prefix}submitcode {ID}\n\`\`\`language\ncode\n\`\`\`\n\nSubmit your code for the given challenge.`;
+      return `${prefix}submitcode {ID}\n\\\`\\\`\\\`{language}\n{code}\n\\\`\\\`\\\`\n\n(Don't escape backticks.)\nSubmit your code for the given challenge.`;
   }
 }
 
