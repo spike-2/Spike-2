@@ -1,5 +1,5 @@
 /**
- * A blueprint for a SpikeKit Plugin.
+ * A plugin to facilitate coding challenges.
  */
 
 const spikeKit = require("../../spikeKit.js");
@@ -13,11 +13,19 @@ const FILENAME = "plugins/challenges/challenges.json";
 let challenges;
 
 function help(prefix, command, args) {
-  return "How to use the command with given args.";
+  switch (command) {
+    case "challenges":
+      return `${prefix}challenges\nRun this command to see what challenges are available.`;
+    case "submitcode":
+      return `${prefix}submitcode {ID}\n\`\`\`language\ncode\n\`\`\`\n\nSubmit your code for the given challenge.`;
+  }
 }
 
 function shortHelp(prefix) {
-  return `${prefix}proofofconcept - Just a proof of concept.`;
+  return (
+    `${prefix}challenges - See current challenges\n` +
+    `${prefix}submitcode - Submit code for a challenge.`
+  );
 }
 
 const listChallenges = async (bot, requestMessage) => {
