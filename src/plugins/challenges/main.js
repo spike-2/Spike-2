@@ -7,7 +7,7 @@ const fs = require("fs");
 const { throwErr } = require("../../botErr.js");
 
 const NAME = "Programming Challenges";
-const AUTHOR = "Joshua Maxwell";
+const AUTHOR = "Brandon Ingli and Joshua Maxwell";
 const COMMANDS = ["challenges", "submitcode"];
 const FILENAME = "plugins/challenges/challenges.json";
 let challenges;
