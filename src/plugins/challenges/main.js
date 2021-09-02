@@ -109,7 +109,14 @@ async function validateCode(language, code, stdin = "", expectedOutput = "") {
 }
 
 async function submitCode(args, bot, message) {
-  // message.delete();
+  try {
+    message.delete();
+  } catch (e) {
+    spikeKit.reply(
+      `${message.author}: I couldn't delete your message! Please delete it to shield your work from others!`,
+      message
+    );
+  }
   // Check message format
   const messageFormat = /^(\d+)\n\`\`\`(.+)\n((.|\n)+)\n\`\`\`\n?$/;
   const segs = args.match(messageFormat);
