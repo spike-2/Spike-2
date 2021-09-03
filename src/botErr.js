@@ -220,6 +220,19 @@ const ancmtPartsErr = (msg) => {
   errEmbed(msg, title, description);
 };
 
+const invalidChallengeIdErr = (msg) => {
+  const title = "Invalid Challenge ID";
+  const description = "Please submit code for a valid challenge.";
+  errEmbed(msg, title, description);
+};
+
+const alredySubmittedChallengeErr = (msg) => {
+  const title = "Already Submitted";
+  const description =
+    "You already submitted passing code for this challenge! If you wish to remove your entry, contact Joshua Maxwell.";
+  errEmbed(msg, title, description);
+};
+
 /**
  * throws the specified error
  * @param {Message} msg the message sent by the user
@@ -256,6 +269,9 @@ const throwErr = (msg, errType) => {
   else if (errType === "invalidEndPartsErr") invalidEndPartsErr(msg);
   else if (errType === "transaction") transactionErr(msg);
   else if (errType === "invalidAnnouncePartsErr") ancmtPartsErr(msg);
+  else if (errType === "invalidChallengeIdErr") invalidChallengeIdErr(msg);
+  else if (errType === "alreadySubmittedChallengeErr")
+    alredySubmittedChallengeErr(msg);
 };
 
 module.exports = { throwErr };
