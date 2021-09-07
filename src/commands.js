@@ -13,7 +13,6 @@ const plugins = [
   require("./plugins/shop/main.js"),
   require("./plugins/enigma/main.js"),
   require("./plugins/spike-lisp/main.js"),
-  require("./plugins/adminAnnounce/main.js"),
   require("./plugins/challenges/main.js"),
 ];
 
