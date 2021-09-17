@@ -9,7 +9,7 @@ const spikeKit = require("../../spikeKit.js");
 /**
  * Provides an Asynchronous alternative to setInverval().
  */
-const {AsyncInterval} = require("../../asyncInterval.js");
+const { AsyncInterval } = require("../../asyncInterval.js");
 
 const its = require("./truman-its-service-notes.js");
 
@@ -26,11 +26,11 @@ const AUTHOR = "Brandon Ingli";
  * Called to start tasks on an interval.
  * @param {Discord.Client} bot Instantiated Discord Bot object.
  */
-function startCron(bot){
-  const asyncInterval = new AsyncInterval(
-    async function(){
+function startCron(bot) {
+  const asyncInterval = new AsyncInterval(async function () {
+    try {
       const messages = await its.getNewServiceNotes();
-      for (const message of messages){
+      for (const message of messages) {
         const embed = spikeKit.createEmbed(
           `ITS Service Note: ${message.title}`,
           message.content,
@@ -40,10 +40,11 @@ function startCron(bot){
         );
         spikeKit.send(embed, "bot-commands", bot);
       }
-    }, 
-    10*spikeKit.MINUTE
-  );
+    } catch (e) {
+      console.error(`ITS Service Notes error: ${e}`);
+    }
+  }, 10 * spikeKit.MINUTE);
   asyncInterval.start();
 }
 
-module.exports = {NAME, AUTHOR, startCron};
+module.exports = { NAME, AUTHOR, startCron };
