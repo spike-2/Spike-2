@@ -9,6 +9,7 @@ const { getLastCommit } = require("git-last-commit");
 const { throwErr } = require("../../botErr.js");
 
 const NAME = "Core";
+const SLUG = "core";
 const AUTHOR = "Joshua Maxwell and Brandon Ingli";
 const COMMANDS = [
   "remindme",
@@ -289,4 +290,12 @@ function processCommand(command, args, bot, message) {
   else if (command === "wiki") wiki(message);
 }
 
-module.exports = { NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand };
+module.exports = {
+  NAME,
+  SLUG,
+  shortHelp,
+  AUTHOR,
+  COMMANDS,
+  help,
+  processCommand,
+};

@@ -9,6 +9,7 @@ const { throwErr } = require("../../botErr.js");
 const { getConsts } = require("../../faccess.js");
 
 const NAME = "Admin Announcement";
+const SLUG = "admin-announcement";
 const AUTHOR = "Brandon Ingli";
 const COMMANDS = ["announce", "pendingannouncements"];
 
@@ -353,6 +354,7 @@ function onBotStart(bot) {
 
 module.exports = {
   NAME,
+  SLUG,
   shortHelp,
   AUTHOR,
   COMMANDS,

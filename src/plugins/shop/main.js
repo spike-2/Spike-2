@@ -16,6 +16,10 @@ const { getStudent, addBucks, getConsts } = require("../../faccess.js");
  */
 const NAME = "Spike Store";
 /**
+ * Slug used to programmatically refer to the plugin. Lowercase letters, numbers, and dashes only.
+ */
+const SLUG = "spike-store";
+/**
  * The author(s) of this plugin.
  */
 const AUTHOR = "Joshua Maxwell and Brandon Ingli";
@@ -196,4 +200,12 @@ function processCommand(command, args, bot, message) {
   }
 }
 
-module.exports = { NAME, shortHelp, AUTHOR, COMMANDS, help, processCommand };
+module.exports = {
+  NAME,
+  SLUG,
+  shortHelp,
+  AUTHOR,
+  COMMANDS,
+  help,
+  processCommand,
+};

@@ -7,6 +7,7 @@ const fs = require("fs");
 const { throwErr } = require("../../botErr.js");
 
 const NAME = "Programming Challenges";
+const SLUG = "programming-challenges";
 const AUTHOR = "Brandon Ingli and Joshua Maxwell";
 const COMMANDS = ["challenges", "submitcode"];
 const FILENAME = "plugins/challenges/challenges.json";
@@ -263,6 +264,7 @@ function onBotStart(bot) {
 
 module.exports = {
   NAME,
+  SLUG,
   shortHelp,
   AUTHOR,
   COMMANDS,

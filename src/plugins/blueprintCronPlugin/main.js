@@ -11,12 +11,16 @@ const spikeKit = require("../../spikeKit.js");
 /**
  * Provides an Asynchronous alternative to setInverval().
  */
-const {AsyncInterval} = require("../../asyncInterval.js");
+const { AsyncInterval } = require("../../asyncInterval.js");
 
 /**
  * The display name of the plugin.
  */
 const NAME = "The Name";
+/**
+ * Slug used to programmatically refer to the plugin. Lowercase letters, numbers, and dashes only.
+ */
+const SLUG = "the-name";
 /**
  * The author(s) of this plugin.
  */
@@ -26,8 +30,6 @@ const AUTHOR = "Some Person";
  * Called to start tasks on an interval.
  * @param {Discord.Client} bot Instantiated Discord Bot object.
  */
-function startCron(bot){
+function startCron(bot) {}
 
-}
-
-module.exports = {NAME, AUTHOR, startCron};
+module.exports = { NAME, SLUG, AUTHOR, startCron };
