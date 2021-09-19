@@ -10,6 +10,7 @@ const { getStudent, addBucks, getDat, getConsts } = require("../../faccess.js");
 const { throwErr } = require("../../botErr.js");
 
 const NAME = "Bet";
+const SLUG = "betting";
 const AUTHOR = "Joshua Maxwell and Brandon Ingli";
 const COMMANDS = ["bet", "endbet", "activebets"];
 
@@ -580,6 +581,7 @@ function onBotStart(bot) {
 
 module.exports = {
   NAME,
+  SLUG,
   shortHelp,
   AUTHOR,
   COMMANDS,

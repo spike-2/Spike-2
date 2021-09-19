@@ -18,6 +18,10 @@ const its = require("./truman-its-service-notes.js");
  */
 const NAME = "ITS Service Notes";
 /**
+ * Slug used to programmatically refer to the plugin. Lowercase letters, numbers, and dashes only.
+ */
+ const SLUG = "its-service-notes";
+/**
  * The author(s) of this plugin.
  */
 const AUTHOR = "Brandon Ingli";
@@ -47,4 +51,4 @@ function startCron(bot) {
   asyncInterval.start();
 }
 
-module.exports = { NAME, AUTHOR, startCron };
+module.exports = {NAME, SLUG, AUTHOR, startCron};

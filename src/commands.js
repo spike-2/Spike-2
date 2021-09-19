@@ -39,11 +39,9 @@ const help = (args, message, PREFIX) => {
   if (!args) {
     // Default Help Screen
     console.log("Getting default help");
-    let messageText = `Use '${PREFIX}help [c]' or '${PREFIX}man [c]' to find more information about these commands.`;
+    let messageText = `Use the given help commands to learn more about each plugin and its commands.\nUse \`${PREFIX}help <command>\` to jump to info on that command.`;
     for (const plugin of plugins) {
-      messageText += `\n-------\n${plugin.NAME}\nby ${
-        plugin.AUTHOR
-      }\n\n${plugin.shortHelp(PREFIX)}`;
+      messageText += `\n-------\n"${plugin.NAME}" by ${plugin.AUTHOR}\n\`${PREFIX}help plugin ${plugin.SLUG}\``;
     }
     spikeKit.reply(
       spikeKit.createEmbed(
@@ -57,10 +55,27 @@ const help = (args, message, PREFIX) => {
     );
   } else {
     // Not default, so find the right plugin to get help from
+    const helpCommand = args.split(" ")[0].toLowerCase();
+    const helpArgs = args.substring(args.split(" ")[0].length).slice(1);
     for (const plugin of plugins) {
-      const helpCommand = args.split(" ")[0].toLowerCase();
-      const helpArgs = args.substring(args.split(" ")[0].length).slice(1);
-      if (plugin.COMMANDS.includes(helpCommand)) {
+      if (helpCommand === "plugin" && helpArgs == plugin.SLUG) {
+        console.log(`Getting plugin help for "${plugin.NAME}"`);
+        spikeKit.reply(
+          spikeKit.createEmbed(
+            `${plugin.NAME} Help`,
+            `${plugin.NAME}\nby ${
+              plugin.AUTHOR
+            }\nUse \`${PREFIX}help <command>\` for info on that command.\n\n${plugin.shortHelp(
+              PREFIX
+            )}`,
+            true,
+            message.author.username,
+            message.author.avatarURL()
+          ),
+          message
+        );
+        break;
+      } else if (plugin.COMMANDS.includes(helpCommand)) {
         console.log(
           `Getting help for ${PREFIX}${helpCommand} from "${plugin.NAME}"`
         );
