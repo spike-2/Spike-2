@@ -14,6 +14,7 @@ const plugins = [
   require("./plugins/enigma/main.js"),
   require("./plugins/spike-lisp/main.js"),
   require("./plugins/challenges/main.js"),
+  require("./plugins/slisp/main.js")
 ];
 
 /**
