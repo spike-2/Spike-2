@@ -23,7 +23,7 @@ const { spikeUID, simoneUID } = getConsts();
 
 bot.on("ready", async () => {
   // when loaded (ready event)
-  bot.user.setActivity(`${PREFIX}help | ${PREFIX}info`, { type: "LISTENING" });
+  bot.user.setActivity(`${PREFIX}help | ${PREFIX}info`, { type: "PLAYING" });
   console.log(`${bot.user.username} is ready...`);
   // Starts the bot cron jobs
   cron.startJobs(bot);
