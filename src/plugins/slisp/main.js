@@ -32,7 +32,7 @@ const COMMANDS = ["slisp"];
  * @returns Help text to be sent back to the user.
  */
 function help(prefix, command, args) {
-  return "How to use the command with given args.";
+  return "To learn how to use the Slisp interpreter, please check out the wiki page: https://github.com/jwMaxwell/Spike-2/wiki/Slisp";
 }
 
 /**
@@ -52,8 +52,7 @@ function shortHelp(prefix) {
  * @param {Discord.Message} message An object representing the message sent.
  */
 function processCommand(command, args, bot, message) {
-  console.log('ta-da');
-  if (command === 'slisp') 
+  if (command === 'slisp')
     slisp.interpret(args.replace('```lisp', '').replace('```', ''), message);
 }
 
