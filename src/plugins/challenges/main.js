@@ -4,7 +4,6 @@
 
 const spikeKit = require("../../spikeKit.js");
 const fs = require("fs");
-const { throwErr } = require("../../botErr.js");
 
 const NAME = "Programming Challenges";
 const SLUG = "programming-challenges";
@@ -130,13 +129,13 @@ async function submitCode(args, bot, message) {
   const messageFormat = /^(\d+)\n\`\`\`(.+)\n((.|\n)+)\n\`\`\`\n?$/;
   const segs = args.match(messageFormat);
   if (!segs || segs.length < 4) {
-    throwErr(message, "syntax");
+    spikeKit.throwErr(message, "syntax");
     return;
   }
 
   // Validate challenge
   if (!Object.keys(challenges).includes(segs[1])) {
-    throwErr(message, "invalidChallengeIdErr");
+    spikeKit.throwErr(message, "invalidChallengeIdErr");
     return;
   }
 
@@ -147,7 +146,7 @@ async function submitCode(args, bot, message) {
     challenge.passed.filter((obj) => obj.submittedBy == message.author.id)
       .length != 0
   ) {
-    throwErr(message, "alreadySubmittedChallengeErr");
+    spikeKit.throwErr(message, "alreadySubmittedChallengeErr");
     return;
   }
 

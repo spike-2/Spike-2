@@ -9,7 +9,6 @@
  */
 const spikeKit = require("../../spikeKit.js");
 const { getStudent, addBucks, getDat, getConsts } = require("../../faccess.js");
-const { throwErr } = require("../../botErr.js");
 
 /**
  * The display name of the plugin.
@@ -81,7 +80,7 @@ const validWager = (msg, wager) => {
   if (temp && temp >= 0 && getStudent(msg.author.id).wallet >= temp)
     return true;
 
-  throwErr(msg, "wager");
+  spikeKit.throwErr(msg, "wager");
   return false;
 };
 
@@ -142,7 +141,7 @@ const getWallet = (msg, id) => {
 
   student = getStudent(id);
   if (!student) {
-    throwErr(msg, "user");
+    spikeKit.throwErr(msg, "user");
     return;
   }
 
@@ -176,7 +175,7 @@ const coinToss = (msg, prefix) => {
     args.length != 3 ||
     (args[2].toLowerCase() !== "heads" && args[2].toLowerCase() !== "tails")
   ) {
-    throwErr(msg, "syntax");
+    spikeKit.throwErr(msg, "syntax");
     return;
   }
 
@@ -225,7 +224,7 @@ const gift = (msg) => {
   console.log(args);
 
   if (args.length != 3) {
-    throwErr(msg, "syntax");
+    spikeKit.throwErr(msg, "syntax");
     return;
   }
 
@@ -236,7 +235,7 @@ const gift = (msg) => {
 
   const recipient = getStudent(detag(args[2]));
   if (!recipient) {
-    throwErr(msg, "user");
+    spikeKit.throwErr(msg, "user");
     return;
   }
 
@@ -348,7 +347,7 @@ const dice = (msg) => {
  */
 const slots = (msg) => {
   if (!msg.member.roles.cache.has(getConsts().role["slots"])) {
-    throwErr(msg, "invalidPermsErr");
+    spikeKit.throwErr(msg, "invalidPermsErr");
     return;
   }
   const wager = parseInt(msg.content.split(" ")[1]);

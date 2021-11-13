@@ -8,7 +8,6 @@
  * A one stop shop for all things a Spike Plugin could need!
  */
 const spikeKit = require("../../spikeKit.js");
-const { throwErr } = require("../../botErr.js");
 const { getStudent, addBucks, getConsts } = require("../../faccess.js");
 
 /**
@@ -145,18 +144,18 @@ const buy = (msg, arg) => {
   if (Object.keys(ITEMS).includes(buyName) && ITEMS[buyName].forSale) {
     choice = ITEMS[buyName];
   } else {
-    throwErr(msg, "noItemErr");
+    spikeKit.throwErr(msg, "noItemErr");
     return;
   }
 
   // do they own it?
   if (msg.member.roles.cache.has(roles[choice.roleName])) {
-    throwErr(msg, "ownedItemErr");
+    spikeKit.throwErr(msg, "ownedItemErr");
     return;
   }
   //do they have the money?
   else if (getStudent(msg.author.id)["wallet"] < choice.price) {
-    throwErr(msg, "tooPoorErr");
+    spikeKit.throwErr(msg, "tooPoorErr");
     return;
   }
 

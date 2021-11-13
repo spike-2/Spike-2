@@ -3,10 +3,18 @@
  */
 
 const Discord = require("discord.js");
-const { getConsts } = require("./faccess.js");
+const { getConsts, getErrs } = require("./faccess.js");
 
 const COLORS = {
-  PURPLE: 0xcc00ff,
+  PURPLE: 0x510c76,
+  RED: 0xfc0004,
+  GREEN: 0x00c000,
+  BLUE: 0x00a8e2,
+  GOLD: 0x87714d,
+  WHITE: 0xffffff,
+  ORANGE: 0xf39c12,
+  YELLOW: 0xf1c40f,
+  BLACK: 0x000000,
 };
 
 // Time Constants for convenience
@@ -32,7 +40,7 @@ function getChannelID(channelName) {
 /**
  * Send a message to a channel of your choice.
  * @param {Discord.MessageEmbed|String} content The content to include in the message.
- * @param {string} channel The channel name (without the leading #) to send this message to.
+ * @param {string | int} channel The channel name (without the leading #) or channel ID to send this message to.
  * @param {Discord.Client} bot Instantiated Discord Client.
  * @throws "Invalid bot" if the bot is not properly provided.
  * @throws "Embed not provided" if Embed is not properly provided.
@@ -47,7 +55,10 @@ async function send(content, channel, bot) {
   if (!(bot instanceof Discord.Client)) {
     throw "Invalid bot";
   }
-  await bot.channels.cache.get(getChannelID(channel)).send(content);
+  if (!Number.isInteger(channel)) {
+    channel = getChannelID(channel);
+  }
+  await bot.channels.cache.get(channel).send(content);
 }
 
 /**
@@ -76,6 +87,7 @@ async function reply(content, message) {
  * @param {boolean} [monotype=false] True if the content should be monospace (```yaml).
  * @param {string} [footer=null] Footer text of the embed.
  * @param {string} [footerImageURL=null] Fully qualified URL to image to include in footer.
+ * @param {SpikeKit.COLORS} [color=COLORS.PURPLE] Color for the embed. If not defined in enum, embed will be purple.
  * @returns {Discord.MessageEmbed} Embed to send on via another function.
  */
 function createEmbed(
@@ -83,13 +95,58 @@ function createEmbed(
   content,
   monotype = false,
   footer = null,
-  footerImageURL = null
+  footerImageURL = null,
+  color = COLORS.PURPLE
 ) {
+  if (!Object.values(COLORS).includes(color)) {
+    color = COLORS.PURPLE;
+  }
   return new Discord.MessageEmbed()
-    .setColor(COLORS.PURPLE)
+    .setColor(color)
     .setTitle(title)
     .setDescription(monotype ? "```yaml\n" + content + "\n```" : content)
     .setFooter(footer, footerImageURL);
 }
 
-module.exports = { SECOND, MINUTE, HOUR, send, reply, createEmbed };
+/**
+ * Send an error defined in errors.json. To send a custom error,
+ * send an embed with COLORS.RED color and monotype.
+ * @param {Discord.Message} msg message sent by user
+ * @param {string} key Key of the error to send.
+ */
+async function throwErr(msg, key) {
+  const errs = getErrs();
+  let selectedError = {
+    title: "Unknown Error",
+    description: `An unknown error occurred: ${key}`,
+  };
+
+  if (!Object.keys(errs).includes(key)) {
+    console.error(`Invalid error key: ${key}`);
+  } else {
+    selectedError = errs[key];
+  }
+
+  await reply(
+    createEmbed(
+      selectedError.title,
+      selectedError.description,
+      true,
+      msg.author.username,
+      msg.author.avatarURL(),
+      COLORS.RED
+    ),
+    msg
+  );
+}
+
+module.exports = {
+  SECOND,
+  MINUTE,
+  HOUR,
+  COLORS,
+  send,
+  reply,
+  createEmbed,
+  throwErr,
+};

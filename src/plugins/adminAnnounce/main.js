@@ -5,7 +5,6 @@
 
 const spikeKit = require("../../spikeKit.js");
 const fs = require("fs");
-const { throwErr } = require("../../botErr.js");
 const { getConsts } = require("../../faccess.js");
 
 const NAME = "Admin Announcement";
@@ -134,7 +133,7 @@ async function newAnnouncement(args, bot, message) {
   let ancmts = getAnnouncements();
   const ancmtParts = args.split(";");
   if (ancmtParts.length != 2) {
-    throwErr(message, "invalidAnnouncePartsErr");
+    spikeKit.throwErr(message, "invalidAnnouncePartsErr");
     console.error(
       `Admin Announce: ancmtParts wrong length. Expected 2, got ${ancmtParts.length}`
     );
@@ -185,7 +184,7 @@ async function newAnnouncement(args, bot, message) {
  */
 function processCommand(command, args, bot, message) {
   if (!hasPermission(message.guild, message.author.id)) {
-    throwErr(message, "invalidPermsErr");
+    spikeKit.throwErr(message, "invalidPermsErr");
     return;
   }
 
@@ -225,7 +224,7 @@ async function processReaction(reaction, user, add, bot) {
     return;
   }
   if (thisAncmtReduced.length > 1) {
-    throwErr(reaction.message, "multipleMessageReaction");
+    spikeKit.throwErr(reaction.message, "multipleMessageReaction");
     // prettier-ignore
     console.error(`Admin Announcement: Expected to find one announcement, got ${thisAncmtReduced.length}`);
     return;
