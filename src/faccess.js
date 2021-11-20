@@ -31,10 +31,16 @@ let files = {
  * writes new data to data file
  */
 const updateFile = () => {
-  fs.writeFile(FILENAME, JSON.stringify(files.records.data), (err, t) => {
-    if (err) return console.log(err);
-    console.log(`${JSON.stringify(files.records.data)} > ${FILENAME}`);
-  });
+  fs.writeFile(
+    files.records.filename,
+    JSON.stringify(files.records.data),
+    (err, t) => {
+      if (err) return console.log(err);
+      console.log(
+        `${JSON.stringify(files.records.data)} > ${files.records.filename}`
+      );
+    }
+  );
 };
 
 /**
@@ -44,11 +50,23 @@ const updateFile = () => {
 const readIn = () => {
   console.log(files);
   Object.keys(files).forEach((key, index) => {
-    files[key].data = fs.readFileSync(files[key].filename, {
-      encoding: "utf8",
-      flag: "r",
-    });
-    files[key].data = JSON.parse(files[key].data);
+    try {
+      files[key].data = fs.readFileSync(files[key].filename, {
+        encoding: "utf8",
+        flag: "r",
+      });
+      files[key].data = JSON.parse(files[key].data);
+    } catch (e) {
+      console.error(`${files[key].filename} doesn't exist or isn't readable.`);
+      if (key == "records") {
+        console.error(`Using empty object for records instead.`);
+        files[key].data = {};
+        updateFile();
+      } else {
+        console.error(`Exiting...`);
+        process.exit(1);
+      }
+    }
     if (key == "records") {
       console.log(files[key].data);
     }
