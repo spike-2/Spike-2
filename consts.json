@@ -191,6 +191,10 @@
 		"catdance": {
 			"premium": true,
 			"content": "⊂ヽ \n　 ＼＼ Λ＿Λ\n 　　 ＼( 'ㅅ' )\n 　　　 >　⌒ヽ\n 　　　/ 　 へ  ＼\n 　　 /　　/　＼＼\n 　　 ﾚ　ノ　　 ヽつ\n 　　/　/ \n 　 /　/| \n 　(　(ヽ \n 　|　|、＼ \n 　| 丿 ＼ ⌒) \n 　| |　　)"
+		},
+		"shocked": {
+			"premium": false,
+			"content": "(⊙.⊙(☉̃ₒ☉)⊙.⊙)"
 		}
 	}
 }
