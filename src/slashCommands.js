@@ -4,6 +4,7 @@
  */
 
 const { getConsts } = require("./faccess.js");
+const Discord = require("discord.js");
 var bot, GUILDID;
 
 const setBot = (theBot) => {
@@ -54,18 +55,18 @@ const deleteCommand = async (commandId) => {
 
 /**
  * Reply to an interaction.
- * @param {string} response Response to send
+ * @param {string | Discord.MessageEmbed} response Response to send
  * @param {Object} interaction The interaction to reply to
  */
-const reply = (response, interaction, bot) => {
-  bot.api.interactions(interaction.id, interaction.token).callback.post({
-    data: {
-      type: 4,
-      data: {
-        content: response,
-      },
-    },
-  });
+const reply = async (response, interaction) => {
+  let messageData = {};
+  if (response instanceof Discord.MessageEmbed) {
+    messageData.embeds = [response];
+  } else {
+    messageData.content = `${response}`;
+  }
+
+  await interaction.reply(messageData);
 };
 
 /**
@@ -104,7 +105,7 @@ const handleInteraction = async (interaction, bot) => {
     emoji &&
     (!emoji.premium || (emoji.premium && member.roles.includes(emojiRole)))
   ) {
-    reply(emoji.content, interaction, bot);
+    reply(emoji.content, interaction);
   }
 };
 

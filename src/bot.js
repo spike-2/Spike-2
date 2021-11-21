@@ -42,10 +42,6 @@ bot.on("ready", async () => {
   // Uncomment below to add new or update existing commands
   // slashCommands.addAllCommands();
 
-  bot.ws.on("INTERACTION_CREATE", async (interaction) => {
-    slashCommands.handleInteraction(interaction, bot);
-  });
-
   onBotStart(bot);
 });
 // on message recieved
@@ -69,6 +65,12 @@ bot.on("message", (message) => {
 
   // if a user sends a message
   if (!message.author.bot) addBucks(message.author, 1);
+});
+
+// on Slash Commands
+bot.on("interactionCreate", async (interaction) => {
+  if (!interaction.isCommand()) return;
+  slashCommands.handleInteraction(interaction, bot);
 });
 
 // on Reactions
