@@ -122,7 +122,8 @@ async function submitCode(args, bot, message) {
   } catch (e) {
     spikeKit.reply(
       `${message.author}: I couldn't delete your message! Please delete it to shield your work from others!`,
-      message
+      message,
+      true
     );
   }
   // Check message format

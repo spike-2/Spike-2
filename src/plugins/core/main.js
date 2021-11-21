@@ -85,7 +85,8 @@ const remindMe = (msg, args) => {
         msg.author.username,
         msg.author.avatarURL()
       ),
-      msg
+      msg,
+      true
     );
   }, time);
 

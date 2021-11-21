@@ -65,10 +65,11 @@ async function send(content, channel, bot) {
  * Reply to an inbound message.
  * @param {Discord.MessageEmbed|String} content The content to include in the message.
  * @param {Discord.Message} message The message object to reply to.
+ * @param {boolean} [mention=false] Mention the user you're replying to.
  * @throws "Embed not provided" if Embed is not properly provided.
  * @throws "Invalid message" if the message object is not properly provided.
  */
-async function reply(content, message) {
+async function reply(content, message, mention = false) {
   if (
     !(content instanceof Discord.MessageEmbed || typeof content === "string")
   ) {
@@ -84,6 +85,9 @@ async function reply(content, message) {
   } else {
     messageData.content = `${content}`;
   }
+
+  messageData.allowedMentions = {};
+  messageData.allowedMentions.repliedUser = mention;
 
   await message.reply(messageData);
 }
