@@ -7,7 +7,7 @@
 
 // dependencies
 require("dotenv").config();
-const { Client } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 const { execute, onBotStart, onReaction } = require("./commands.js");
 const { readIn, addBucks, getConsts } = require("./faccess.js");
 const { verify } = require("./verify.js");
@@ -20,7 +20,14 @@ const PREFIX = "$";
 readIn();
 
 // starting the bot
-const bot = new Client();
+const bot = new Client({
+  intents: [
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+  ],
+});
 
 const { spikeUID, simoneUID } = getConsts();
 
