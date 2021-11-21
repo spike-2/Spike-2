@@ -8,13 +8,6 @@ const { getConsts, getErrs } = require("./faccess.js");
 const COLORS = {
   PURPLE: 0x510c76,
   RED: 0xfc0004,
-  GREEN: 0x00c000,
-  BLUE: 0x00a8e2,
-  GOLD: 0x87714d,
-  WHITE: 0xffffff,
-  ORANGE: 0xf39c12,
-  YELLOW: 0xf1c40f,
-  BLACK: 0x000000,
 };
 
 // Time Constants for convenience
