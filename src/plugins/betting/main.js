@@ -7,7 +7,6 @@
 const spikeKit = require("../../spikeKit.js");
 const fs = require("fs");
 const { getStudent, addBucks, getDat, getConsts } = require("../../faccess.js");
-const { throwErr } = require("../../botErr.js");
 
 const NAME = "Bet";
 const SLUG = "betting";
@@ -151,7 +150,7 @@ async function newBet(args, bot, message) {
   let bets = getBets();
   const betParts = args.split("\n");
   if (betParts.length < 3) {
-    throwErr(message, "invalidBetPartsErr");
+    spikeKit.throwErr(message, "invalidBetPartsErr");
     console.error(
       `Bet: betParts wrong length. Expected 3, got ${betParts.length}`
     );
@@ -165,7 +164,7 @@ async function newBet(args, bot, message) {
       throw "No funds!";
     }
   } catch (e) {
-    throwErr(message, "tooPoorErr");
+    spikeKit.throwErr(message, "tooPoorErr");
     console.error(
       `Bet: User ${message.author.username} doesn't have funds to set up wager.`
     );
@@ -188,7 +187,7 @@ async function newBet(args, bot, message) {
   for (const line of betParts.slice(2)) {
     const lineArgs = line.trim().match(/^(.+)\s([0-9]+)\s([0-9]+)\s(.*)$/);
     if (lineArgs == null || lineArgs.length != 5) {
-      throwErr(message, "invalidLineArgsLengthErr");
+      spikeKit.throwErr(message, "invalidLineArgsLengthErr");
       console.error(
         `Bet: lineArgs wrong length. Expected 3, got ${
           lineArgs ? lineArgs.length : "null"
@@ -202,16 +201,16 @@ async function newBet(args, bot, message) {
     emojiToReact = [...emojiToReact, emoji];
 
     if (parseInt(lineArgs[2]) == NaN || parseInt(lineArgs[3]) == NaN) {
-      throwErr(message, "NanBetAmtErr");
+      spikeKit.throwErr(message, "NanBetAmtErr");
       console.error(
         `Bet: Got a NaN for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`
       );
       return;
     }
     if (parseInt(lineArgs[2]) <= 0 || parseInt(lineArgs[3]) <= 0) {
-      throwErr(message, "betNonZeroErr");
+      spikeKit.throwErr(message, "betNonPosErr");
       console.error(
-        `Bet: Got a non-zero value for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`
+        `Bet: Got a non-positive value for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`
       );
       return;
     }
@@ -262,7 +261,7 @@ async function endBet(args, bot, message) {
 
   const endParts = args.trim().split(" ");
   if (endParts.length != 2) {
-    throwErr(message, "invalidEndPartsErr");
+    spikeKit.throwErr(message, "invalidEndPartsErr");
     console.error(
       `Bet: endParts wrong length. Expected 2, got ${endParts.length}`
     );
@@ -270,7 +269,7 @@ async function endBet(args, bot, message) {
   }
 
   if (!bets[endParts[0]]) {
-    throwErr(message, "invalidEndBetIdErr");
+    spikeKit.throwErr(message, "invalidEndBetIdErr");
     console.error(`Bet: End Bet invalid ID: ${endParts[0]}`);
     return;
   }
@@ -279,7 +278,7 @@ async function endBet(args, bot, message) {
   const thisBet = bets[thisBetID];
 
   if (message.author.id != thisBet.createdBy) {
-    throwErr(message, "notBetOwnerErr");
+    spikeKit.throwErr(message, "notBetOwnerErr");
     console.error(
       `Bet: User that's not the creator tried to end ${thisBetID}: ${message.author.username}`
     );
@@ -288,7 +287,7 @@ async function endBet(args, bot, message) {
 
   const winningEmoji = parseEmoji(endParts[1], message.guild);
   if (!thisBet.wagers[winningEmoji.emoji]) {
-    throwErr(message, "invalidEmojiErr");
+    spikeKit.throwErr(message, "invalidEmojiErr");
     console.error(`Bet: Winning Emoji not a wager: ${winningEmoji.printEmoji}`);
     return;
   }
@@ -314,7 +313,7 @@ async function endBet(args, bot, message) {
       throw "Doesn't Exist";
     }
   } catch (e) {
-    throwErr(message, "user");
+    spikeKit.throwErr(message, "user");
     console.error(`Bet: User ${user.username} doesn't exist.`);
     return;
   }
@@ -336,7 +335,7 @@ async function endBet(args, bot, message) {
   try {
     addBucks(betAuthor, bucksToAdjust);
   } catch (e) {
-    throwErr(message, "cannotAdjustBetAuthorBank");
+    spikeKit.throwErr(message, "cannotAdjustBetAuthorBank");
     console.error(
       `Bet: Couldn't adjust ${betAuthor.username}'s bank by ${bucksToAdjust}`
     );
@@ -351,7 +350,7 @@ async function endBet(args, bot, message) {
       addBucks(user, winningsPerPerson);
       winnersNames = [...winnersNames, user.username];
     } catch (e) {
-      throwErr(message, "cannotPayBettor;" + user.username);
+      spikeKit.throwErr(message, "cannotPayBettor;" + user.username);
       console.error(
         `Bet: Couldn't pay ${winningsPerPerson} to ${user.username}.`
       );
@@ -379,7 +378,7 @@ Bet ${winningWager.bet}, Win ${winningsPerPerson}\nWinners: ${winnersNames.join(
     betAuthor.avatarURL()
   );
 
-  await bot.channels.cache.get(thisBet.channelID).send(embed);
+  spikeKit.send(embed, thisBet.channelID, bot);
   const getLastMessage = await message.channel.messages.fetch({ limit: 1 });
   const lastMessage = getLastMessage.first();
 
@@ -444,7 +443,7 @@ function processReaction(reaction, user, add, bot) {
       b.messageID == reaction.message.id
   );
   if (thisBetReduced.length != 1) {
-    throwErr(reaction.message, "multipleMessageReaction");
+    spikeKit.throwErr(reaction.message, "multipleMessageReaction");
     console.error(
       `Bet: Expected to find one bet, got ${thisBetReduced.length}`
     );
@@ -455,7 +454,7 @@ function processReaction(reaction, user, add, bot) {
 
   // Verify that they can bet
   if (thisBet.createdBy == user.id) {
-    throwErr(reaction.message, "betOwnerBets");
+    spikeKit.throwErr(reaction.message, "betOwnerBets");
     console.error(
       `Bet: ${user.username} tried to wager on their own bet ${thisBetID}`
     );
@@ -471,7 +470,7 @@ function processReaction(reaction, user, add, bot) {
       throw "Doesn't Exist";
     }
   } catch (e) {
-    throwErr(reaction.message, "user");
+    spikeKit.throwErr(reaction.message, "user");
     console.error(`Bet: Student ${user.id} doesn't exist.`);
     reaction.users.remove(user.id);
     return;
@@ -482,7 +481,7 @@ function processReaction(reaction, user, add, bot) {
 
   // Verify emoji
   if (!Object.keys(thisBet.wagers).includes(emoji)) {
-    throwErr(reaction.message, "invalidEmojiErr");
+    spikeKit.throwErr(reaction.message, "invalidEmojiErr");
     console.error(`Bet: Emoji ${emoji} not a wager on ${thisBetID}`);
     reaction.users.remove(user.id);
     return;
@@ -500,7 +499,7 @@ function processReaction(reaction, user, add, bot) {
 
     // Verify the funds exist to bet
     if (student.wallet < thisBet.wagers[emoji].bet) {
-      throwErr(reaction.message, "tooPoorErr");
+      spikeKit.throwErr(reaction.message, "tooPoorErr");
       console.error(
         `Bet: Student ${user.username} doesn't have enough to bet ${thisBet.wagers[emoji].bet} (Wallet ${student.wallet})`
       );
@@ -512,7 +511,7 @@ function processReaction(reaction, user, add, bot) {
     try {
       addBucks(user, parseInt(-1 * thisBet.wagers[emoji].bet));
     } catch (e) {
-      throwErr(reaction.message, "transaction");
+      spikeKit.throwErr(reaction.message, "transaction");
       console.error(
         `Bet: Couldn't take ${thisBet.wagers[emoji].bet} from ${user.username}`
       );
@@ -554,7 +553,7 @@ function processReaction(reaction, user, add, bot) {
     try {
       addBucks(user, thisBet.wagers[emoji].bet);
     } catch (e) {
-      throwErr(reaction.message, "transaction");
+      spikeKit.throwErr(reaction.message, "transaction");
       console.error(
         `Bet: Couldn't refund ${thisBet.wagers[emoji].bet} to ${user.username}.`
       );

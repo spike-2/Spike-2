@@ -16,6 +16,9 @@ const slashCommands = require("./slashCommands.js");
 
 const PREFIX = "$";
 
+// loads in data
+readIn();
+
 // starting the bot
 const bot = new Client();
 
@@ -121,9 +124,6 @@ bot.on("messageReactionRemove", async (reaction, user) => {
     onReaction(reaction, user, false, bot);
   }
 });
-
-// loads in data
-console.log(readIn());
 
 // brings the bot online
 bot.login(process.env.DISJS_BOT_TOKEN);

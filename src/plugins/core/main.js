@@ -6,7 +6,6 @@ const spikeKit = require("../../spikeKit.js");
 const { getPackage, getConsts } = require("../../faccess.js");
 const https = require("https");
 const { getLastCommit } = require("git-last-commit");
-const { throwErr } = require("../../botErr.js");
 
 const NAME = "Core";
 const SLUG = "core";
@@ -68,7 +67,7 @@ const remindMe = (msg, args) => {
   const segs = args.match(regexp);
 
   if (!segs || segs.length != 5) {
-    throwErr(msg, "syntax");
+    spikeKit.throwErr(msg, "syntax");
     return;
   }
 
@@ -107,7 +106,6 @@ const remindMe = (msg, args) => {
 };
 
 const embedify = (args, msg) => {
-  console.log("performing embedify");
   const title = args.slice(0, args.indexOf(";"));
   const content = args
     .slice(args.indexOf(";") + 1)
@@ -128,27 +126,33 @@ const embedify = (args, msg) => {
 };
 
 const clear = (msg) => {
-  console.log(msg.member.roles);
   if (
     !msg.member.hasPermission("ADMINISTRATOR") &&
     !msg.member.roles.cache.has(getConsts().role.botexpert)
   ) {
-    throwErr(msg, "invalidPermsErr");
+    spikeKit.throwErr(msg, "invalidPermsErr");
     return;
   }
   const arg = msg.content.split(" ")[1];
-  if (isNaN(arg)) throwErr(msg, "clearNaNErr");
-  else if (arg > 100) throwErr(msg, "clearTooBigErr");
-  else if (arg < 2) throwErr(msg, "clearTooSmallErr");
+  if (isNaN(arg)) {
+    spikeKit.throwErr(msg, "clearNaNErr");
+    return;
+  } else if (arg > 100) {
+    spikeKit.throwErr(msg, "clearTooBigErr");
+    return;
+  } else if (arg < 2) {
+    spikeKit.throwErr(msg, "clearTooSmallErr");
+    return;
+  }
   msg.channel.bulkDelete(parseInt(arg));
 };
 
 const echo = (content, msg) => {
   if (!msg.member.roles.cache.has(getConsts().role["echo"])) {
-    throwErr(msg, "invalidPermsErr");
+    spikeKit.throwErr(msg, "invalidPermsErr");
     return;
   }
-  msg.channel.send(content);
+  spikeKit.reply(content, msg);
   msg.delete();
 };
 

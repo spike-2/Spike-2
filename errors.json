@@ -1,0 +1,114 @@
+{
+  "syntax": {
+    "title": "Invalid Syntax",
+    "description": "Please see the help menu for more information."
+  },
+  "wager": {
+    "title": "Invalid Wager",
+    "description": "Your wager must be a positive amount and you cannot bet more than you own."
+  },
+  "user": {
+    "title": "Invalid User",
+    "description": "The given user either doesn't exist or has yet to be cached!"
+  },
+  "command": {
+    "title": "Command not found",
+    "description": "The given command cannot be found. To view the list of commands, type \"$help\""
+  },
+  "noItemErr": {
+    "title": "Item not found",
+    "description": "The given item does not exist. To view the Spike Shop, type \"$help shop\""
+  },
+  "ownedItemErr": {
+    "title": "Already owned",
+    "description": "You already own this item, you silly goose!"
+  },
+  "tooPoorErr": {
+    "title": "Insufficient funds",
+    "description": "You do not have sufficient funds."
+  },
+  "clearNaNErr": {
+    "title": "Invalid number",
+    "description": "Please input a valid number."
+  },
+  "NaNErr": {
+    "title": "Invalid number",
+    "description": "Please input a valid number."
+  },
+  "clearTooBigErr": {
+    "title": "Number too large",
+    "description": "Input a number that is less than 100."
+  },
+  "clearTooSmallErr": {
+    "title": "Number too small",
+    "description": "Input a number that is at least 2."
+  },
+  "invalidPermsErr": {
+    "title": "Invalid Permissions",
+    "description": "This command requires special permissions to perform."
+  },
+  "invalidBetPartsErr": {
+    "title": "Invalid Syntax",
+    "description": "Wrong number of bet arguments: Expected 3"
+  },
+  "invalidLineArgsLengthErr": {
+    "title": "Invalid line arguments length",
+    "description": "Line arguments wrong length. Expected 3"
+  },
+  "NanBetAmtErr": {
+    "title": "NaN Amount",
+    "description": "Bet or Win amount is not a number."
+  },
+  "betNonPosErr": {
+    "title": "Non-positive bet/win amount",
+    "description": "Bet or Win amount is not > 0."
+  },
+  "invalidEndPartsErr": {
+    "title": "Invalid Syntax",
+    "description": "Got wrong number of parameters to end bet."
+  },
+  "invalidEndBetIdErr": {
+    "title": "Invalid ID",
+    "description": "Cannot end a bet with this ID."
+  },
+  "notBetOwnerErr": {
+    "title": "Not Bet Creator",
+    "description": "Only the creator of the bet can close the bet."
+  },
+  "invalidEmojiErr": {
+    "title": "Invalid Emoji",
+    "description": "Emoji is not a wager."
+  },
+  "cannotAdjustBetAuthorBank": {
+    "title": "Cannot Adjust Author's Bank",
+    "description": "Cannot adjust bet author's bank."
+  },
+  "cannotPayBettor": {
+    "title": "Cannot Pay Bettor",
+    "description": "A bettor cannot be paid. Contact maintainers or see error logs for more information."
+  },
+  "multipleMessageReaction": {
+    "title": "Multiple Messages Found Reacted To",
+    "description": "Expected one message reacted to, got multiple."
+  },
+  "betOwnerBets": {
+    "title": "Bet Owner Cannot Bet on Own Bet",
+    "description": "A bet owner tried to bet on their own bet, which they cannot do."
+  },
+  "transaction": {
+    "title": "Transaction Error",
+    "description": "An error occurred when making a Spike Bucks transaction."
+  },
+  "invalidAnnouncePartsErr": {
+    "title": "Syntax Error",
+    "description": "Wrong number of arguments for announcement: Expected 2"
+  },
+  "incvalidChallengeIdErr": {
+    "title": "Invalid Challenge ID",
+    "description": "Please submit code for a valid challenge."
+  },
+  "alreadySubmittedChallengeErr": {
+    "title": "Already Submitted",
+    "description": "You already submitted passing code for this challenge! If you wish to remove your entry, contact Joshua Maxwell."
+  }
+}
