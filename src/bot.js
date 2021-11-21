@@ -28,6 +28,7 @@ const bot = new Client({
     Intents.FLAGS.DIRECT_MESSAGES,
     Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
   ],
+  partials: ["CHANNEL"],
 });
 
 const { spikeUID, simoneUID } = getConsts();
@@ -50,7 +51,11 @@ bot.on("ready", async () => {
   onBotStart(bot);
 });
 // on message recieved
-bot.on("messageCreate", (message) => {
+bot.on("messageCreate", async (message) => {
+  if (message.partial) {
+    message = await message.fetch();
+  }
+
   if (
     message.member &&
     !message.member.roles.cache.has(getConsts().role["verified"]) &&
@@ -59,7 +64,7 @@ bot.on("messageCreate", (message) => {
     verify(message, bot);
   }
 
-  if (message.channel.type === "dm") {
+  if (message.channel.type === "DM") {
     //TODO
   }
 
