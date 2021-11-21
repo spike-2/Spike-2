@@ -88,6 +88,7 @@ async function reply(content, message, mention = false) {
 
   messageData.allowedMentions = {};
   messageData.allowedMentions.repliedUser = mention;
+  messageData.failIfNotExists = false;
 
   await message.reply(messageData);
 }
