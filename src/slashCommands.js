@@ -5,28 +5,14 @@
 
 const { getConsts } = require("./faccess.js");
 const Discord = require("discord.js");
-var bot, GUILDID;
+const { REST } = require("@discordjs/rest");
+const { ROUTES } = require("discord-api-types/v9");
+var bot, GUILDID, rest;
 
 const setBot = (theBot) => {
   bot = theBot;
   GUILDID = getConsts().guild;
-};
-
-/**
- * Get the API App object
- * @returns API App required for interacting with the api
- */
-const getApp = () => {
-  return (app = bot.api.applications(bot.user.id).guilds(GUILDID));
-};
-
-/**
- * Get currently enrolled slash commands
- * @returns {Object[]} An array of objects representing slash commands
- */
-const getCommands = async () => {
-  const commands = await getApp().commands.get();
-  return commands;
+  rest = new REST({ version: "9" }).setToken(process.env.DISJS_BOT_TOKEN);
 };
 
 /**
@@ -36,11 +22,13 @@ const getCommands = async () => {
  * @param {Object} [options=null] An array of options for the command. See https://discord.com/developers/docs/interactions/slash-commands#registering-a-command
  */
 const addCommand = async (name, description, options = null) => {
-  await getApp().commands.post({
-    data: {
-      name: name,
-      description: description,
-      options: options,
+  await rest.put(ROUTES.applicationGuildCommands(bot.user.id, GUILDID), {
+    body: {
+      data: {
+        name: name,
+        description: description,
+        options: options,
+      },
     },
   });
 };
@@ -50,7 +38,9 @@ const addCommand = async (name, description, options = null) => {
  * @param {string} commandId The ID of the command to delete
  */
 const deleteCommand = async (commandId) => {
-  await getApp().commands(commandId).delete();
+  await rest.delete(
+    `${ROUTES.applicationGuildCommands(bot.user.id, GUILDID)}/${commandId}`
+  );
 };
 
 /**
