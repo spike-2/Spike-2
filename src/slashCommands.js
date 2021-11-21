@@ -77,10 +77,10 @@ const addAllCommands = async () => {
 };
 
 const deleteAllCommands = async () => {
-  const commands = await slashCommands.getCommands();
+  const commands = await getCommands();
   for (command of commands) {
     console.log(`Deleting ${command.name}...`);
-    await slashCommands.deleteCommand(command.id);
+    await deleteCommand(command.id);
     console.log(`${command.name} deleted.`);
   }
 };
