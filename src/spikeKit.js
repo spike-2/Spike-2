@@ -111,9 +111,9 @@ function createEmbed(
   }
   return new Discord.MessageEmbed()
     .setColor(color)
-    .setTitle(title)
-    .setDescription(monotype ? "```yaml\n" + content + "\n```" : content)
-    .setFooter(footer, footerImageURL);
+    .setTitle(`${title}`)
+    .setDescription(monotype ? `\`\`\`yaml\n${content}\n\`\`\`` : `${content}`)
+    .setFooter(`${footer}`, footerImageURL);
 }
 
 /**
