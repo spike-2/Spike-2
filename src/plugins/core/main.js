@@ -128,7 +128,7 @@ const embedify = (args, msg, bot) => {
 
 const clear = (msg) => {
   if (
-    !msg.member.hasPermission("ADMINISTRATOR") &&
+    !msg.member.permissions.has("ADMINISTRATOR") &&
     !msg.member.roles.cache.has(getConsts().role.botexpert)
   ) {
     spikeKit.throwErr(msg, "invalidPermsErr");
