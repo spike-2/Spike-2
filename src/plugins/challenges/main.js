@@ -159,7 +159,7 @@ async function submitCode(args, bot, message) {
   );
 
   if (codeValidation.validated) {
-    spikeKit.reply(
+    spikeKit.send(
       spikeKit.createEmbed(
         `Programming Challenges: ${challenge.title}`,
         `Your submission passed validation! Congratulations!`,
@@ -167,7 +167,8 @@ async function submitCode(args, bot, message) {
         message.author.username,
         message.author.avatarURL()
       ),
-      message
+      message.channelId,
+      bot
     );
     challenges[segs[1]].passed.push({
       submittedBy: message.author.id,
@@ -176,7 +177,7 @@ async function submitCode(args, bot, message) {
     });
     writeChallenges(challenges);
   } else if (codeValidation.success) {
-    spikeKit.reply(
+    spikeKit.send(
       spikeKit.createEmbed(
         `Programming Challenges: ${challenge.title}`,
         `Your submission ran successfully, but produced incorrect output.`,
@@ -184,10 +185,11 @@ async function submitCode(args, bot, message) {
         message.author.username,
         message.author.avatarURL()
       ),
-      message
+      message.channelId,
+      bot
     );
   } else {
-    spikeKit.reply(
+    spikeKit.send(
       spikeKit.createEmbed(
         `Programming Challenges: ${challenge.title}`,
         `Your submission only produced error output:\n\`\`\`\n${codeValidation.output}\n\`\`\``,
@@ -195,7 +197,8 @@ async function submitCode(args, bot, message) {
         message.author.username,
         message.author.avatarURL()
       ),
-      message
+      message.channelId,
+      bot
     );
   }
 }

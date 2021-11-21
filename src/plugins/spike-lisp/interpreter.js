@@ -33,7 +33,7 @@
     },
 
     eval: function (x) {
-      message.channel.send(x[0]);
+      message.channel.send(`${x[0]}`);
       message.delete();
     },
 

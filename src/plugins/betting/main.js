@@ -233,7 +233,7 @@ async function newBet(args, bot, message) {
     message.author.username,
     message.author.avatarURL()
   );
-  await spikeKit.reply(embed, message);
+  await spikeKit.send(embed, message.channelId, bot);
 
   const getLastMessage = await message.channel.messages.fetch({ limit: 1 });
   const lastMessage = getLastMessage.first();

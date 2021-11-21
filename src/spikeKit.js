@@ -51,7 +51,14 @@ async function send(content, channel, bot) {
   if (!Number.isInteger(channel)) {
     channel = getChannelID(channel);
   }
-  await bot.channels.cache.get(channel).send(content);
+
+  let messageData = {};
+  if (content instanceof Discord.MessageEmbed) {
+    messageData.embeds = [content];
+  } else {
+    messageData.content = `${content}`;
+  }
+  await bot.channels.cache.get(channel).send(messageData);
 }
 
 /**
@@ -70,7 +77,15 @@ async function reply(content, message) {
   if (!(message instanceof Discord.Message)) {
     throw "Invalid message";
   }
-  await message.channel.send(content);
+
+  let messageData = {};
+  if (content instanceof Discord.MessageEmbed) {
+    messageData.embeds = [content];
+  } else {
+    messageData.content = `${content}`;
+  }
+
+  await message.reply(messageData);
 }
 
 /**
