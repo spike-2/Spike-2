@@ -48,7 +48,7 @@ async function send(content, channel, bot) {
   if (!(bot instanceof Discord.Client)) {
     throw "Invalid bot";
   }
-  if (!Number.isInteger(channel)) {
+  if (!/\d+/.test(channel)) {
     channel = getChannelID(channel);
   }
 

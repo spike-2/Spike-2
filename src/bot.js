@@ -22,6 +22,7 @@ readIn();
 // starting the bot
 const bot = new Client({
   intents: [
+    Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     Intents.FLAGS.DIRECT_MESSAGES,
@@ -41,10 +42,7 @@ bot.on("ready", async () => {
   slashCommands.setBot(bot);
 
   // Uncomment below to delete all commands
-  // const commands = await slashCommands.getCommands();
-  // for (command of commands){
-  // await slashCommands.deleteCommand(command.id);
-  // }
+  // slashCommands.deleteAllCommands();
 
   // Uncomment below to add new or update existing commands
   // slashCommands.addAllCommands();
@@ -52,7 +50,7 @@ bot.on("ready", async () => {
   onBotStart(bot);
 });
 // on message recieved
-bot.on("message", (message) => {
+bot.on("messageCreate", (message) => {
   if (
     message.member &&
     !message.member.roles.cache.has(getConsts().role["verified"]) &&
