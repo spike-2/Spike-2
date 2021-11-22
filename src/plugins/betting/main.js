@@ -390,7 +390,7 @@ Bet ${winningWager.bet}, Win ${winningsPerPerson}\nWinners: ${winnersNames.join(
     betAuthor.username,
     betAuthor.avatarURL()
   );
-  oldMessage.edit(oldMessageNewEmbed);
+  oldMessage.edit({ embeds: [oldMessageNewEmbed] });
 
   // Remove from the active bets
   delete bets[thisBetID];
@@ -453,7 +453,7 @@ function processReaction(reaction, user, add, bot) {
   const [thisBetID, thisBet] = thisBetReduced[0];
 
   // Verify that they can bet
-  if (thisBet.createdBy == user.id) {
+  if (thisBet.createdBy == user.id && add) {
     spikeKit.throwErr(reaction.message, "betOwnerBets");
     console.error(
       `Bet: ${user.username} tried to wager on their own bet ${thisBetID}`
