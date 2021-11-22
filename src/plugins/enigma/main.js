@@ -91,7 +91,7 @@ function processCommand(command, args, bot, message) {
     } catch (e) {
       enigmaText = `Error: ${e}`;
     }
-    spikeKit.reply(
+    spikeKit.send(
       spikeKit.createEmbed(
         "Enigma",
         enigmaText,
@@ -99,7 +99,8 @@ function processCommand(command, args, bot, message) {
         message.author.username,
         message.author.avatarURL()
       ),
-      message
+      message.channelId,
+      bot
     );
     message.delete();
   }
