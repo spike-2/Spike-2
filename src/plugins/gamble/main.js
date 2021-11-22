@@ -221,7 +221,6 @@ const coinToss = (msg, prefix) => {
 const gift = (msg) => {
   // gift [amt] [user]
   const args = msg.content.split(" ");
-  console.log(args);
 
   if (args.length != 3) {
     spikeKit.throwErr(msg, "syntax");
