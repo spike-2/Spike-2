@@ -269,7 +269,7 @@ const leaderboard = (msg) => {
   users.sort((a, b) => b.wallet - a.wallet);
 
   let result = "";
-  for (let i = 0; i < 10; ++i)
+  for (let i = 0; i < 10 && i < users.length; ++i)
     result += `${i + 1} | ${users[i].name} - ${users[i].wallet}\n`;
   result = result.slice(0, result.length - 1);
   const title = "Coin Toss";
