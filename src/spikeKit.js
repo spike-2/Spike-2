@@ -48,20 +48,28 @@ async function send(content, channel, bot) {
   if (!(bot instanceof Discord.Client)) {
     throw "Invalid bot";
   }
-  if (!Number.isInteger(channel)) {
+  if (!/\d+/.test(channel)) {
     channel = getChannelID(channel);
   }
-  await bot.channels.cache.get(channel).send(content);
+
+  let messageData = {};
+  if (content instanceof Discord.MessageEmbed) {
+    messageData.embeds = [content];
+  } else {
+    messageData.content = `${content}`;
+  }
+  await bot.channels.cache.get(channel).send(messageData);
 }
 
 /**
  * Reply to an inbound message.
  * @param {Discord.MessageEmbed|String} content The content to include in the message.
  * @param {Discord.Message} message The message object to reply to.
+ * @param {boolean} [mention=false] Mention the user you're replying to.
  * @throws "Embed not provided" if Embed is not properly provided.
  * @throws "Invalid message" if the message object is not properly provided.
  */
-async function reply(content, message) {
+async function reply(content, message, mention = false) {
   if (
     !(content instanceof Discord.MessageEmbed || typeof content === "string")
   ) {
@@ -70,7 +78,19 @@ async function reply(content, message) {
   if (!(message instanceof Discord.Message)) {
     throw "Invalid message";
   }
-  await message.channel.send(content);
+
+  let messageData = {};
+  if (content instanceof Discord.MessageEmbed) {
+    messageData.embeds = [content];
+  } else {
+    messageData.content = `${content}`;
+  }
+
+  messageData.allowedMentions = {};
+  messageData.allowedMentions.repliedUser = mention;
+  messageData.failIfNotExists = false;
+
+  await message.reply(messageData);
 }
 
 /**
@@ -96,9 +116,9 @@ function createEmbed(
   }
   return new Discord.MessageEmbed()
     .setColor(color)
-    .setTitle(title)
-    .setDescription(monotype ? "```yaml\n" + content + "\n```" : content)
-    .setFooter(footer, footerImageURL);
+    .setTitle(`${title}`)
+    .setDescription(monotype ? `\`\`\`yaml\n${content}\n\`\`\`` : `${content}`)
+    .setFooter(`${footer}`, footerImageURL);
 }
 
 /**

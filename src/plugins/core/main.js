@@ -77,7 +77,6 @@ const remindMe = (msg, args) => {
     parseInt(segs[3]) * spikeKit.SECOND;
 
   setTimeout((_) => {
-    spikeKit.reply(msg.author.toString(), msg);
     spikeKit.reply(
       spikeKit.createEmbed(
         "Reminder :bell:",
@@ -86,7 +85,8 @@ const remindMe = (msg, args) => {
         msg.author.username,
         msg.author.avatarURL()
       ),
-      msg
+      msg,
+      true
     );
   }, time);
 
@@ -105,14 +105,14 @@ const remindMe = (msg, args) => {
   );
 };
 
-const embedify = (args, msg) => {
+const embedify = (args, msg, bot) => {
   const title = args.slice(0, args.indexOf(";"));
   const content = args
     .slice(args.indexOf(";") + 1)
     .trimStart()
     .trimEnd();
 
-  spikeKit.reply(
+  spikeKit.send(
     spikeKit.createEmbed(
       title,
       content,
@@ -120,14 +120,15 @@ const embedify = (args, msg) => {
       msg.author.username,
       msg.author.avatarURL()
     ),
-    msg
+    msg.channelId,
+    bot
   );
   msg.delete();
 };
 
 const clear = (msg) => {
   if (
-    !msg.member.hasPermission("ADMINISTRATOR") &&
+    !msg.member.permissions.has("ADMINISTRATOR") &&
     !msg.member.roles.cache.has(getConsts().role.botexpert)
   ) {
     spikeKit.throwErr(msg, "invalidPermsErr");
@@ -147,12 +148,12 @@ const clear = (msg) => {
   msg.channel.bulkDelete(parseInt(arg));
 };
 
-const echo = (content, msg) => {
+const echo = (content, msg, bot) => {
   if (!msg.member.roles.cache.has(getConsts().role["echo"])) {
     spikeKit.throwErr(msg, "invalidPermsErr");
     return;
   }
-  spikeKit.reply(content, msg);
+  spikeKit.send(content, msg.channelId, bot);
   msg.delete();
 };
 
@@ -284,9 +285,9 @@ function wiki(msg) {
 
 function processCommand(command, args, bot, message) {
   if (command.toLowerCase() === "remindme") remindMe(message, args);
-  else if (command === "embedify") embedify(args, message);
+  else if (command === "embedify") embedify(args, message, bot);
   else if (command === "clear") clear(message);
-  else if (command === "echo") echo(args, message);
+  else if (command === "echo") echo(args, message, bot);
   else if (command === "info") info(message);
   else if (command === "bug") bug(message);
   else if (command === "request") request(message);

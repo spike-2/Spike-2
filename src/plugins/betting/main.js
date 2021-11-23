@@ -233,7 +233,7 @@ async function newBet(args, bot, message) {
     message.author.username,
     message.author.avatarURL()
   );
-  await spikeKit.reply(embed, message);
+  await spikeKit.send(embed, message.channelId, bot);
 
   const getLastMessage = await message.channel.messages.fetch({ limit: 1 });
   const lastMessage = getLastMessage.first();
@@ -390,7 +390,7 @@ Bet ${winningWager.bet}, Win ${winningsPerPerson}\nWinners: ${winnersNames.join(
     betAuthor.username,
     betAuthor.avatarURL()
   );
-  oldMessage.edit(oldMessageNewEmbed);
+  oldMessage.edit({ embeds: [oldMessageNewEmbed] });
 
   // Remove from the active bets
   delete bets[thisBetID];
@@ -454,11 +454,13 @@ function processReaction(reaction, user, add, bot) {
 
   // Verify that they can bet
   if (thisBet.createdBy == user.id) {
-    spikeKit.throwErr(reaction.message, "betOwnerBets");
-    console.error(
-      `Bet: ${user.username} tried to wager on their own bet ${thisBetID}`
-    );
-    reaction.users.remove(user.id);
+    if (add) {
+      spikeKit.throwErr(reaction.message, "betOwnerBets");
+      console.error(
+        `Bet: ${user.username} tried to wager on their own bet ${thisBetID}`
+      );
+      reaction.users.remove(user.id);
+    }
     return;
   }
 

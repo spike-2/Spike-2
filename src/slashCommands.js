@@ -4,44 +4,16 @@
  */
 
 const { getConsts } = require("./faccess.js");
-var bot, GUILDID;
+const Discord = require("discord.js");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+var bot, GUILDID, rest;
 
 const setBot = (theBot) => {
   bot = theBot;
   GUILDID = getConsts().guild;
-};
-
-/**
- * Get the API App object
- * @returns API App required for interacting with the api
- */
-const getApp = () => {
-  return (app = bot.api.applications(bot.user.id).guilds(GUILDID));
-};
-
-/**
- * Get currently enrolled slash commands
- * @returns {Object[]} An array of objects representing slash commands
- */
-const getCommands = async () => {
-  const commands = await getApp().commands.get();
-  return commands;
-};
-
-/**
- * Add or Update a Command. Passing the name of an existing command updates it.
- * @param {string} name Name of the command
- * @param {string} description Description of the command
- * @param {Object} [options=null] An array of options for the command. See https://discord.com/developers/docs/interactions/slash-commands#registering-a-command
- */
-const addCommand = async (name, description, options = null) => {
-  await getApp().commands.post({
-    data: {
-      name: name,
-      description: description,
-      options: options,
-    },
-  });
+  rest = new REST({ version: "9" }).setToken(process.env.DISJS_BOT_TOKEN);
 };
 
 /**
@@ -49,41 +21,68 @@ const addCommand = async (name, description, options = null) => {
  * @param {string} commandId The ID of the command to delete
  */
 const deleteCommand = async (commandId) => {
-  await getApp().commands(commandId).delete();
+  await rest.delete(
+    `${Routes.applicationGuildCommands(bot.user.id, GUILDID)}/${commandId}`
+  );
+};
+
+const getCommands = async () => {
+  let commands = await rest.get(
+    Routes.applicationGuildCommands(bot.user.id, GUILDID)
+  );
+  return commands;
 };
 
 /**
  * Reply to an interaction.
- * @param {string} response Response to send
+ * @param {string | Discord.MessageEmbed} response Response to send
  * @param {Object} interaction The interaction to reply to
  */
-const reply = (response, interaction, bot) => {
-  bot.api.interactions(interaction.id, interaction.token).callback.post({
-    data: {
-      type: 4,
-      data: {
-        content: response,
-      },
-    },
-  });
+const reply = async (response, interaction) => {
+  let messageData = {};
+  if (response instanceof Discord.MessageEmbed) {
+    messageData.embeds = [response];
+  } else {
+    messageData.content = `${response}`;
+  }
+
+  await interaction.reply(messageData);
 };
 
 /**
  * Bulk add the slash commands we want.
  */
-const addAllCommands = () => {
+const addAllCommands = async () => {
   console.log(`Adding Slash Commands...`);
+  let commands = [];
   const emojis = getConsts().emoji;
   for (let [name, params] of Object.entries(emojis)) {
-    addCommand(
-      name.toLowerCase(),
-      (params.premium
-        ? `[PREMIUM] ${params.content}`
-        : params.content
-      ).substring(0, 100)
+    commands.push(
+      new SlashCommandBuilder()
+        .setName(name.toLowerCase())
+        .setDescription(
+          (params.premium
+            ? `[PREMIUM] ${params.content}`
+            : params.content
+          ).substring(0, 100)
+        )
+        .setDefaultPermission(true)
+        .toJSON()
     );
   }
+  await rest.put(Routes.applicationGuildCommands(bot.user.id, GUILDID), {
+    body: commands,
+  });
   console.log(`All Commands Added.`);
+};
+
+const deleteAllCommands = async () => {
+  const commands = await getCommands();
+  for (command of commands) {
+    console.log(`Deleting ${command.name}...`);
+    await deleteCommand(command.id);
+    console.log(`${command.name} deleted.`);
+  }
 };
 
 /**
@@ -94,25 +93,31 @@ const addAllCommands = () => {
  * Options: [{value: "", type: 4, name: "name"}, ...]
  */
 const handleInteraction = async (interaction, bot) => {
-  const { name, options } = interaction.data;
-  const member = interaction.member;
+  const { commandName, user } = interaction;
+  const member =
+    interaction.guild.members.cache.get(user) ||
+    (await interaction.guild.members.fetch(user));
   const emojiRole = getConsts().role.emoji;
+  let emojiRoleObject =
+    interaction.guild.roles.cache.get(emojiRole) ||
+    (await interaction.guild.roles.fetch(emojiRole));
 
-  const emoji = getConsts().emoji[name];
+  const emoji = getConsts().emoji[commandName];
 
   if (
     emoji &&
-    (!emoji.premium || (emoji.premium && member.roles.includes(emojiRole)))
+    member &&
+    (!emoji.premium || (emoji.premium && member.roles.cache.has(emojiRole)))
   ) {
-    reply(emoji.content, interaction, bot);
+    reply(emoji.content, interaction);
   }
 };
 
 module.exports = {
   setBot,
   getCommands,
-  addCommand,
   addAllCommands,
   deleteCommand,
+  deleteAllCommands,
   handleInteraction,
 };

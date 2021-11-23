@@ -7,7 +7,7 @@
 
 // dependencies
 require("dotenv").config();
-const { Client } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 const { execute, onBotStart, onReaction } = require("./commands.js");
 const { readIn, addBucks, getConsts } = require("./faccess.js");
 const { verify } = require("./verify.js");
@@ -20,7 +20,16 @@ const PREFIX = "$";
 readIn();
 
 // starting the bot
-const bot = new Client();
+const bot = new Client({
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+  ],
+  partials: ["CHANNEL"],
+});
 
 const { spikeUID, simoneUID } = getConsts();
 
@@ -34,22 +43,19 @@ bot.on("ready", async () => {
   slashCommands.setBot(bot);
 
   // Uncomment below to delete all commands
-  // const commands = await slashCommands.getCommands();
-  // for (command of commands){
-  // await slashCommands.deleteCommand(command.id);
-  // }
+  // slashCommands.deleteAllCommands();
 
   // Uncomment below to add new or update existing commands
   // slashCommands.addAllCommands();
 
-  bot.ws.on("INTERACTION_CREATE", async (interaction) => {
-    slashCommands.handleInteraction(interaction, bot);
-  });
-
   onBotStart(bot);
 });
 // on message recieved
-bot.on("message", (message) => {
+bot.on("messageCreate", async (message) => {
+  if (message.partial) {
+    message = await message.fetch();
+  }
+
   if (
     message.member &&
     !message.member.roles.cache.has(getConsts().role["verified"]) &&
@@ -58,7 +64,7 @@ bot.on("message", (message) => {
     verify(message, bot);
   }
 
-  if (message.channel.type === "dm") {
+  if (message.channel.type === "DM") {
     //TODO
   }
 
@@ -69,6 +75,12 @@ bot.on("message", (message) => {
 
   // if a user sends a message
   if (!message.author.bot) addBucks(message.author, 1);
+});
+
+// on Slash Commands
+bot.on("interactionCreate", async (interaction) => {
+  if (!interaction.isCommand()) return;
+  slashCommands.handleInteraction(interaction, bot);
 });
 
 // on Reactions

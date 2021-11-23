@@ -50,7 +50,7 @@ function shortHelp(prefix) {
 function hasPermission(guild, id) {
   const member = guild.members.cache.get(id);
   return (
-    member.hasPermission("ADMINISTRATOR") ||
+    member.permissions.has("ADMINISTRATOR") ||
     member.roles.cache.has(getConsts().role.botexpert)
   );
 }
