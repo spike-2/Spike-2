@@ -68,7 +68,7 @@
 		"ticketResolved": "***Ticket has been resolved***"
 	},
 	"verify": {
-		"muted-msg": "You have been marked as unverified since you are either new here or you nickname does not meet the server's guidelines. Please read the rules and change your discord nickname to include your first and last name. **After you have done this, type `$verify` to request an unmute!**",
+		"muted-msg": "You have been marked as unverified since you are either new here or you nickname does not meet the server's guidelines. Please read the rules and change your discord nickname to include your first and last name. **After you have done this, type `${PREFIX}verify` to request an unmute!**",
 		"sent-msg": "The admins have been notified about your unmute request!"
 	},
 	"emoji": {
