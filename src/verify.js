@@ -43,4 +43,21 @@ const verify = (message, bot, PREFIX) => {
   }
 };
 
-module.exports = { verify };
+const alreadyVerified = (message, bot) => {
+  spikeKit.send(
+    spikeKit.createEmbed(
+      `Already Verified!`,
+      `You're already verified, ${message.author}! Enjoy the server!`,
+      false,
+      `${message.author.username}`,
+      message.author.avatarURL(),
+      spikeKit.COLORS.PURPLE
+    ),
+    "bot-commands",
+    bot,
+    [message.author]
+  );
+  message.delete();
+};
+
+module.exports = { verify, alreadyVerified };
