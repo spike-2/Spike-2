@@ -10,7 +10,7 @@ require("dotenv").config();
 const { Client, Intents } = require("discord.js");
 const { execute, onBotStart, onReaction } = require("./commands.js");
 const { readIn, addBucks, getConsts } = require("./faccess.js");
-const { verify } = require("./verify.js");
+const { verify, alreadyVerified } = require("./verify.js");
 const cron = require("./botCron.js");
 const slashCommands = require("./slashCommands.js");
 
@@ -62,6 +62,14 @@ bot.on("messageCreate", async (message) => {
     message.channel.id != getConsts().channel.introductions
   ) {
     verify(message, bot, PREFIX);
+  }
+
+  if (
+    message.content === `${PREFIX}verify` &&
+    message.member &&
+    message.member.roles.cache.has(getConsts().role["verified"])
+  ) {
+    alreadyVerified(message, bot);
   }
 
   if (message.channel.type === "DM") {
