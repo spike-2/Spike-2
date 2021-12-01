@@ -1,10 +1,10 @@
 const { getConsts } = require("./faccess.js");
 const spikeKit = require("./spikeKit.js");
 
-const verify = (message, bot) => {
+const verify = (message, bot, PREFIX) => {
   message.delete();
 
-  if (message.content === "$verify") {
+  if (message.content === `${PREFIX}verify`) {
     const e = spikeKit.createEmbed(
       "Request sent!",
       getConsts().verify["sent-msg"],
@@ -13,10 +13,10 @@ const verify = (message, bot) => {
       message.author.avatarURL(),
       spikeKit.COLORS.PURPLE
     );
-    spikeKit.send(e, "bot-commands", bot);
+    spikeKit.send(e, "bot-commands", bot, [message.author]);
 
     const title = `User "${message.author.username}" unmute request`;
-    const content = `<@${message.author.id}> has requested to be unmuted`;
+    const content = `${message.author} has requested to be unmuted`;
     const f = spikeKit.createEmbed(
       title,
       content,
@@ -27,9 +27,10 @@ const verify = (message, bot) => {
     );
     spikeKit.send(f, "admin-notifications", bot);
   } else {
-    const content = `<@${message.author.id}> ${
-      getConsts().verify["muted-msg"]
-    }`;
+    const content = getConsts().verify["muted-msg"].replace(
+      "${PREFIX}",
+      `${PREFIX}`
+    );
     const e = spikeKit.createEmbed(
       "Unverified",
       content,
@@ -38,7 +39,7 @@ const verify = (message, bot) => {
       message.author.avatarURL(),
       spikeKit.COLORS.RED
     );
-    spikeKit.send(e, "bot-commands", bot);
+    spikeKit.send(e, "bot-commands", bot, [message.author]);
   }
 };
 

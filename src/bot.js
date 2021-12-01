@@ -61,7 +61,7 @@ bot.on("messageCreate", async (message) => {
     !message.member.roles.cache.has(getConsts().role["verified"]) &&
     message.channel.id != getConsts().channel.introductions
   ) {
-    verify(message, bot);
+    verify(message, bot, PREFIX);
   }
 
   if (message.channel.type === "DM") {

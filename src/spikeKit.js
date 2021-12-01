@@ -35,11 +35,12 @@ function getChannelID(channelName) {
  * @param {Discord.MessageEmbed|String} content The content to include in the message.
  * @param {string | int} channel The channel name (without the leading #) or channel ID to send this message to.
  * @param {Discord.Client} bot Instantiated Discord Client.
+ * @param {Discord.User[]} [mention=null] An array of users to mention. Will add to the beginning of the content (even for embeds)
  * @throws "Invalid bot" if the bot is not properly provided.
  * @throws "Embed not provided" if Embed is not properly provided.
  * @throws "Channel not found"  if the given channel name is not in our records.
  */
-async function send(content, channel, bot) {
+async function send(content, channel, bot, mention = false) {
   if (
     !(content instanceof Discord.MessageEmbed || typeof content === "string")
   ) {
@@ -55,8 +56,17 @@ async function send(content, channel, bot) {
   let messageData = {};
   if (content instanceof Discord.MessageEmbed) {
     messageData.embeds = [content];
+    messageData.content = "";
   } else {
     messageData.content = `${content}`;
+  }
+
+  if (mention && mention.length > 0) {
+    let mentionString = "";
+    for (const user of mention) {
+      mentionString += `${user} `;
+    }
+    messageData.content = `${mentionString}${messageData.content}`;
   }
   await bot.channels.cache.get(channel).send(messageData);
 }
