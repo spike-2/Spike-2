@@ -3,7 +3,7 @@
   "fullName": "Spike (Beta)",
   "version": "2.0.5",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "creator": "Joshua Maxwell",
   "created": "25 Nov 2020",
   "repository": {
@@ -14,8 +14,9 @@
   },
   "language": "node.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/bot.js"
+    "start": "cd src && node ./main.js",
+    "update": "cd scripts && make",
+    "clean": "cd scripts && sh clean.sh"
   },
   "keywords": [],
   "author": "",
