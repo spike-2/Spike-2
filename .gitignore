@@ -2,6 +2,7 @@ lastCheckTime.txt
 node_modules
 bets.json
 .env
+.env.testing
 announcements.json
 records.json
 challenges.json
