@@ -1,8 +1,8 @@
 lastCheckTime.txt
 node_modules
-Makefile
 bets.json
 .env
+.env.testing
 announcements.json
 records.json
 challenges.json

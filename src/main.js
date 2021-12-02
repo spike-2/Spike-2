@@ -6,7 +6,9 @@
  */
 
 // dependencies
-require("dotenv").config();
+require("dotenv").config({
+  path: process.argv.includes("--testing") ? "./.env.testing" : "./.env",
+});
 const { Client, Intents } = require("discord.js");
 const { execute, onBotStart, onReaction } = require("./commands.js");
 const { readIn, addBucks, getConsts } = require("./faccess.js");
