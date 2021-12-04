@@ -34,7 +34,7 @@ if (!webhookParts) {
 
 const consoleLogLevel = process.env.CONSOLE_LOG_LEVEL ?? "warn";
 
-spikeKit.logger = logger = winston.createLogger({
+spikeKit.logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       level: consoleLogLevel,

@@ -68,7 +68,14 @@ async function send(content, channel, bot, mention = false) {
     }
     messageData.content = `${mentionString}${messageData.content ?? ""}`;
   }
-  await bot.channels.cache.get(channel).send(messageData);
+
+  const channelObj = bot.channels.cache.get(channel);
+  // prettier-ignore
+  this.logger.log(
+    "debug",
+    `Sending message to channel #${channelObj.name} : ${content instanceof Discord.MessageEmbed ? `[${content.title}] ${content.description}` : content}`
+  );
+  await channelObj.send(messageData);
 }
 
 /**
@@ -100,6 +107,11 @@ async function reply(content, message, mention = false) {
   messageData.allowedMentions.repliedUser = mention;
   messageData.failIfNotExists = false;
 
+  // prettier-ignore
+  this.logger.log(
+    "debug",
+    `Replying to ${message.url} : ${content instanceof Discord.MessageEmbed ? `[${content.title}] ${content.description}` : content}`
+  );
   await message.reply(messageData);
 }
 
@@ -145,7 +157,7 @@ async function throwErr(msg, key) {
   };
 
   if (!Object.keys(errs).includes(key)) {
-    spikeKit.logger.warn(`Invalid error key: ${key}`);
+    this.logger.warn(`Invalid error key: ${key}`);
   } else {
     selectedError = errs[key];
   }

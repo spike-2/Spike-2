@@ -115,9 +115,8 @@ const execute = (message, bot, PREFIX) => {
     let found = false;
     for (const plugin of plugins) {
       if (plugin.COMMANDS.includes(command)) {
-        spikeKit.logger.log(
-          "debug",
-          `Running ${PREFIX}${command} from "${plugin.NAME}"`
+        spikeKit.logger.info(
+          `Running ${PREFIX}${command} from "${plugin.NAME}". Args: ${args}`
         );
         plugin.processCommand(command, args, bot, message);
         found = true;
@@ -146,7 +145,7 @@ function onReaction(reaction, user, add, bot) {
         embed.title.toLowerCase().startsWith(`${plugin.NAME.toLowerCase()}: `)
       ) {
         // prettier-ignore
-        spikeKit.logger.log("debug", `Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`);
+        spikeKit.logger.info(`Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`);
         plugin.processReaction(reaction, user, add, bot);
         found = true;
       }
