@@ -73,6 +73,7 @@ spikeKit.logger = winston.createLogger({
       symlinkName: "combined.log",
       auditFile: "combined-audit.json",
       level: "info",
+      handleExceptions: true,
       format: winston.format.combine(
         winston.format.timestamp({
           format: "YYYY-MM-DD HH:mm:ss",
@@ -92,6 +93,7 @@ spikeKit.logger = winston.createLogger({
       symlinkName: "error.log",
       auditFile: "error-audit.json",
       level: "warn",
+      handleExceptions: true,
       format: winston.format.combine(
         winston.format.timestamp({
           format: "YYYY-MM-DD HH:mm:ss",
