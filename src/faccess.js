@@ -3,6 +3,7 @@
  * This file deals with the bot files and data regarding users
  */
 fs = require("fs");
+let logger;
 
 let files = {
   records: {
@@ -35,8 +36,8 @@ const updateFile = () => {
     files.records.filename,
     JSON.stringify(files.records.data),
     (err, t) => {
-      if (err) return console.log(err);
-      console.log(
+      if (err) return logger.error(err);
+      logger.info(
         `${JSON.stringify(files.records.data)} > ${files.records.filename}`
       );
     }
@@ -48,7 +49,7 @@ const updateFile = () => {
  * @returns success message
  */
 const readIn = () => {
-  console.log(files);
+  logger.info(`${JSON.stringify(files)}`);
   Object.keys(files).forEach((key, index) => {
     try {
       files[key].data = fs.readFileSync(files[key].filename, {
@@ -57,20 +58,20 @@ const readIn = () => {
       });
       files[key].data = JSON.parse(files[key].data);
     } catch (e) {
-      console.error(`${files[key].filename} doesn't exist or isn't readable.`);
+      logger.error(`${files[key].filename} doesn't exist or isn't readable.`);
       if (key == "records") {
-        console.error(`Using empty object for records instead.`);
+        console.warn(`Using empty object for records instead.`);
         files[key].data = {};
         updateFile();
       } else {
-        console.error(`Exiting...`);
+        logger.error(`Exiting...`);
         process.exit(1);
       }
     }
     if (key == "records") {
-      console.log(files[key].data);
+      logger.info(`${JSON.stringify(files[key].data)}`);
     }
-    console.log(`${files[key].name} loaded`);
+    logger.info(`${files[key].name} loaded`);
   });
 };
 
@@ -126,6 +127,10 @@ const getErrs = () => {
   return files.errors.data;
 };
 
+const setLogger = (theLogger) => {
+  logger = theLogger;
+};
+
 module.exports = {
   getStudent,
   readIn,
@@ -135,6 +140,7 @@ module.exports = {
   getConsts,
   getPackage,
   getErrs,
+  setLogger,
 };
 
 /**

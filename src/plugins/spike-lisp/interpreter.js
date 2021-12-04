@@ -10,7 +10,7 @@
     },
 
     print: function (x) {
-      console.log(x);
+      spikeKit.logger.info(x);
       return x;
     },
 
@@ -92,8 +92,8 @@
 
     define: function (input, context) {
       context.scope[input[1][0].value] = function () {
-        console.log(`${input[1][0].value} args`);
-        console.log(arguments);
+        spikeKit.logger.info(`${input[1][0].value} args`);
+        spikeKit.logger.info(arguments);
         var lambdaArguments = arguments;
         var lambdaScope = input[1][1].reduce(function (acc, x, i) {
           acc[x.value] = lambdaArguments[i];

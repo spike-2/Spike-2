@@ -20,7 +20,7 @@ const NAME = "ITS Service Notes";
 /**
  * Slug used to programmatically refer to the plugin. Lowercase letters, numbers, and dashes only.
  */
- const SLUG = "its-service-notes";
+const SLUG = "its-service-notes";
 /**
  * The author(s) of this plugin.
  */
@@ -45,10 +45,10 @@ function startCron(bot) {
         spikeKit.send(embed, "bot-commands", bot);
       }
     } catch (e) {
-      console.error(`ITS Service Notes error: ${e}`);
+      spikeKit.logger.error(`ITS Service Notes error: ${e}`);
     }
   }, 10 * spikeKit.MINUTE);
   asyncInterval.start();
 }
 
-module.exports = {NAME, SLUG, AUTHOR, startCron};
+module.exports = { NAME, SLUG, AUTHOR, startCron };

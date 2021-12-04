@@ -64,7 +64,7 @@ function getAnnouncements() {
     let ancmts = fs.readFileSync(ANNOUNCEMENTSFILENAME);
     return JSON.parse(ancmts);
   } catch (e) {
-    console.error(
+    spikeKit.logger.warn(
       `${ANNOUNCEMENTSFILENAME} Doesn't Exist or isn't readable. Using empty object instead.`
     );
     return {};
@@ -134,7 +134,7 @@ async function newAnnouncement(args, bot, message) {
   const ancmtParts = args.split(";");
   if (ancmtParts.length != 2) {
     spikeKit.throwErr(message, "invalidAnnouncePartsErr");
-    console.error(
+    spikeKit.logger.error(
       `Admin Announce: ancmtParts wrong length. Expected 2, got ${ancmtParts.length}`
     );
   }
@@ -172,7 +172,7 @@ async function newAnnouncement(args, bot, message) {
   await lastMessage.react(APPROVE_EMOJI);
   await lastMessage.react(CANCEL_EMOJI);
 
-  console.log(`Announcement ${ancmtId} successfully set up!`);
+  spikeKit.logger.info(`Announcement ${ancmtId} successfully set up!`);
 }
 
 /**
@@ -226,7 +226,7 @@ async function processReaction(reaction, user, add, bot) {
   if (thisAncmtReduced.length > 1) {
     spikeKit.throwErr(reaction.message, "multipleMessageReaction");
     // prettier-ignore
-    console.error(`Admin Announcement: Expected to find one announcement, got ${thisAncmtReduced.length}`);
+    spikeKit.logger.error(`Admin Announcement: Expected to find one announcement, got ${thisAncmtReduced.length}`);
     return;
   }
 
@@ -344,11 +344,11 @@ function onBotStart(bot) {
   const ancmts = getAnnouncements();
   if (Object.keys(ancmts).length > 0) {
     for (const [id, ancmt] of Object.entries(ancmts)) {
-      console.log(`Caching announcement ${ancmt.title}`);
+      spikeKit.logger.info(`Caching announcement ${ancmt.title}`);
       bot.channels.cache.get(ancmt.channelID).messages.fetch(ancmt.messageID);
     }
   }
-  console.log(`${NAME} has started.`);
+  spikeKit.logger.info(`${NAME} has started.`);
 }
 
 module.exports = {

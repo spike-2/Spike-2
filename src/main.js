@@ -11,14 +11,16 @@ require("dotenv").config({
 });
 const { Client, Intents } = require("discord.js");
 const { execute, onBotStart, onReaction } = require("./commands.js");
-const { readIn, addBucks, getConsts } = require("./faccess.js");
+const { readIn, addBucks, getConsts, setLogger } = require("./faccess.js");
 const { verify, alreadyVerified } = require("./verify.js");
 const cron = require("./botCron.js");
 const slashCommands = require("./slashCommands.js");
+const spikeKit = require("./spikeKit.js");
 
 const PREFIX = "$";
 
 // loads in data
+setLogger(spikeKit.logger);
 readIn();
 
 // starting the bot
@@ -38,7 +40,7 @@ const { spikeUID, simoneUID } = getConsts();
 bot.on("ready", async () => {
   // when loaded (ready event)
   bot.user.setActivity(`${PREFIX}help | ${PREFIX}info`, { type: "PLAYING" });
-  console.log(`${bot.user.username} is ready...`);
+  spikeKit.logger.info(`${bot.user.username} is ready...`);
   // Starts the bot cron jobs
   cron.startJobs(bot);
 
@@ -118,7 +120,9 @@ bot.on("messageReactionAdd", async (reaction, user) => {
     try {
       await reaction.fetch();
     } catch (error) {
-      console.error("Something went wrong when fetching the message: ", error);
+      spikeKit.logger.error(
+        `Something went wrong when fetching the message: ${error}`
+      );
       // Return as `reaction.message.author` may be undefined/null
       return;
     }
@@ -136,7 +140,9 @@ bot.on("messageReactionRemove", async (reaction, user) => {
     try {
       await reaction.fetch();
     } catch (error) {
-      console.error("Something went wrong when fetching the message: ", error);
+      spikeKit.logger.error(
+        `Something went wrong when fetching the message: ${error}`
+      );
       // Return as `reaction.message.author` may be undefined/null
       return;
     }
