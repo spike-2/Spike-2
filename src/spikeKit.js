@@ -4,6 +4,26 @@
 
 const Discord = require("discord.js");
 const { getConsts, getErrs } = require("./faccess.js");
+const winston = require("winston");
+const winstonDiscord = require("winston-discord-transport");
+const winstonRotateFile = require("winston-daily-rotate-file");
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console({
+      level: "silly",
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+    }),
+  ],
+});
 
 const COLORS = {
   PURPLE: 0x510c76,
