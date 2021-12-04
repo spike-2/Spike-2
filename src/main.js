@@ -16,8 +16,53 @@ const { verify, alreadyVerified } = require("./verify.js");
 const cron = require("./botCron.js");
 const slashCommands = require("./slashCommands.js");
 const spikeKit = require("./spikeKit.js");
+const winston = require("winston");
+const winstonDiscord = require("./SpikeDiscordWebhookTransport.js");
+const winstonRotateFile = require("winston-daily-rotate-file");
 
-const PREFIX = "$";
+const PREFIX = "%";
+
+// Logger setup
+const webhookRegex = new RegExp(
+  /^https:\/\/discord.com\/api\/webhooks\/(.+)\/(.+)$/,
+  "g"
+);
+const webhookParts = webhookRegex.exec(process.env.WINSTON_DISCORD_WEBHOOK);
+if (!webhookParts) {
+  throw "Bad Discord Webhook";
+}
+
+spikeKit.logger = logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console({
+      level: "silly",
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+      handleExceptions: true,
+    }),
+    new winstonDiscord({
+      id: webhookParts[1],
+      token: webhookParts[2],
+      level: "warn",
+      format: winston.format.combine(
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+      handleExceptions: true,
+    }),
+  ],
+});
 
 // loads in data
 setLogger(spikeKit.logger);
