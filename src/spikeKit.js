@@ -192,4 +192,5 @@ module.exports = {
   reply,
   createEmbed,
   throwErr,
+  logger,
 };
