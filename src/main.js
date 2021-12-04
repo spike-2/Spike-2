@@ -20,7 +20,7 @@ const winston = require("winston");
 const winstonDiscord = require("./SpikeDiscordWebhookTransport.js");
 const winstonRotateFile = require("winston-daily-rotate-file");
 
-const PREFIX = "%";
+const PREFIX = "$";
 
 // Logger setup
 const webhookRegex = new RegExp(
