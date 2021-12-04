@@ -32,10 +32,12 @@ if (!webhookParts) {
   throw "Bad Discord Webhook";
 }
 
+const consoleLogLevel = process.env.CONSOLE_LOG_LEVEL ?? "warn";
+
 spikeKit.logger = logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
-      level: "silly",
+      level: consoleLogLevel,
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.timestamp({
