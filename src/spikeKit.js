@@ -56,7 +56,6 @@ async function send(content, channel, bot, mention = false) {
   let messageData = {};
   if (content instanceof Discord.MessageEmbed) {
     messageData.embeds = [content];
-    messageData.content = "";
   } else {
     messageData.content = `${content}`;
   }
@@ -66,7 +65,7 @@ async function send(content, channel, bot, mention = false) {
     for (const user of mention) {
       mentionString += `${user} `;
     }
-    messageData.content = `${mentionString}${messageData.content}`;
+    messageData.content = `${mentionString}${messageData.content ?? ""}`;
   }
   await bot.channels.cache.get(channel).send(messageData);
 }
