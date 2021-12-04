@@ -61,6 +61,44 @@ spikeKit.logger = logger = winston.createLogger({
       ),
       handleExceptions: true,
     }),
+    new winstonRotateFile({
+      filename: "combined-%DATE%.log",
+      datePattern: "YYYY-MM",
+      zippedArchive: false,
+      maxSize: "20m",
+      maxFiles: "3",
+      createSymlink: true,
+      symlinkName: "combined.log",
+      auditFile: "combined-audit.json",
+      level: "info",
+      format: winston.format.combine(
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+    }),
+    new winstonRotateFile({
+      filename: "error-%DATE%.log",
+      datePattern: "YYYY-MM",
+      zippedArchive: false,
+      maxSize: "20m",
+      maxFiles: "3",
+      createSymlink: true,
+      symlinkName: "error.log",
+      auditFile: "error-audit.json",
+      level: "warn",
+      format: winston.format.combine(
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+    }),
   ],
 });
 

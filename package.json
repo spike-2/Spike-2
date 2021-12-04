@@ -18,7 +18,8 @@
     "testing": "make testing && cd src && node --trace-warnings ./main.js --testing",
     "resetTesting": "make resetTesting",
     "update": "make update",
-    "clean": "make clean"
+    "clean": "make clean",
+    "cleanLogs": "make cleanLogs"
   },
   "keywords": [],
   "author": "",

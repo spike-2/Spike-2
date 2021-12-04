@@ -6,3 +6,5 @@ bets.json
 announcements.json
 records.json
 challenges.json
+*.log
+*-audit.json
