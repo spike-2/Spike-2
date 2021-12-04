@@ -151,7 +151,7 @@ async function newBet(args, bot, message) {
   const betParts = args.split("\n");
   if (betParts.length < 3) {
     spikeKit.throwErr(message, "invalidBetPartsErr");
-    spikeKit.logger.error(
+    spikeKit.logger.warn(
       `Bet: betParts wrong length. Expected 3, got ${betParts.length}`
     );
     return;
@@ -165,7 +165,7 @@ async function newBet(args, bot, message) {
     }
   } catch (e) {
     spikeKit.throwErr(message, "tooPoorErr");
-    spikeKit.logger.error(
+    spikeKit.logger.info(
       `Bet: User ${message.author.username} doesn't have funds to set up wager.`
     );
     return;
@@ -188,7 +188,7 @@ async function newBet(args, bot, message) {
     const lineArgs = line.trim().match(/^(.+)\s([0-9]+)\s([0-9]+)\s(.*)$/);
     if (lineArgs == null || lineArgs.length != 5) {
       spikeKit.throwErr(message, "invalidLineArgsLengthErr");
-      spikeKit.logger.error(
+      spikeKit.logger.warn(
         `Bet: lineArgs wrong length. Expected 3, got ${
           lineArgs ? lineArgs.length : "null"
         }\nLine: ${line}`
@@ -202,14 +202,14 @@ async function newBet(args, bot, message) {
 
     if (parseInt(lineArgs[2]) == NaN || parseInt(lineArgs[3]) == NaN) {
       spikeKit.throwErr(message, "NanBetAmtErr");
-      spikeKit.logger.error(
+      spikeKit.logger.warn(
         `Bet: Got a NaN for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`
       );
       return;
     }
     if (parseInt(lineArgs[2]) <= 0 || parseInt(lineArgs[3]) <= 0) {
       spikeKit.throwErr(message, "betNonPosErr");
-      spikeKit.logger.error(
+      spikeKit.logger.warn(
         `Bet: Got a non-positive value for a bet amount or win amount.\nbet: ${lineArgs[2]}\nwin: ${lineArgs}`
       );
       return;
@@ -245,7 +245,7 @@ async function newBet(args, bot, message) {
   for (const emoji of emojiToReact) {
     await lastMessage.react(emoji);
   }
-  spikeKit.logger.info(`Bet ${betID} successfully set up!`);
+  spikeKit.logger.log("debug", `Bet ${betID} successfully set up!`);
 }
 
 /**
@@ -262,7 +262,7 @@ async function endBet(args, bot, message) {
   const endParts = args.trim().split(" ");
   if (endParts.length != 2) {
     spikeKit.throwErr(message, "invalidEndPartsErr");
-    spikeKit.logger.error(
+    spikeKit.logger.warn(
       `Bet: endParts wrong length. Expected 2, got ${endParts.length}`
     );
     return;
@@ -270,7 +270,7 @@ async function endBet(args, bot, message) {
 
   if (!bets[endParts[0]]) {
     spikeKit.throwErr(message, "invalidEndBetIdErr");
-    spikeKit.logger.error(`Bet: End Bet invalid ID: ${endParts[0]}`);
+    spikeKit.logger.warn(`Bet: End Bet invalid ID: ${endParts[0]}`);
     return;
   }
 
@@ -279,7 +279,7 @@ async function endBet(args, bot, message) {
 
   if (message.author.id != thisBet.createdBy) {
     spikeKit.throwErr(message, "notBetOwnerErr");
-    spikeKit.logger.error(
+    spikeKit.logger.info(
       `Bet: User that's not the creator tried to end ${thisBetID}: ${message.author.username}`
     );
     return;
@@ -288,7 +288,7 @@ async function endBet(args, bot, message) {
   const winningEmoji = parseEmoji(endParts[1], message.guild);
   if (!thisBet.wagers[winningEmoji.emoji]) {
     spikeKit.throwErr(message, "invalidEmojiErr");
-    spikeKit.logger.error(
+    spikeKit.logger.warn(
       `Bet: Winning Emoji not a wager: ${winningEmoji.printEmoji}`
     );
     return;
@@ -301,7 +301,7 @@ async function endBet(args, bot, message) {
   for (const wager of Object.values(thisBet.wagers)) {
     pot += wager.bet * wager.bettors.length;
   }
-  spikeKit.logger.info(`Pot: ${pot}`);
+  spikeKit.logger.log("debug", `Pot: ${pot}`);
 
   let winnings = winningWager.bettors.length * winningWager.win;
 
@@ -316,7 +316,7 @@ async function endBet(args, bot, message) {
     }
   } catch (e) {
     spikeKit.throwErr(message, "user");
-    spikeKit.logger.error(`Bet: User ${user.username} doesn't exist.`);
+    spikeKit.logger.warn(`Bet: User ${user.username} doesn't exist.`);
     return;
   }
 
@@ -398,7 +398,7 @@ Bet ${winningWager.bet}, Win ${winningsPerPerson}\nWinners: ${winnersNames.join(
   delete bets[thisBetID];
   writeBets(bets);
 
-  spikeKit.logger.info(`Bet ${thisBetID} finished.`);
+  spikeKit.logger.log("debug", `Bet ${thisBetID} finished.`);
 }
 
 /**
@@ -431,7 +431,8 @@ function processCommand(command, args, bot, message) {
  * @param {Discord.Client} bot The instantiated Discord Bot object.
  */
 function processReaction(reaction, user, add, bot) {
-  spikeKit.logger.info(
+  spikeKit.logger.log(
+    "debug",
     `${user.username} ${add ? "Added" : "Removed"} a reaction on ${
       reaction.message.author.username
     }'s message: :${reaction.emoji.name}:.`
@@ -458,7 +459,7 @@ function processReaction(reaction, user, add, bot) {
   if (thisBet.createdBy == user.id) {
     if (add) {
       spikeKit.throwErr(reaction.message, "betOwnerBets");
-      spikeKit.logger.error(
+      spikeKit.logger.info(
         `Bet: ${user.username} tried to wager on their own bet ${thisBetID}`
       );
       reaction.users.remove(user.id);
@@ -486,7 +487,7 @@ function processReaction(reaction, user, add, bot) {
   // Verify emoji
   if (!Object.keys(thisBet.wagers).includes(emoji)) {
     spikeKit.throwErr(reaction.message, "invalidEmojiErr");
-    spikeKit.logger.error(`Bet: Emoji ${emoji} not a wager on ${thisBetID}`);
+    spikeKit.logger.warn(`Bet: Emoji ${emoji} not a wager on ${thisBetID}`);
     reaction.users.remove(user.id);
     return;
   }
@@ -495,7 +496,7 @@ function processReaction(reaction, user, add, bot) {
     // Verify that the user didn't already bet
     if (thisBet.wagers[emoji].bettors.includes(user.id)) {
       // No need to alert the user. This is likely due to caching issues on the bot.
-      spikeKit.logger.error(
+      spikeKit.logger.info(
         `Bet: User ${user.username} already wagered ${emoji} on ${thisBetID}`
       );
       return;
@@ -504,7 +505,7 @@ function processReaction(reaction, user, add, bot) {
     // Verify the funds exist to bet
     if (student.wallet < thisBet.wagers[emoji].bet) {
       spikeKit.throwErr(reaction.message, "tooPoorErr");
-      spikeKit.logger.error(
+      spikeKit.logger.info(
         `Bet: Student ${user.username} doesn't have enough to bet ${thisBet.wagers[emoji].bet} (Wallet ${student.wallet})`
       );
       reaction.users.remove(user.id);
@@ -530,14 +531,15 @@ function processReaction(reaction, user, add, bot) {
     bets[thisBetID] = thisBet;
     writeBets(bets);
 
-    spikeKit.logger.info(
+    spikeKit.logger.log(
+      "debug",
       `Bet: ${user.username} bet ${thisBet.wagers[emoji].bet} for ${emoji} on ${thisBetID}`
     );
   } else {
     // Verify they betted this
     if (!thisBet.wagers[emoji].bettors.includes(user.id)) {
       // No need to alert the user. This is likely due to caching issues on the bot.
-      spikeKit.logger.error(
+      spikeKit.logger.warn(
         `Bet: User ${user.username} didn't wager ${emoji} on ${thisBetID}`
       );
       return;
@@ -575,11 +577,11 @@ function onBotStart(bot) {
   const bets = getBets();
   if (Object.keys(bets).length > 0) {
     for (const [betId, bet] of Object.entries(bets)) {
-      spikeKit.logger.info(`Caching Bet ${bet.title}`);
+      spikeKit.logger.log("debug", `Caching Bet ${bet.title}`);
       bot.channels.cache.get(bet.channelID).messages.fetch(bet.messageID);
     }
   }
-  spikeKit.logger.info(`${NAME} has started.`);
+  spikeKit.logger.log("debug", `${NAME} has started.`);
 }
 
 module.exports = {

@@ -36,7 +36,10 @@ const updateFile = () => {
     files.records.filename,
     JSON.stringify(files.records.data),
     (err, t) => {
-      if (err) return logger.error(err);
+      if (err) {
+        logger.error(err);
+        return;
+      }
       logger.info(
         `${JSON.stringify(files.records.data)} > ${files.records.filename}`
       );
@@ -49,7 +52,7 @@ const updateFile = () => {
  * @returns success message
  */
 const readIn = () => {
-  logger.info(`${JSON.stringify(files)}`);
+  logger.log("debug", `${JSON.stringify(files)}`);
   Object.keys(files).forEach((key, index) => {
     try {
       files[key].data = fs.readFileSync(files[key].filename, {
@@ -69,9 +72,9 @@ const readIn = () => {
       }
     }
     if (key == "records") {
-      logger.info(`${JSON.stringify(files[key].data)}`);
+      logger.log("debug", `${JSON.stringify(files[key].data)}`);
     }
-    logger.info(`${files[key].name} loaded`);
+    logger.log("debug", `${files[key].name} loaded`);
   });
 };
 

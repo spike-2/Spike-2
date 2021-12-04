@@ -217,17 +217,17 @@ async function main() {
     // let notes = await mockNewServiceNotes();
     let notes = await getNewServiceNotes();
     for (const note of notes) {
-      spikeKit.logger.info(note.title);
-      spikeKit.logger.info(note.updated);
-      spikeKit.logger.info(note.content);
-      spikeKit.logger.info("\n#####\n");
+      console.log(note.title);
+      console.log(note.updated);
+      console.log(note.content);
+      console.log("\n#####\n");
     }
     if (notes.length == 0) {
-      spikeKit.logger.info("No new notes.");
+      console.log("No new notes.");
     }
     return;
   } catch (e) {
-    spikeKit.logger.error(e);
+    console.error(e);
     return;
   }
 }

@@ -134,7 +134,7 @@ async function newAnnouncement(args, bot, message) {
   const ancmtParts = args.split(";");
   if (ancmtParts.length != 2) {
     spikeKit.throwErr(message, "invalidAnnouncePartsErr");
-    spikeKit.logger.error(
+    spikeKit.logger.warn(
       `Admin Announce: ancmtParts wrong length. Expected 2, got ${ancmtParts.length}`
     );
   }
@@ -172,7 +172,7 @@ async function newAnnouncement(args, bot, message) {
   await lastMessage.react(APPROVE_EMOJI);
   await lastMessage.react(CANCEL_EMOJI);
 
-  spikeKit.logger.info(`Announcement ${ancmtId} successfully set up!`);
+  spikeKit.logger.log("debug", `Announcement ${ancmtId} successfully set up!`);
 }
 
 /**
@@ -344,11 +344,11 @@ function onBotStart(bot) {
   const ancmts = getAnnouncements();
   if (Object.keys(ancmts).length > 0) {
     for (const [id, ancmt] of Object.entries(ancmts)) {
-      spikeKit.logger.info(`Caching announcement ${ancmt.title}`);
+      spikeKit.logger.log("debug", `Caching announcement ${ancmt.title}`);
       bot.channels.cache.get(ancmt.channelID).messages.fetch(ancmt.messageID);
     }
   }
-  spikeKit.logger.info(`${NAME} has started.`);
+  spikeKit.logger.log("debug", `${NAME} has started.`);
 }
 
 module.exports = {

@@ -68,7 +68,8 @@ function processCommand(command, args, bot, message) {}
  * @param {Discord.Client} bot The instantiated Discord Bot object.
  */
 function processReaction(reaction, user, add, bot) {
-  spikeKit.logger.info(
+  spikeKit.logger.log(
+    "debug",
     `${user.username} ${add ? "Added" : "Removed"} a reaction on ${
       reaction.message.author.username
     }'s message: :${reaction.emoji.name}:.`
@@ -80,7 +81,7 @@ function processReaction(reaction, user, add, bot) {
  * @param {Discord.Client} bot The instantiated Discord Bot object.
  */
 function onBotStart(bot) {
-  spikeKit.logger.info(`${NAME} has started.`);
+  spikeKit.logger.log("debug", `${NAME} has started.`);
 }
 
 module.exports = {

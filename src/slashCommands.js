@@ -54,7 +54,7 @@ const reply = async (response, interaction) => {
  * Bulk add the slash commands we want.
  */
 const addAllCommands = async () => {
-  spikeKit.logger.info(`Adding Slash Commands...`);
+  spikeKit.logger.log("debug", `Adding Slash Commands...`);
   let commands = [];
   const emojis = getConsts().emoji;
   for (let [name, params] of Object.entries(emojis)) {
@@ -74,15 +74,15 @@ const addAllCommands = async () => {
   await rest.put(Routes.applicationGuildCommands(bot.user.id, GUILDID), {
     body: commands,
   });
-  spikeKit.logger.info(`All Commands Added.`);
+  spikeKit.logger.log("debug", `All Commands Added.`);
 };
 
 const deleteAllCommands = async () => {
   const commands = await getCommands();
   for (command of commands) {
-    spikeKit.logger.info(`Deleting ${command.name}...`);
+    spikeKit.logger.log("debug", `Deleting ${command.name}...`);
     await deleteCommand(command.id);
-    spikeKit.logger.info(`${command.name} deleted.`);
+    spikeKit.logger.log("debug", `${command.name} deleted.`);
   }
 };
 

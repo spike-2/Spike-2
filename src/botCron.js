@@ -13,10 +13,10 @@ const spikeKit = require("./spikeKit.js");
  */
 const startJobs = (bot) => {
   for (plugin of plugins) {
-    spikeKit.logger.info(`Starting Cron Job for ${plugin.NAME}...`);
+    spikeKit.logger.log("debug", `Starting Cron Job for ${plugin.NAME}...`);
     plugin.startCron(bot);
   }
-  spikeKit.logger.info("Done Starting Cron Jobs.");
+  spikeKit.logger.log("debug", "Done Starting Cron Jobs.");
 };
 
 module.exports = { startJobs };

@@ -146,7 +146,7 @@ async function throwErr(msg, key) {
   };
 
   if (!Object.keys(errs).includes(key)) {
-    spikeKit.logger.error(`Invalid error key: ${key}`);
+    spikeKit.logger.warn(`Invalid error key: ${key}`);
   } else {
     selectedError = errs[key];
   }

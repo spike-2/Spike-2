@@ -305,7 +305,7 @@ const dice = (msg) => {
   const die1 = Math.floor(Math.random() * 6 + 1);
   const die2 = Math.floor(Math.random() * 6 + 1);
 
-  spikeKit.logger.info(`${die1}, ${die2}`);
+  spikeKit.logger.log("debug", `${die1}, ${die2}`);
 
   const winnings =
     die1 === die2 && die1 === 6

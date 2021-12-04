@@ -34,10 +34,10 @@ function onBotStart(bot) {
  * @param {string} PREFIX the bot's current prefix
  */
 const help = (args, message, PREFIX) => {
-  spikeKit.logger.info("Looking for help...");
+  spikeKit.logger.log("debug", "Looking for help...");
   if (!args) {
     // Default Help Screen
-    spikeKit.logger.info("Getting default help");
+    spikeKit.logger.log("debug", "Getting default help");
     let messageText = `Use the given help commands to learn more about each plugin and its commands.\nUse \`${PREFIX}help <command>\` to jump to info on that command.`;
     for (const plugin of plugins) {
       messageText += `\n-------\n"${plugin.NAME}" by ${plugin.AUTHOR}\n\`${PREFIX}help plugin ${plugin.SLUG}\``;
@@ -58,7 +58,10 @@ const help = (args, message, PREFIX) => {
     const helpArgs = args.substring(args.split(" ")[0].length).slice(1);
     for (const plugin of plugins) {
       if (helpCommand === "plugin" && helpArgs == plugin.SLUG) {
-        spikeKit.logger.info(`Getting plugin help for "${plugin.NAME}"`);
+        spikeKit.logger.log(
+          "debug",
+          `Getting plugin help for "${plugin.NAME}"`
+        );
         spikeKit.reply(
           spikeKit.createEmbed(
             `${plugin.NAME} Help`,
@@ -75,7 +78,8 @@ const help = (args, message, PREFIX) => {
         );
         break;
       } else if (plugin.COMMANDS.includes(helpCommand)) {
-        spikeKit.logger.info(
+        spikeKit.logger.log(
+          "debug",
           `Getting help for ${PREFIX}${helpCommand} from "${plugin.NAME}"`
         );
         spikeKit.reply(
@@ -111,7 +115,8 @@ const execute = (message, bot, PREFIX) => {
     let found = false;
     for (const plugin of plugins) {
       if (plugin.COMMANDS.includes(command)) {
-        spikeKit.logger.info(
+        spikeKit.logger.log(
+          "debug",
           `Running ${PREFIX}${command} from "${plugin.NAME}"`
         );
         plugin.processCommand(command, args, bot, message);
@@ -141,7 +146,7 @@ function onReaction(reaction, user, add, bot) {
         embed.title.toLowerCase().startsWith(`${plugin.NAME.toLowerCase()}: `)
       ) {
         // prettier-ignore
-        spikeKit.logger.info(`Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`);
+        spikeKit.logger.log("debug", `Processing Reaction ${add ? "Add" : "Remove"} from "${plugin.NAME}"`);
         plugin.processReaction(reaction, user, add, bot);
         found = true;
       }
