@@ -229,7 +229,8 @@ function processCommand(command, args, bot, message) {
  * @param {Discord.Client} bot The instantiated Discord Bot object.
  */
 function processReaction(reaction, user, add, bot) {
-  console.log(
+  spikeKit.logger.log(
+    "debug",
     `${user.username} ${add ? "Added" : "Removed"} a reaction on ${
       reaction.message.author.username
     }'s message: :${reaction.emoji.name}:.`
@@ -241,7 +242,7 @@ const loadFile = () => {
     let contents = fs.readFileSync(FILENAME);
     return JSON.parse(contents);
   } catch (e) {
-    console.error(
+    spikeKit.logger.warn(
       `${FILENAME} doesn't exist or isn't readable. Using empty object instead.`
     );
     return {};
@@ -262,7 +263,7 @@ function writeChallenges(challenges) {
  */
 function onBotStart(bot) {
   challenges = loadFile();
-  console.log(`${NAME} has started.`);
+  spikeKit.logger.log("debug", `${NAME} has started.`);
 }
 
 module.exports = {

@@ -11,14 +11,103 @@ require("dotenv").config({
 });
 const { Client, Intents } = require("discord.js");
 const { execute, onBotStart, onReaction } = require("./commands.js");
-const { readIn, addBucks, getConsts } = require("./faccess.js");
+const { readIn, addBucks, getConsts, setLogger } = require("./faccess.js");
 const { verify, alreadyVerified } = require("./verify.js");
 const cron = require("./botCron.js");
 const slashCommands = require("./slashCommands.js");
+const spikeKit = require("./spikeKit.js");
+const winston = require("winston");
+const winstonDiscord = require("./SpikeDiscordWebhookTransport.js");
+const winstonRotateFile = require("winston-daily-rotate-file");
 
 const PREFIX = "$";
 
+// Logger setup
+const webhookRegex = new RegExp(
+  /^https:\/\/discord.com\/api\/webhooks\/(.+)\/(.+)$/,
+  "g"
+);
+const webhookParts = webhookRegex.exec(process.env.WINSTON_DISCORD_WEBHOOK);
+if (!webhookParts) {
+  throw "Bad Discord Webhook";
+}
+
+const consoleLogLevel = process.env.CONSOLE_LOG_LEVEL ?? "warn";
+
+spikeKit.logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console({
+      level: consoleLogLevel,
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+      handleExceptions: true,
+    }),
+    new winstonDiscord({
+      id: webhookParts[1],
+      token: webhookParts[2],
+      level: "warn",
+      format: winston.format.combine(
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+      handleExceptions: true,
+    }),
+    new winstonRotateFile({
+      filename: "combined-%DATE%.log",
+      datePattern: "YYYY-MM",
+      zippedArchive: false,
+      maxSize: "20m",
+      maxFiles: "3",
+      createSymlink: true,
+      symlinkName: "combined.log",
+      auditFile: "combined-audit.json",
+      level: "info",
+      handleExceptions: true,
+      format: winston.format.combine(
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+    }),
+    new winstonRotateFile({
+      filename: "error-%DATE%.log",
+      datePattern: "YYYY-MM",
+      zippedArchive: false,
+      maxSize: "20m",
+      maxFiles: "3",
+      createSymlink: true,
+      symlinkName: "error.log",
+      auditFile: "error-audit.json",
+      level: "warn",
+      handleExceptions: true,
+      format: winston.format.combine(
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.printf(
+          (info) => `[${info.timestamp}] [${info.level}] ${info.message}`
+        )
+      ),
+    }),
+  ],
+});
+
 // loads in data
+setLogger(spikeKit.logger);
 readIn();
 
 // starting the bot
@@ -38,7 +127,7 @@ const { spikeUID, simoneUID } = getConsts();
 bot.on("ready", async () => {
   // when loaded (ready event)
   bot.user.setActivity(`${PREFIX}help | ${PREFIX}info`, { type: "PLAYING" });
-  console.log(`${bot.user.username} is ready...`);
+  spikeKit.logger.log("debug", `${bot.user.username} is ready...`);
   // Starts the bot cron jobs
   cron.startJobs(bot);
 
@@ -118,7 +207,9 @@ bot.on("messageReactionAdd", async (reaction, user) => {
     try {
       await reaction.fetch();
     } catch (error) {
-      console.error("Something went wrong when fetching the message: ", error);
+      spikeKit.logger.error(
+        `Something went wrong when fetching the message: ${error}`
+      );
       // Return as `reaction.message.author` may be undefined/null
       return;
     }
@@ -136,7 +227,9 @@ bot.on("messageReactionRemove", async (reaction, user) => {
     try {
       await reaction.fetch();
     } catch (error) {
-      console.error("Something went wrong when fetching the message: ", error);
+      spikeKit.logger.error(
+        `Something went wrong when fetching the message: ${error}`
+      );
       // Return as `reaction.message.author` may be undefined/null
       return;
     }

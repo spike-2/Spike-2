@@ -9,6 +9,7 @@ const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 var bot, GUILDID, rest;
+const spikeKit = require("./spikeKit.js");
 
 const setBot = (theBot) => {
   bot = theBot;
@@ -53,7 +54,7 @@ const reply = async (response, interaction) => {
  * Bulk add the slash commands we want.
  */
 const addAllCommands = async () => {
-  console.log(`Adding Slash Commands...`);
+  spikeKit.logger.log("debug", `Adding Slash Commands...`);
   let commands = [];
   const emojis = getConsts().emoji;
   for (let [name, params] of Object.entries(emojis)) {
@@ -73,15 +74,15 @@ const addAllCommands = async () => {
   await rest.put(Routes.applicationGuildCommands(bot.user.id, GUILDID), {
     body: commands,
   });
-  console.log(`All Commands Added.`);
+  spikeKit.logger.log("debug", `All Commands Added.`);
 };
 
 const deleteAllCommands = async () => {
   const commands = await getCommands();
   for (command of commands) {
-    console.log(`Deleting ${command.name}...`);
+    spikeKit.logger.log("debug", `Deleting ${command.name}...`);
     await deleteCommand(command.id);
-    console.log(`${command.name} deleted.`);
+    spikeKit.logger.log("debug", `${command.name} deleted.`);
   }
 };
 

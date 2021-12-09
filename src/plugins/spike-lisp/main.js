@@ -49,8 +49,11 @@ function mount(args, message) {
   dat[args.split("\n")[0]] = args.slice(args.indexOf("\n"));
 
   fs.writeFile(FILENAME, JSON.stringify(dat), (err, t) => {
-    if (err) return console.log(err);
-    console.log(`${JSON.stringify(dat)} > ${FILENAME}`);
+    if (err) {
+      spikeKit.logger.error(err);
+      return;
+    }
+    spikeKit.logger.log("debug", `${JSON.stringify(dat)} > ${FILENAME}`);
   });
 
   spikeKit.reply(
