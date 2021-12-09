@@ -20,6 +20,7 @@ const COMMANDS = [
   "request",
   "pr",
   "wiki",
+  "getavatar",
 ];
 
 function help(prefix, command, args) {
@@ -42,6 +43,8 @@ function help(prefix, command, args) {
       return `${prefix}pr\nLearn how to submit a pull request for a new feature, bug fix, or plugin.`;
     case "wiki":
       return `${prefix}wiki\nLearn how to visit the wiki.`;
+    case "getavatar":
+      return `${prefix}getavatar [user]\nGet a user's avatar. To get yours, mention yourself.`;
     default:
       return "Command not found.";
   }
@@ -58,7 +61,8 @@ function shortHelp(prefix) {
     `${prefix}bug - Learn how to submit bug report.\n` +
     `${prefix}request - Learn how to submit a feature request.\n` +
     `${prefix}pr - Learn how to submit new code via a PR.\n` +
-    `${prefix}wiki - Get a link to the wiki.`
+    `${prefix}wiki - Get a link to the wiki.\n` +
+    `${prefix}getavatar - Get a user's avatar.`
   );
 }
 
@@ -283,6 +287,37 @@ function wiki(msg) {
   );
 }
 
+/**
+ * Get the mentioned user's avatar URL
+ * @param {Discord.Message} msg Message to reply to
+ * @param {string} args Should be just the mention
+ * @param {Discord.Client} bot Logged in bot
+ */
+async function getAvatar(msg, args, bot) {
+  if (args.trim().split(" ").length == 1) {
+    try {
+      const uid = args.replace("<@!", "").replace("<@", "").replace(">", "");
+      const user = await bot.users.fetch(uid);
+      const avatar = user.avatarURL() ?? "";
+      if (avatar) {
+        spikeKit.reply(`${args} avatar can be found at ${avatar}`, msg);
+      }
+    } catch (e) {
+      spikeKit.reply(
+        spikeKit.createEmbed(
+          `Can't Get User's Avatar`,
+          `Sorry, I can't get ${args} avatar right now.`,
+          false,
+          msg.author.username,
+          msg.author.avatarURL(),
+          spikeKit.COLORS.RED
+        ),
+        msg
+      );
+    }
+  }
+}
+
 function processCommand(command, args, bot, message) {
   if (command.toLowerCase() === "remindme") remindMe(message, args);
   else if (command === "embedify") embedify(args, message, bot);
@@ -293,6 +328,7 @@ function processCommand(command, args, bot, message) {
   else if (command === "request") request(message);
   else if (command === "pr") pr(message);
   else if (command === "wiki") wiki(message);
+  else if (command === "getavatar") getAvatar(message, args, bot);
 }
 
 module.exports = {
