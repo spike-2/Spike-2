@@ -28,7 +28,7 @@ assignees: ''
 **Runtime Info**
 <!-- WARNING: Make sure no sensitive info is included, such as webhook URLs! -->
 <!-- Run `$info` and copy the commit ID Spike is currently running -->
-+ Commit ID:
++ Commit ID: 
 <!-- Platform(s) and app version(s) of Discord used -->
 + App(s) Accessing Discord:
 
