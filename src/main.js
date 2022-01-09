@@ -22,6 +22,8 @@ const winstonRotateFile = require("winston-daily-rotate-file");
 
 const PREFIX = "$";
 
+spikeKit.IS_PROD = !process.argv.includes("--testing");
+
 // Logger setup
 const webhookRegex = new RegExp(
   /^https:\/\/discord.com\/api\/webhooks\/(.+)\/(.+)$/,

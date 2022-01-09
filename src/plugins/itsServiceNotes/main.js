@@ -31,6 +31,12 @@ const AUTHOR = "Brandon Ingli";
  * @param {Discord.Client} bot Instantiated Discord Bot object.
  */
 function startCron(bot) {
+  if (!spikeKit.IS_PROD) {
+    spikeKit.logger.warn(
+      "ITS Service Notes: Running on non-prod, so not starting cron."
+    );
+    return;
+  }
   const asyncInterval = new AsyncInterval(async function () {
     try {
       const messages = await its.getNewServiceNotes();

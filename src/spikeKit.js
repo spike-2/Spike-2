@@ -5,6 +5,7 @@
 const Discord = require("discord.js");
 const { getConsts, getErrs } = require("./faccess.js");
 let logger;
+let IS_PROD = true;
 
 const COLORS = {
   PURPLE: 0x510c76,
@@ -180,6 +181,7 @@ module.exports = {
   MINUTE,
   HOUR,
   COLORS,
+  IS_PROD,
   send,
   reply,
   createEmbed,
