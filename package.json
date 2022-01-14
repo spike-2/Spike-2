@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/spike-2/Spike-2.git",
     "gh_url": "https://github.com/spike-2/Spike-2",
-    "wiki": "https://github.com/spike-2/Spike-2/wiki"
+    "website": "https://spike-2.github.io/"
   },
   "language": "node.js",
   "scripts": {
