@@ -1,6 +1,5 @@
 testing:
 	sed -i 's/PREFIX = "\$$"/PREFIX = "%"/g' src/main.js
-	rm -f plugins/itsServiceNotes/lastCheckTime.txt
 
 resetTesting:
 	sed -i 's/PREFIX = "%"/PREFIX = "\$$"/g' src/main.js
