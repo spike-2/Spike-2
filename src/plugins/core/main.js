@@ -166,7 +166,7 @@ function getContributorsPromise() {
     https.get(
       {
         host: "api.github.com",
-        path: "/repos/jwMaxwell/Spike-2/contributors",
+        path: "/repos/spike-2/Spike-2/contributors",
         headers: {
           Accept: "application/vnd.github.v3+json",
           "User-Agent": "Mozilla/5.0",
@@ -239,7 +239,7 @@ function bug(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Bug Report",
-      "To learn more about submitting a bug report, visit the [Bug Report Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Bug-Reports).",
+      "To learn more about submitting a bug report, visit the [Bug Report Wiki Page](https://github.com/spike-2/Spike-2/wiki/Bug-Reports).",
       false,
       msg.author.username,
       msg.author.avatarURL()
@@ -252,7 +252,7 @@ function request(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Feature Request",
-      "To learn more about submitting a feature request, visit the [Feature Request Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Feature-Requests).",
+      "To learn more about submitting a feature request, visit the [Feature Request Wiki Page](https://github.com/spike-2/Spike-2/wiki/Feature-Requests).",
       false,
       msg.author.username,
       msg.author.avatarURL()
@@ -265,7 +265,7 @@ function pr(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Pull Request",
-      "To learn more about submitting a pull request, visit the [Pull Request Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Submitting-a-Pull-Request).",
+      "To learn more about submitting a pull request, visit the [Pull Request Wiki Page](https://github.com/spike-2/Spike-2/wiki/Submitting-a-Pull-Request).",
       false,
       msg.author.username,
       msg.author.avatarURL()
@@ -278,7 +278,7 @@ function wiki(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Wiki",
-      "[Visit the Wiki](https://github.com/jwMaxwell/Spike-2/wiki) for more detailed documentation, contribution information, and more!",
+      "[Visit the Wiki](https://github.com/spike-2/Spike-2/wiki) for more detailed documentation, contribution information, and more!",
       false,
       msg.author.username,
       msg.author.avatarURL()
