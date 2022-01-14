@@ -62,14 +62,14 @@ const ITEMS = {
     price: 250,
     description:
       "[ON SALE FOR A LIMITED TIME] You were there when Spike left beta! Enjoy being distinguished in the roles list and other future perks!",
-    forSale: false,
+    forSale: true,
   },
   earlyaccess: {
     roleName: "earlyaccess",
     price: 5000,
     description:
       "Unlock early access to select new features. Be the early adopter you know you are.",
-    forSale: false,
+    forSale: true,
   },
   "2xmult": {
     roleName: "2xmult",
