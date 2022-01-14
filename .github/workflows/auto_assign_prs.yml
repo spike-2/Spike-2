@@ -14,5 +14,5 @@ jobs:
     - name: Assign NEW issues and NEW pull requests to project 2
       uses: srggrs/assign-one-project-github-action@1.2.1
       with:
-        project: 'https://github.com/jwMaxwell/Spike-2/projects/1'
+        project: 'https://github.com/spike-2/Spike-2/projects/1'
         column_name: 'Needs Review'
