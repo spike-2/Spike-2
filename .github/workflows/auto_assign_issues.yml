@@ -3,16 +3,17 @@ name: Auto Assign Issues to Project
 on:
   issues:
     types: [opened]
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   assign_one_project:
     runs-on: ubuntu-latest
     name: Assign to One Project
     steps:
-    - name: Assign NEW issues and NEW pull requests to project 2
-      uses: srggrs/assign-one-project-github-action@1.2.1
-      with:
-        project: 'https://github.com/spike-2/Spike-2/projects/1'
-        column_name: 'Ideas'
+      - name: Assign new issues to project
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.3
+        with:
+          gh_token: ${{ secrets.PROJECT_ACCESS_TOKEN }}
+          organization: spike-2
+          project_id: 1
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: "Idea"
