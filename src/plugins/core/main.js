@@ -19,7 +19,7 @@ const COMMANDS = [
   "bug",
   "request",
   "pr",
-  "wiki",
+  "website",
   "getavatar",
 ];
 
@@ -41,8 +41,8 @@ function help(prefix, command, args) {
       return `${prefix}request\nLearn how to submit a feature request.`;
     case "pr":
       return `${prefix}pr\nLearn how to submit a pull request for a new feature, bug fix, or plugin.`;
-    case "wiki":
-      return `${prefix}wiki\nLearn how to visit the wiki.`;
+    case "website":
+      return `${prefix}website\nLearn how to visit the website.`;
     case "getavatar":
       return `${prefix}getavatar [user]\nGet a user's avatar. To get yours, mention yourself.`;
     default:
@@ -61,7 +61,7 @@ function shortHelp(prefix) {
     `${prefix}bug - Learn how to submit bug report.\n` +
     `${prefix}request - Learn how to submit a feature request.\n` +
     `${prefix}pr - Learn how to submit new code via a PR.\n` +
-    `${prefix}wiki - Get a link to the wiki.\n` +
+    `${prefix}website - Get a link to the website.\n` +
     `${prefix}getavatar - Get a user's avatar.`
   );
 }
@@ -166,7 +166,7 @@ function getContributorsPromise() {
     https.get(
       {
         host: "api.github.com",
-        path: "/repos/jwMaxwell/Spike-2/contributors",
+        path: "/repos/spike-2/Spike-2/contributors",
         headers: {
           Accept: "application/vnd.github.v3+json",
           "User-Agent": "Mozilla/5.0",
@@ -222,7 +222,7 @@ const info = async (msg) => {
     `Language: ${package.language}\n` +
     `Creation date: ${package.created}\n` +
     `Repository: ${package.repository.gh_url}\n` +
-    `Wiki: ${package.repository.wiki}`;
+    `Website: ${package.repository.website}`;
   spikeKit.reply(
     spikeKit.createEmbed(
       `${package.fullName} info`,
@@ -239,7 +239,7 @@ function bug(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Bug Report",
-      "To learn more about submitting a bug report, visit the [Bug Report Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Bug-Reports).",
+      "To learn more about submitting a bug report, visit the [Bug Report Page on our Website](https://spike-2.github.io/docs/contributing/bug-reports/).",
       false,
       msg.author.username,
       msg.author.avatarURL()
@@ -252,7 +252,7 @@ function request(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Feature Request",
-      "To learn more about submitting a feature request, visit the [Feature Request Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Feature-Requests).",
+      "To learn more about submitting a feature request, visit the [Feature Request Page on our Website](https://spike-2.github.io/docs/contributing/feature-requests/).",
       false,
       msg.author.username,
       msg.author.avatarURL()
@@ -265,7 +265,7 @@ function pr(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
       "Pull Request",
-      "To learn more about submitting a pull request, visit the [Pull Request Wiki Page](https://github.com/jwMaxwell/Spike-2/wiki/Submitting-a-Pull-Request).",
+      "To learn more about submitting a pull request, visit the [Pull Request Page on our Website](https://spike-2.github.io/docs/contributing/submitting-a-pull-request/).",
       false,
       msg.author.username,
       msg.author.avatarURL()
@@ -274,11 +274,11 @@ function pr(msg) {
   );
 }
 
-function wiki(msg) {
+function website(msg) {
   spikeKit.reply(
     spikeKit.createEmbed(
-      "Wiki",
-      "[Visit the Wiki](https://github.com/jwMaxwell/Spike-2/wiki) for more detailed documentation, contribution information, and more!",
+      "Website",
+      "[Visit our Website](https://spike-2.github.io/) for more detailed documentation, contribution information, and more!",
       false,
       msg.author.username,
       msg.author.avatarURL()
@@ -327,7 +327,7 @@ function processCommand(command, args, bot, message) {
   else if (command === "bug") bug(message);
   else if (command === "request") request(message);
   else if (command === "pr") pr(message);
-  else if (command === "wiki") wiki(message);
+  else if (command === "website") website(message);
   else if (command === "getavatar") getAvatar(message, args, bot);
 }
 

@@ -8,9 +8,9 @@
   "created": "25 Nov 2020",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jwMaxwell/Spike-2.git",
-    "gh_url": "https://github.com/jwMaxwell/Spike-2",
-    "wiki": "https://github.com/jwMaxwell/Spike-2/wiki"
+    "url": "https://github.com/spike-2/Spike-2.git",
+    "gh_url": "https://github.com/spike-2/Spike-2",
+    "website": "https://spike-2.github.io/"
   },
   "language": "node.js",
   "scripts": {
